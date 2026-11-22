@@ -17,7 +17,7 @@
     "Pago.dc.html": { "x": 6080, "y": 0, "w": 1440, "h": 1200, "title": "Reserva y pago", "page": "cliente", "expand": "fill", "is_interactive": true },
     "Entradas.dc.html": { "x": 7600, "y": 0, "w": 1440, "h": 1500, "title": "Mis entradas", "page": "cliente", "expand": "fill", "is_interactive": true },
     "Perfil.dc.html": { "x": 9120, "y": 0, "w": 1440, "h": 1300, "title": "Preferencias y notificaciones", "page": "cliente", "expand": "fill", "is_interactive": true },
-    "MainMobile.dc.html": { "x": 0, "y": 2800, "w": 390, "h": 5600, "title": "Inicio · mobile", "page": "cliente", "is_interactive": true },
+    "MainMobile.dc.html": { "x": 0, "y": 2800, "w": 390, "h": 6200, "title": "Inicio · mobile", "page": "cliente", "is_interactive": true },
     "EventoMobile.dc.html": { "x": 1520, "y": 2800, "w": 390, "h": 3400, "title": "Detalle del evento · mobile", "page": "cliente", "is_interactive": true },
     "FilaMobile.dc.html": { "x": 3040, "y": 2800, "w": 390, "h": 2000, "title": "Fila virtual · mobile", "page": "cliente", "is_interactive": true },
     "AsientosMobile.dc.html": { "x": 4560, "y": 2800, "w": 390, "h": 2400, "title": "Elegir lugares · mobile", "page": "cliente", "is_interactive": true },

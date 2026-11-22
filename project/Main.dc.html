@@ -18,6 +18,27 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .mock{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 24px;background:#141414;color:#F2F1EC;font-size:13px}
 .mock a{color:#F2F1EC;text-decoration:none;padding:4px 12px;border-radius:999px;border:1px solid #57544E}
 .mock a.on{background:#FFC531;color:#141414;border-color:#FFC531}
+.mock button{min-height:30px;padding:4px 12px;border-radius:999px;border:1px solid #57544E;background:transparent;color:#F2F1EC;font:13px Inter,sans-serif;cursor:pointer}
+.mock button.on{background:#F2F1EC;color:#141414;border-color:#F2F1EC}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.burger{display:none}
+.mnav{position:absolute;left:0;right:0;top:100%;background:#FFFFFF;border-bottom:1px solid #E9E7E1;box-shadow:0 12px 30px rgba(20,20,20,.08)}
+.mnav ul{list-style:none;margin:0;padding:8px 0;display:flex;flex-direction:column}
+.mnav a{display:flex;align-items:center;min-height:48px;padding:0 16px;border-left:4px solid transparent;color:#5C5A55;font-size:16px;font-weight:600;text-decoration:none}
+.mnav a.on{border-left-color:#FFC531;color:#141414}
+.search-wrap{position:relative;max-width:620px}
+.suggest{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:15;list-style:none;margin:0;padding:6px;background:#FFFFFF;border:1px solid #D9D6CE;border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.25);color:#141414}
+.suggest a{display:flex;flex-direction:column;gap:2px;min-height:44px;justify-content:center;padding:6px 12px;border-radius:8px;color:#141414;text-decoration:none;font-size:15px}
+.suggest a:hover{background:#F6F5F1;color:#141414}
+.suggest a span{font-size:13px;color:#67645E}
+.suggest button{width:100%;min-height:44px;margin-top:4px;padding:0 12px;border:0;border-top:1px solid #F0EFEB;background:transparent;text-align:left;font:600 14px Inter,sans-serif;color:#1D4ED8;cursor:pointer}
+.more{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;padding-top:12px;border-top:1px solid #F0EFEB}
+.filters-toggle{display:none}
+.skel{display:block;border-radius:6px;background:linear-gradient(90deg,#ECEAE4 0%,#F6F5F1 50%,#ECEAE4 100%);background-size:200% 100%;animation:shim 1.3s ease-in-out infinite}
+@keyframes shim{from{background-position:100% 0}to{background-position:-100% 0}}
+@media (prefers-reduced-motion:reduce){.skel{animation:none}}
+.foot-grid{display:grid;grid-template-columns:2fr repeat(4,1fr);gap:40px}
+.regret{border:1px solid #CFCBC2;border-radius:8px;padding:6px 12px;font-weight:600;color:#141414 !important}
 .top{position:sticky;top:0;z-index:20;background:#FFFFFF;border-bottom:1px solid #E9E7E1}
 .top-in{max-width:1240px;margin:0 auto;padding:0 28px;min-height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
 .brand{display:inline-flex;align-items:center;gap:9px;font-family:Archivo,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.03em;color:#141414;text-decoration:none;justify-self:start}
@@ -46,7 +67,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .search-field{flex:1;display:flex;align-items:center;gap:10px;padding:0 12px;min-height:52px;color:#77736B;border-radius:10px}
 .search-field input{border:0;outline:0;font:15px Inter,sans-serif;color:#141414;width:100%;min-width:0;background:transparent}
 .quick{display:flex;flex-wrap:wrap;gap:8px}
-.quick button{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(20,20,20,.35);color:#FFFFFF;font:500 13px Inter,sans-serif;cursor:pointer}
+.quick button.on{background:#FFC531;border-color:#FFC531;color:#141414}
+.quick button{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(20,20,20,.35);color:#FFFFFF;font:500 13px Inter,sans-serif;cursor:pointer}
 .quick button:hover{background:rgba(20,20,20,.6)}
 .tk{width:340px;max-width:100%;background:#FFFFFF;color:#141414;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35);transform:rotate(1.5deg)}
 .tk-img{height:130px;position:relative;overflow:hidden;background:#E4E1D8}
@@ -60,11 +82,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:#77736B;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 .eyebrow i{display:inline-block;width:19px;height:2px;background:#FFC531}
 .panel{background:#FFFFFF;border:1px solid #E4E1D9;border-radius:14px;padding:14px 16px}
-.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid transparent;background:transparent;font:500 13px Inter,sans-serif;cursor:pointer;color:#5C5A55}
+.chip{min-height:44px;padding:0 14px;border-radius:999px;border:1px solid transparent;background:transparent;font:500 13px Inter,sans-serif;cursor:pointer;color:#5C5A55}
 .chip:hover{background:#F7F5EF}
 .chip.on{background:#141414;color:#FFFFFF}
 .sel{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:#77736B}
-.sel select,.sel input{min-height:40px;border:1px solid #E1DED6;border-radius:8px;padding:0 10px;background:#FFFFFF;font:13px Inter,sans-serif;color:#141414}
+.sel select,.sel input{min-height:44px;border:1px solid #E1DED6;border-radius:8px;padding:0 10px;background:#FFFFFF;font:13px Inter,sans-serif;color:#141414}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:18px}
 .card{display:flex;flex-direction:column;text-decoration:none;color:#141414;background:#FFFFFF;border:1px solid #E6E3DC;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(23,19,12,.08);color:#141414}
@@ -96,12 +118,19 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .pop-item{display:flex;gap:11px;padding:12px 14px;border-top:1px solid #F0EFEB;font-size:13px}
 .mini{width:8px;height:8px;border-radius:50%;background:#FFC531;margin-top:6px;flex:none}
 @media (max-width:760px){
-.mock{display:none}
+.mock{padding:8px 16px}
 .steps li:not(.cur){font-size:0;gap:0}
 .steps li:not(.cur) .n{font-size:11px}
 .steps li+li:before{width:10px}
-.top-in{grid-template-columns:1fr auto;padding:0 16px}
-.cnav{grid-column:1/-1;grid-row:2;justify-content:center;gap:24px;min-height:44px}
+.top-in{grid-template-columns:1fr auto;padding:0 16px;min-height:64px}
+.cnav{display:none}
+.burger{display:grid}
+.acts{gap:4px}
+.more{display:none}
+.more.open{display:grid}
+.filters-toggle{display:inline-flex}
+.foot-grid{grid-template-columns:1fr 1fr;gap:40px 32px}
+.foot-brand{grid-column:1/-1}
 .hero-in{padding:44px 16px}
 .tk{transform:none}
 .wrap{padding:40px 16px}
@@ -116,6 +145,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     <a href="OrgEventos.dc.html">Organizador</a>
     <a href="AdminGestion.dc.html">Administrador</a>
     <a href="Acceso.dc.html">Personal de acceso</a>
+    <strong style="margin: 0 4px 0 12px">Cartelera</strong>
+    <sc-for list="{{statuses}}" as="st" hint-placeholder-count="3">
+      <button class="{{st.cls}}" aria-pressed="{{st.pressed}}" onClick="{{st.pick}}">{{st.label}}</button>
+    </sc-for>
   </nav>
 
   <header class="top">
@@ -150,8 +183,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
             <div class="pop-item"><span class="mini" style="background: #1C8A54"></span><div><strong>Compra confirmada</strong><br><span style="color: #67645E">2 entradas para Hamlet · Hace 3 días</span></div></div>
           </div>
         </sc-if>
+        <button class="icon-btn burger" aria-label="{{burgerLabel}}" aria-expanded="{{menuExpanded}}" aria-controls="menu-mobile" onClick="{{toggleMenu}}">
+          <sc-if value="{{menuClosed}}" hint-placeholder-val="{{ true }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></sc-if>
+          <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></sc-if>
+        </button>
       </div>
     </div>
+    <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+      <nav id="menu-mobile" class="mnav" aria-label="Menú">
+        <ul>
+          <li><a class="on" href="Main.dc.html">Explorar</a></li>
+          <li><a href="Entradas.dc.html">Mis entradas</a></li>
+          <li><a href="Perfil.dc.html">Preferencias</a></li>
+        </ul>
+      </nav>
+    </sc-if>
   </header>
 
   <section class="hero" aria-labelledby="hero-title">
@@ -162,17 +208,27 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
         <span class="kicker"><i></i>Recitales · festivales · teatro · partidos · conferencias</span>
         <h1 id="hero-title" style="font-size: clamp(44px, 6.4vw, 84px); line-height: .95; letter-spacing: -0.035em; max-width: 760px">Nadie más tiene <span style="color: #FFC531">tu lugar.</span></h1>
         <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #ECE9E2; max-width: 560px">Elegís el asiento, te lo guardamos 10 minutos mientras pagás y la entrada te llega con un QR que vale una sola vez. Aunque haya miles comprando al mismo tiempo.</p>
-        <form class="search" role="search" onSubmit="{{submitSearch}}">
-          <label class="search-field">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-            <span style="position: absolute; left: -9999px">Buscar eventos</span>
-            <input type="search" placeholder="Artista, equipo, obra o disertante" value="{{q}}" onChange="{{setQ}}">
-          </label>
-          <a class="btn accent" href="#eventos" style="min-height: 52px; padding: 0 24px">Buscar</a>
-        </form>
-        <div class="quick" aria-label="Accesos rápidos">
+        <div class="search-wrap">
+          <form class="search" role="search" onSubmit="{{submitSearch}}">
+            <label class="search-field">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+              <span class="sr">Buscar eventos</span>
+              <input type="search" placeholder="Artista, equipo, obra o disertante" autocomplete="off" aria-controls="sugerencias" aria-expanded="{{suggestExpanded}}" value="{{q}}" onChange="{{setQ}}" onFocus="{{openSuggest}}" onBlur="{{closeSuggest}}">
+            </label>
+            <button class="btn accent" type="submit" style="min-height: 52px; padding: 0 24px">Buscar</button>
+          </form>
+          <sc-if value="{{showSuggest}}" hint-placeholder-val="{{ false }}">
+            <ul id="sugerencias" class="suggest" aria-label="Sugerencias">
+              <sc-for list="{{suggestions}}" as="sg" hint-placeholder-count="3">
+                <li><a href="Evento.dc.html"><strong>{{sg.name}}</strong><span>{{sg.when}} · {{sg.city}}</span></a></li>
+              </sc-for>
+              <li><button type="button" onMouseDown="{{applySearch}}">Ver todos los resultados para «{{qTrim}}» · Enter</button></li>
+            </ul>
+          </sc-if>
+        </div>
+        <div class="quick" role="group" aria-label="Accesos rápidos por tipo">
           <sc-for list="{{quick}}" as="k" hint-placeholder-count="5">
-            <button onClick="{{k.pick}}">{{k.label}}</button>
+            <button class="{{k.cls}}" aria-pressed="{{k.pressed}}" onClick="{{k.pick}}">{{k.label}}</button>
           </sc-for>
         </div>
       </div>
@@ -204,17 +260,24 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
         <h2 style="font-size: 38px">Próximos eventos</h2>
       </div>
       <label class="sel" style="flex-direction: row; align-items: center; gap: 8px">Ordenar por
-        <select value="{{sort}}" onChange="{{setSort}}"><option value="DATE">Fecha</option><option value="PRICE">Precio</option><option value="RELEVANCE">Relevancia</option></select>
+        <select value="{{sort}}" onChange="{{setSort}}">
+          <sc-for list="{{sortOptions}}" as="so" hint-placeholder-count="2"><option value="{{so.value}}">{{so.label}}</option></sc-for>
+        </select>
       </label>
     </div>
 
     <div class="panel" style="display: flex; flex-direction: column; gap: 12px">
-      <div style="display: flex; flex-wrap: wrap; gap: 4px" role="group" aria-label="Tipo de evento">
-        <sc-for list="{{types}}" as="t" hint-placeholder-count="6">
-          <button class="{{t.cls}}" aria-pressed="{{t.pressed}}" onClick="{{t.pick}}">{{t.label}}</button>
-        </sc-for>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between">
+        <div style="display: flex; flex-wrap: wrap; gap: 4px" role="group" aria-label="Tipo de evento">
+          <sc-for list="{{types}}" as="t" hint-placeholder-count="6">
+            <button class="{{t.cls}}" aria-pressed="{{t.pressed}}" onClick="{{t.pick}}">{{t.label}}</button>
+          </sc-for>
+        </div>
+        <button class="btn ghost filters-toggle" aria-expanded="{{filtersExpanded}}" aria-controls="mas-filtros" onClick="{{toggleFilters}}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filtros{{filtersBadge}}
+        </button>
       </div>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; padding-top: 12px; border-top: 1px solid #F0EFEB">
+      <div id="mas-filtros" class="{{moreCls}}">
         <label class="sel">Ciudad
           <select value="{{city}}" onChange="{{setCity}}"><option value="">Todas</option><option value="Buenos Aires">Buenos Aires</option><option value="Tandil">Tandil</option><option value="Rosario">Rosario</option><option value="Córdoba">Córdoba</option></select>
         </label>
@@ -222,11 +285,42 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
           <select value="{{org}}" onChange="{{setOrg}}"><option value="">Todos</option><option value="Producciones del Sur">Producciones del Sur</option><option value="Club Social Tandil">Club Social Tandil</option><option value="Comunidad Dev Pampa">Comunidad Dev Pampa</option></select>
         </label>
         <label class="sel">Desde<input type="date" value="{{from}}" onChange="{{setFrom}}"></label>
-        <label class="sel">Hasta<input type="date" value="{{to}}" onChange="{{setTo}}"></label>
+        <label class="sel">Hasta<input type="date" min="{{from}}" value="{{to}}" onChange="{{setTo}}"></label>
       </div>
     </div>
 
-    <p style="margin: 0; display: flex; align-items: baseline; gap: 8px" aria-live="polite"><span style="font: 500 22px 'JetBrains Mono', monospace">{{count}}</span><span style="color: #77736B">{{countWord}}</span></p>
+    <sc-if value="{{isReady}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px">
+        <p style="margin: 0; display: flex; align-items: baseline; gap: 8px" aria-live="polite"><span style="font: 500 22px 'JetBrains Mono', monospace">{{count}}</span><span style="color: #77736B">{{countWord}}</span></p>
+        <sc-if value="{{anyActive}}" hint-placeholder-val="{{ false }}"><button class="btn ghost" onClick="{{clear}}">Limpiar filtros</button></sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isLoading}}" hint-placeholder-val="{{ false }}">
+      <p class="sr" role="status">Cargando eventos</p>
+      <div class="grid" aria-hidden="true">
+        <sc-for list="{{skeletons}}" as="sk" hint-placeholder-count="8">
+          <div class="card">
+            <div class="card-img skel" style="border-radius: 0"></div>
+            <div style="padding: 15px 16px 14px; display: flex; flex-direction: column; gap: 10px">
+              <span class="skel" style="height: 12px; width: 40%"></span>
+              <span class="skel" style="height: 22px; width: 85%"></span>
+              <span class="skel" style="height: 14px; width: 65%"></span>
+              <span class="skel" style="height: 14px; width: 30%; margin-top: 8px; align-self: flex-end"></span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{isError}}" hint-placeholder-val="{{ false }}">
+      <div role="alert" style="text-align: center; padding: 48px 20px; background: #FFFFFF; border: 1px solid #E6E3DC; border-radius: 14px; color: #5C5A55; display: flex; flex-direction: column; align-items: center; gap: 10px">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#D44335" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.01"/></svg>
+        <h3 style="color: #141414; font-size: 22px">No pudimos cargar los eventos</h3>
+        <p style="margin: 0">Revisá tu conexión y probá de nuevo. Si sigue pasando, el problema es nuestro.</p>
+        <button class="btn" onClick="{{retry}}">Reintentar</button>
+      </div>
+    </sc-if>
 
     <sc-if value="{{hasResults}}" hint-placeholder-val="{{ true }}">
       <div class="grid">
@@ -247,9 +341,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
           </a>
         </sc-for>
       </div>
-      <nav aria-label="Páginas" style="display: flex; justify-content: center; align-items: center; gap: 18px; color: #77736B; font-size: 13px">
-        <button class="btn ghost" disabled="" style="min-height: 38px; opacity: .5">Anterior</button><span>Página 1 de 1</span><button class="btn ghost" disabled="" style="min-height: 38px; opacity: .5">Siguiente</button>
-      </nav>
+      <sc-if value="{{hasPages}}" hint-placeholder-val="{{ true }}">
+        <nav aria-label="Páginas" style="display: flex; justify-content: center; align-items: center; gap: 18px; color: #77736B; font-size: 13px">
+          <sc-if value="{{canPrev}}" hint-placeholder-val="{{ false }}"><button class="btn ghost" onClick="{{prevPage}}">Anterior</button></sc-if>
+          <sc-if value="{{noPrev}}" hint-placeholder-val="{{ true }}"><button class="btn ghost" disabled="" style="opacity: .5">Anterior</button></sc-if>
+          <span aria-current="page">Página {{pageNum}} de {{totalPages}}</span>
+          <sc-if value="{{canNext}}" hint-placeholder-val="{{ true }}"><button class="btn ghost" onClick="{{nextPage}}">Siguiente</button></sc-if>
+          <sc-if value="{{noNext}}" hint-placeholder-val="{{ false }}"><button class="btn ghost" disabled="" style="opacity: .5">Siguiente</button></sc-if>
+        </nav>
+      </sc-if>
     </sc-if>
 
     <sc-if value="{{noResults}}" hint-placeholder-val="{{ false }}">
@@ -297,20 +397,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 
   <footer class="foot" style="margin-top: auto">
     <div class="wrap" style="padding-top: 64px; padding-bottom: 36px; display: flex; flex-direction: column; gap: 48px">
-      <div style="display: flex; flex-wrap: wrap; gap: 40px 56px">
-        <div style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 16px; max-width: 360px">
+      <div class="foot-grid">
+        <div class="foot-brand" style="display: flex; flex-direction: column; gap: 16px; max-width: 360px">
           <a class="brand" href="Main.dc.html" style="color: #141414"><span class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></span>TicketYa<sup style="font-size: 12px; font-weight: 600">®</sup></a>
           <p style="margin: 0; line-height: 1.6; font-size: 14px">Entradas para todo tipo de eventos, desde el club del barrio hasta el estadio. Comprás desde el celular, sin filas ni sobresaltos.</p>
           <a href="Perfil.dc.html" style="color: #141414; font-weight: 700; text-decoration: underline; text-decoration-color: #FFC531; text-decoration-thickness: 3px; text-underline-offset: 4px">Avisame cuando toque mi artista favorito →</a>
         </div>
-        <nav aria-labelledby="f1" style="flex: 1 1 150px"><h3 id="f1">Explorar</h3><ul><li><a href="#eventos">Recitales</a></li><li><a href="#eventos">Festivales</a></li><li><a href="#eventos">Teatro</a></li><li><a href="#eventos">Deportes</a></li><li><a href="#eventos">Conferencias</a></li></ul></nav>
-        <nav aria-labelledby="f2" style="flex: 1 1 150px"><h3 id="f2">Ciudades</h3><ul><li><a href="#eventos">Buenos Aires</a></li><li><a href="#eventos">Rosario</a></li><li><a href="#eventos">Córdoba</a></li><li><a href="#eventos">Tandil</a></li></ul></nav>
-        <nav aria-labelledby="f3" style="flex: 1 1 170px"><h3 id="f3">Ayuda</h3><ul><li><a href="Entradas.dc.html">Mis entradas y QR</a></li><li><a href="Entradas.dc.html">Devoluciones</a></li><li><a href="Fila.dc.html">Cómo funciona la fila virtual</a></li><li><a href="Pago.dc.html">Medios de pago</a></li></ul></nav>
-        <nav aria-labelledby="f4" style="flex: 1 1 170px"><h3 id="f4">Organizadores</h3><ul><li><a href="OrgEditor.dc.html">Publicá tu evento</a></li><li><a href="OrgEventos.dc.html">Panel de organizador</a></li><li><a href="OrgReporte.dc.html">Reportes de venta</a></li><li><a href="Acceso.dc.html">Control de acceso</a></li></ul></nav>
+        <nav aria-labelledby="f1"><h3 id="f1">Explorar</h3><ul><li><a href="#eventos">Recitales</a></li><li><a href="#eventos">Festivales</a></li><li><a href="#eventos">Teatro</a></li><li><a href="#eventos">Deportes</a></li><li><a href="#eventos">Conferencias</a></li></ul></nav>
+        <nav aria-labelledby="f2"><h3 id="f2">Ciudades</h3><ul><li><a href="#eventos">Buenos Aires</a></li><li><a href="#eventos">Rosario</a></li><li><a href="#eventos">Córdoba</a></li><li><a href="#eventos">Tandil</a></li></ul></nav>
+        <nav aria-labelledby="f3"><h3 id="f3">Ayuda</h3><ul><li><a href="Entradas.dc.html">Mis entradas y QR</a></li><li><a href="Entradas.dc.html">Devoluciones</a></li><li><a href="Fila.dc.html">Cómo funciona la fila virtual</a></li><li><a href="Pago.dc.html">Medios de pago</a></li></ul></nav>
+        <nav aria-labelledby="f4"><h3 id="f4">Organizadores</h3><ul><li><a href="OrgEditor.dc.html">Publicá tu evento</a></li><li><a href="#eventos">Cómo funciona</a></li><li><a href="#eventos">Contacto comercial</a></li></ul></nav>
       </div>
-      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 22px; border-top: 1px solid #E1DED7; font-size: 13px; color: #77736B">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding-top: 22px; border-top: 1px solid #E1DED7; font-size: 13px; color: #77736B">
         <span>© 2026 TicketYa® · Hecho en Argentina · Grupo 10 · Arquitectura Web, TUDAI</span>
-        <span style="display: flex; flex-wrap: wrap; gap: 20px"><a href="#eventos" style="font-size: 13px; color: #77736B">Términos</a><a href="#eventos" style="font-size: 13px; color: #77736B">Privacidad</a><a href="#eventos" style="font-size: 13px; color: #77736B">Defensa del consumidor</a><span>Pagás con crédito, débito o dinero en cuenta</span></span>
+        <nav aria-label="Legal" style="display: flex; flex-wrap: wrap; align-items: center; gap: 20px"><a href="#eventos" style="font-size: 13px; color: #77736B">Términos</a><a href="#eventos" style="font-size: 13px; color: #77736B">Privacidad</a><a href="#eventos" style="font-size: 13px; color: #77736B">Defensa del consumidor</a><a class="regret" href="#eventos" style="font-size: 13px">Botón de arrepentimiento</a></nav>
       </div>
     </div>
   </footer>
@@ -333,13 +433,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { q: '', type: 'ALL', city: '', org: '', from: '', to: '', sort: 'DATE', logged: true, loginOpen: false, bellOpen: false, left: 2 * 3600 + 14 * 60 + 33 };
+    this.state = { q: '', query: '', suggestFor: '', suggestOpen: false, type: 'ALL', city: '', org: '', from: '', to: '', sort: 'DATE', page: 0, status: 'ok', filtersOpen: false, menuOpen: false, logged: true, loginOpen: false, bellOpen: false, left: 2 * 3600 + 14 * 60 + 33 };
   }
   componentDidMount() {
     this.timer = setInterval(() => this.setState({ left: Math.max(0, this.state.left - 1) }), 1000);
   }
   componentWillUnmount() {
     clearInterval(this.timer);
+    clearTimeout(this.debounce);
+    clearTimeout(this.loading);
+  }
+  scrollToList() {
+    const list = document.getElementById('eventos');
+    if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  filter(changes) {
+    this.setState({ ...changes, page: 0 });
   }
   events() {
     return [
@@ -348,30 +457,83 @@ class Component extends DCLogic {
       { name: 'Festival Río Abierto', type: 'FESTIVAL', date: '2027-01-17', time: '16:00', venue: 'Parque Costanero', city: 'Rosario', people: 'Marea Baja, Los Serranos, DJ Ceibo', org: 'Producciones del Sur', price: 38000, hot: true, soldOut: false, rel: 2, img: '/_blob/f138f8236d4d4c37ff7b95476851bc8c', alt: 'Público en un festival al aire libre' },
       { name: 'Atlético Sur vs. Deportivo Norte', type: 'SPORTS', date: '2026-12-06', time: '17:30', venue: 'Estadio del Sur', city: 'Buenos Aires', people: 'Atlético Sur, Deportivo Norte', org: 'Producciones del Sur', price: 15000, hot: false, soldOut: true, rel: 5, img: '/_blob/1cd73006b76a72a1f4cdc234f5b22166', alt: 'Estadio de fútbol lleno' },
       { name: 'Hamlet', type: 'THEATER', date: '2026-12-05', time: '20:30', venue: 'Teatro de la Sierra', city: 'Tandil', people: 'Compañía La Fragua', org: 'Club Social Tandil', price: 12000, hot: false, soldOut: false, rel: 4, img: '/_blob/7c930b38c6e1b24a9a8c775cbc8fcdab', alt: 'Sala de teatro con butacas rojas' },
-      { name: 'Jornada Dev Pampa', type: 'CONFERENCE', date: '2027-02-10', time: '09:00', venue: 'Centro de Convenciones', city: 'Córdoba', people: 'Lucía Ferreyra, Martín Ibarra', org: 'Comunidad Dev Pampa', price: 20000, hot: false, soldOut: false, rel: 6, img: '/_blob/c2f4f3af1eff3c95194f288ccc6f0fa7', alt: 'Auditorio durante una conferencia' }
+      { name: 'Jornada Dev Pampa', type: 'CONFERENCE', date: '2027-02-10', time: '09:00', venue: 'Centro de Convenciones', city: 'Córdoba', people: 'Lucía Ferreyra, Martín Ibarra', org: 'Comunidad Dev Pampa', price: 20000, hot: false, soldOut: false, rel: 6, img: '/_blob/c2f4f3af1eff3c95194f288ccc6f0fa7', alt: 'Auditorio durante una conferencia' },
+      { name: 'Marea Baja acústico', type: 'CONCERT', date: '2026-12-19', time: '21:30', venue: 'Sala del Puerto', city: 'Rosario', people: 'Marea Baja', org: 'Producciones del Sur', price: 16000, hot: false, soldOut: false, rel: 7, img: '/_blob/9e28a372fa0d76707034c06ca92cca2e', alt: 'Banda tocando en una sala chica' },
+      { name: 'Clásico del Litoral', type: 'SPORTS', date: '2027-01-24', time: '19:00', venue: 'Estadio Litoral', city: 'Rosario', people: 'Unión Costera, Atlético Ribera', org: 'Producciones del Sur', price: 18000, hot: true, soldOut: false, rel: 8, img: '/_blob/1cd73006b76a72a1f4cdc234f5b22166', alt: 'Tribuna de un estadio de fútbol' },
+      { name: 'La casa de Bernarda Alba', type: 'THEATER', date: '2027-02-06', time: '20:00', venue: 'Teatro Real', city: 'Córdoba', people: 'Elenco Mediterráneo', org: 'Club Social Tandil', price: 14000, hot: false, soldOut: false, rel: 9, img: '/_blob/7c930b38c6e1b24a9a8c775cbc8fcdab', alt: 'Escenario de teatro con telón rojo' },
+      { name: 'Festival de Jazz Serrano', type: 'FESTIVAL', date: '2027-03-13', time: '17:00', venue: 'Parque del Lago', city: 'Tandil', people: 'Trío Sierra, Big Band del Centro', org: 'Club Social Tandil', price: 22000, hot: false, soldOut: false, rel: 10, img: '/_blob/f138f8236d4d4c37ff7b95476851bc8c', alt: 'Escenario de festival al atardecer' }
     ];
   }
   renderVals() {
     const s = this.state;
-    const typeLabels = { ALL: 'Todos', CONCERT: 'Recital', FESTIVAL: 'Festival', THEATER: 'Teatro', SPORTS: 'Deporte', CONFERENCE: 'Conferencia' };
+    const PAGE_SIZE = 8;
+    const MIN_SUGGEST_CHARS = 2;
+    const MAX_SUGGESTIONS = 5;
+    const filterLabels = { ALL: 'Todos', CONCERT: 'Recitales', FESTIVAL: 'Festivales', THEATER: 'Teatro', SPORTS: 'Deportes', CONFERENCE: 'Conferencias' };
+    const cardLabels = { CONCERT: 'Recital', FESTIVAL: 'Festival', THEATER: 'Teatro', SPORTS: 'Deporte', CONFERENCE: 'Conferencia' };
     const months = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-    const q = s.q.trim().toLowerCase();
+    const matches = (e, text) => (e.name + ' ' + e.people).toLowerCase().includes(text);
+    const query = s.query.toLowerCase();
     const sorters = { DATE: (a, b) => a.date.localeCompare(b.date), PRICE: (a, b) => a.price - b.price, RELEVANCE: (a, b) => a.rel - b.rel };
-    const results = this.events()
-      .filter((e) => (s.type === 'ALL' || e.type === s.type) && (!s.city || e.city === s.city) && (!s.org || e.org === s.org) && (!s.from || e.date >= s.from) && (!s.to || e.date <= s.to) && (!q || (e.name + ' ' + e.people).toLowerCase().includes(q)))
+    const all = this.events()
+      .filter((e) => (s.type === 'ALL' || e.type === s.type) && (!s.city || e.city === s.city) && (!s.org || e.org === s.org) && (!s.from || e.date >= s.from) && (!s.to || e.date <= s.to) && (!query || matches(e, query)))
       .sort(sorters[s.sort])
-      .map((e) => ({ ...e, typeLabel: typeLabels[e.type].toUpperCase(), day: e.date.slice(8), month: months[Number(e.date.slice(5, 7)) - 1], priceLabel: '$' + e.price.toLocaleString('es-AR'), imgStyle: e.soldOut ? 'filter:grayscale(1)' : '' }));
-    const set = (key) => (ev) => this.setState({ [key]: ev.target.value });
+      .map((e) => ({ ...e, typeLabel: cardLabels[e.type].toUpperCase(), day: e.date.slice(8), month: months[Number(e.date.slice(5, 7)) - 1], priceLabel: '$' + e.price.toLocaleString('es-AR'), imgStyle: e.soldOut ? 'filter:grayscale(1)' : '' }));
+    const totalPages = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+    const page = Math.min(s.page, totalPages - 1);
+    const results = all.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);
+    const suggestText = s.suggestFor.trim().toLowerCase();
+    const suggestions = suggestText.length < MIN_SUGGEST_CHARS ? [] : this.events().filter((e) => matches(e, suggestText)).slice(0, MAX_SUGGESTIONS)
+      .map((e) => ({ name: e.name, city: e.city, when: Number(e.date.slice(8)) + ' ' + months[Number(e.date.slice(5, 7)) - 1].toLowerCase() }));
+    const showSuggest = s.suggestOpen && suggestions.length > 0;
+    const extraFilters = [s.city, s.org, s.from, s.to].filter(Boolean).length;
+    const anyActive = Boolean(s.query) || s.type !== 'ALL' || extraFilters > 0;
+    const ok = s.status === 'ok';
+    const set = (key) => (ev) => this.filter({ [key]: ev.target.value });
+    const pickType = (k, scroll) => () => { this.filter({ type: k }); if (scroll) this.scrollToList(); };
+    const applySearch = () => {
+      const text = s.q.trim();
+      const sort = text ? 'RELEVANCE' : (s.sort === 'RELEVANCE' ? 'DATE' : s.sort);
+      clearTimeout(this.debounce);
+      this.filter({ query: text, sort, suggestOpen: false });
+      this.scrollToList();
+    };
+    const goToPage = (n) => () => { this.setState({ page: n }); this.scrollToList(); };
     const pad = (n) => String(n).padStart(2, '0');
+    const statusLabels = { ok: 'Resultados', loading: 'Cargando', error: 'Error' };
     return {
-      q: s.q, city: s.city, org: s.org, from: s.from, to: s.to, sort: s.sort,
-      setQ: set('q'), setCity: set('city'), setOrg: set('org'), setFrom: set('from'), setTo: set('to'), setSort: set('sort'),
-      submitSearch: (ev) => ev.preventDefault(),
-      quick: [['CONCERT', 'Recitales'], ['FESTIVAL', 'Festivales'], ['THEATER', 'Teatro'], ['SPORTS', 'Fútbol y deportes'], ['CONFERENCE', 'Conferencias']].map(([k, label]) => ({ label, pick: () => this.setState({ type: k }) })),
-      types: Object.keys(typeLabels).map((k) => ({ label: typeLabels[k], cls: s.type === k ? 'chip on' : 'chip', pressed: s.type === k ? 'true' : 'false', pick: () => this.setState({ type: k }) })),
-      results, hasResults: results.length > 0, noResults: results.length === 0,
-      count: String(results.length).padStart(2, '0'), countWord: results.length === 1 ? 'evento' : 'eventos',
-      clear: () => this.setState({ q: '', type: 'ALL', city: '', org: '', from: '', to: '' }),
+      q: s.q, qTrim: s.q.trim(), city: s.city, org: s.org, from: s.from, to: s.to, sort: s.sort,
+      setQ: (ev) => {
+        const value = ev.target.value;
+        this.setState({ q: value, suggestOpen: true });
+        clearTimeout(this.debounce);
+        this.debounce = setTimeout(() => this.setState({ suggestFor: value }), 300);
+      },
+      openSuggest: () => this.setState({ suggestOpen: true }),
+      closeSuggest: () => setTimeout(() => this.setState({ suggestOpen: false }), 150),
+      suggestions, showSuggest, suggestExpanded: showSuggest ? 'true' : 'false', applySearch,
+      submitSearch: (ev) => { ev.preventDefault(); applySearch(); },
+      setCity: set('city'), setOrg: set('org'), setFrom: set('from'), setTo: set('to'), setSort: set('sort'),
+      sortOptions: [['DATE', 'Fecha'], ['PRICE', 'Precio'], ...(s.query ? [['RELEVANCE', 'Relevancia']] : [])].map(([value, label]) => ({ value, label })),
+      quick: Object.keys(cardLabels).map((k) => ({ label: filterLabels[k], cls: s.type === k ? 'on' : '', pressed: s.type === k ? 'true' : 'false', pick: pickType(k, true) })),
+      types: Object.keys(filterLabels).map((k) => ({ label: filterLabels[k], cls: s.type === k ? 'chip on' : 'chip', pressed: s.type === k ? 'true' : 'false', pick: pickType(k, false) })),
+      moreCls: s.filtersOpen ? 'more open' : 'more', filtersExpanded: s.filtersOpen ? 'true' : 'false',
+      filtersBadge: extraFilters ? ' (' + extraFilters + ')' : '',
+      toggleFilters: () => this.setState({ filtersOpen: !s.filtersOpen }),
+      results, isReady: ok, hasResults: ok && all.length > 0, noResults: ok && all.length === 0,
+      isLoading: s.status === 'loading', isError: s.status === 'error',
+      skeletons: Array.from({ length: PAGE_SIZE }, (_, i) => ({ id: i })),
+      retry: () => { this.setState({ status: 'loading' }); clearTimeout(this.loading); this.loading = setTimeout(() => this.setState({ status: 'ok' }), 900); },
+      statuses: Object.keys(statusLabels).map((k) => ({ label: statusLabels[k], cls: s.status === k ? 'on' : '', pressed: s.status === k ? 'true' : 'false', pick: () => this.setState({ status: k }) })),
+      count: pad(all.length), countWord: (all.length === 1 ? 'evento' : 'eventos') + (s.query ? ' para «' + s.query + '»' : ''),
+      anyActive,
+      clear: () => this.filter({ q: '', query: '', suggestFor: '', type: 'ALL', city: '', org: '', from: '', to: '', sort: s.sort === 'RELEVANCE' ? 'DATE' : s.sort }),
+      hasPages: totalPages > 1, pageNum: page + 1, totalPages,
+      canPrev: page > 0, noPrev: page === 0, canNext: page < totalPages - 1, noNext: page >= totalPages - 1,
+      prevPage: goToPage(page - 1), nextPage: goToPage(page + 1),
+      menuOpen: s.menuOpen, menuClosed: !s.menuOpen, menuExpanded: s.menuOpen ? 'true' : 'false',
+      burgerLabel: s.menuOpen ? 'Cerrar menú' : 'Abrir menú',
+      toggleMenu: () => this.setState({ menuOpen: !s.menuOpen }),
       hh: pad(Math.floor(s.left / 3600)), mm: pad(Math.floor(s.left % 3600 / 60)), ss: pad(s.left % 60),
       logged: s.logged, loggedOut: !s.logged, loginOpen: s.loginOpen, bellOpen: s.bellOpen && s.logged,
       toggleBell: () => this.setState({ bellOpen: !s.bellOpen }),
