@@ -28,4 +28,11 @@ export default defineConfig([
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    // Los helpers de test no corren en el dev server: Fast Refresh no aplica.
+    files: ['src/test/**'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])
