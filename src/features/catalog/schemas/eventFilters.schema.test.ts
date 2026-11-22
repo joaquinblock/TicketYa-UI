@@ -57,3 +57,17 @@ describe('parseEventFilters con el orden por relevancia', () => {
     expect(parse('sort=RELEVANCE')).toEqual({ sort: 'DATE', page: 1 })
   })
 })
+
+describe('parseEventFilters con el texto buscado', () => {
+  it('recorta los espacios alrededor del texto', () => {
+    expect(parse('q=%20%20serr%20')).toEqual({ q: 'serr', sort: 'DATE', page: 1 })
+  })
+
+  it('un texto vacío o de solo espacios es como no buscar nada', () => {
+    expect(parse('q=%20%20')).toEqual({ sort: 'DATE', page: 1 })
+  })
+
+  it('recorta a 100 caracteres, el máximo del backend', () => {
+    expect(parse(`q=${'a'.repeat(101)}`).q).toBe('a'.repeat(100))
+  })
+})
