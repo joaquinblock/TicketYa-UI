@@ -2,6 +2,7 @@
 
 - **Fecha:** AAAA-MM-DD
 - **Estado:** propuesta | aceptada | reemplazada por NNNN
+- **Origen:** #NUM
 
 ## Contexto
 
@@ -17,4 +18,4 @@
 
 ## Consecuencias
 
-<!-- Qué se gana, qué se pierde y qué cambia para quien escribe código. -->
+<!-- Qué se gana, qué se pierde (el costo o la limitación que se acepta, explícito) y qué cambia para quien escribe código. Una vez aceptado no se edita: si la decisión cambia, va un ADR nuevo que lo reemplaza. -->
