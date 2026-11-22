@@ -41,3 +41,7 @@ function sortByDateWithoutQuery<T extends Pick<EventFilters, 'q' | 'sort'>>(filt
 export function parseEventFilters(searchParams: URLSearchParams): EventFilters {
   return eventFiltersSchema.parse(Object.fromEntries(searchParams))
 }
+
+export function toSearchParams(_filters: EventFilters): URLSearchParams {
+  return new URLSearchParams('sin=implementar')
+}

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parseEventFilters } from './eventFilters.schema'
+import { toSearchParams } from './eventFilters.schema'
 
 const parse = (query: string) => parseEventFilters(new URLSearchParams(query))
 
@@ -83,5 +84,22 @@ describe('parseEventFilters con la ciudad', () => {
 
   it('una ciudad vacía es como no filtrar', () => {
     expect(parse('city=')).toEqual({ sort: 'DATE', page: 1 })
+  })
+})
+
+describe('toSearchParams', () => {
+  it('con los filtros por defecto deja la URL sin parámetros', () => {
+    expect(toSearchParams({ sort: 'DATE', page: 1 }).toString()).toBe('')
+  })
+
+  it('solo escribe los filtros que no son el valor por defecto', () => {
+    const params = toSearchParams({ q: 'serr', type: 'CONCERT', sort: 'RELEVANCE', page: 2 })
+
+    expect(Object.fromEntries(params)).toEqual({
+      q: 'serr',
+      type: 'CONCERT',
+      sort: 'RELEVANCE',
+      page: '2',
+    })
   })
 })
