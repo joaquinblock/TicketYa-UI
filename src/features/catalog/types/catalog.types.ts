@@ -1,8 +1,11 @@
-import type { EVENT_SORT, EVENT_STATUS, EVENT_TYPE } from '../constants/catalog.constants'
+import type { EVENT_SORTS, EVENT_TYPES } from '../constants/catalog.constants'
 
-export type EventType = (typeof EVENT_TYPE)[keyof typeof EVENT_TYPE]
-export type EventSort = (typeof EVENT_SORT)[keyof typeof EVENT_SORT]
-export type EventStatus = (typeof EVENT_STATUS)[keyof typeof EVENT_STATUS]
+export type EventType = (typeof EVENT_TYPES)[number]
+export type EventSort = (typeof EVENT_SORTS)[number]
+/** La cartelera solo muestra eventos publicados o agotados. */
+export type EventStatus = 'PUBLISHED' | 'SOLD_OUT'
+
+export type EventTypeLabel = { plural: string; singular: string }
 
 export type Venue = {
   id: number

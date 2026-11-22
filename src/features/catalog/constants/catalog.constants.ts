@@ -1,10 +1,7 @@
-export const EVENT_TYPE = {
-  CONCERT: 'CONCERT',
-  FESTIVAL: 'FESTIVAL',
-  THEATER: 'THEATER',
-  SPORTS: 'SPORTS',
-  CONFERENCE: 'CONFERENCE',
-} as const
+import type { EventSort, EventType, EventTypeLabel } from '../types/catalog.types'
+
+/** En el orden en que se muestran los chips. */
+export const EVENT_TYPES = ['CONCERT', 'FESTIVAL', 'THEATER', 'SPORTS', 'CONFERENCE'] as const
 
 /** Plural para el filtro ("Recitales") y singular para la card ("Recital"). */
 export const EVENT_TYPE_LABEL = {
@@ -13,26 +10,18 @@ export const EVENT_TYPE_LABEL = {
   THEATER: { plural: 'Teatro', singular: 'Teatro' },
   SPORTS: { plural: 'Deportes', singular: 'Deporte' },
   CONFERENCE: { plural: 'Conferencias', singular: 'Conferencia' },
-} as const
+} as const satisfies Record<EventType, EventTypeLabel>
 
-export const EVENT_SORT = {
-  DATE: 'DATE',
-  PRICE: 'PRICE',
-  RELEVANCE: 'RELEVANCE',
-} as const
+/** En el orden en que se muestran en "Ordenar por". */
+export const EVENT_SORTS = ['DATE', 'PRICE', 'RELEVANCE'] as const
 
 export const EVENT_SORT_LABEL = {
   DATE: 'Fecha',
   PRICE: 'Precio',
   RELEVANCE: 'Relevancia',
-} as const
+} as const satisfies Record<EventSort, string>
 
-export const EVENT_STATUS = {
-  PUBLISHED: 'PUBLISHED',
-  SOLD_OUT: 'SOLD_OUT',
-} as const
-
-export const DEFAULT_EVENT_SORT = EVENT_SORT.DATE
+export const DEFAULT_EVENT_SORT = 'DATE' satisfies EventSort
 export const FIRST_PAGE = 1
 
 /** 8 por página: dentro del 7 ± 2 de Miller y 2 filas de 4 en escritorio. */
