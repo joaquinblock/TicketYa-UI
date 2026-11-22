@@ -2,6 +2,9 @@ import { useEventFilters } from '../../hooks/useEventFilters'
 import { useEventSearch } from '../../hooks/useEventSearch'
 import type { EventSummary } from '../../types/catalog.types'
 import { EventCard } from '../EventCard/EventCard'
+import { EventFilters } from '../EventFilters'
+
+const COUNT_DIGITS = 2
 
 /** La cartelera: filtros, contador, resultados y sus estados. */
 export function EventBoard() {
@@ -13,8 +16,25 @@ export function EventBoard() {
       <h2 id="cartelera-titulo" className="text-4xl font-extrabold">
         Próximos eventos
       </h2>
-      {data && <EventGrid events={data.content} />}
+      <EventFilters />
+      {data && (
+        <>
+          <ResultCount total={data.totalElements} />
+          <EventGrid events={data.content} />
+        </>
+      )}
     </section>
+  )
+}
+
+function ResultCount({ total }: { total: number }) {
+  return (
+    <p aria-live="polite" className="flex items-baseline gap-2">
+      <span className="font-mono text-2xl font-medium">
+        {String(total).padStart(COUNT_DIGITS, '0')}
+      </span>
+      <span className="text-subtle">{total === 1 ? 'evento' : 'eventos'}</span>
+    </p>
   )
 }
 
