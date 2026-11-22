@@ -21,4 +21,11 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // Las tablas de rutas exportan JSX, no componentes: Fast Refresh no tiene nada que preservar.
+    files: ['**/*.route.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])

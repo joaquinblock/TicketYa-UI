@@ -1,9 +1,10 @@
 import { AppProviders } from './AppProviders'
+import { AppRouter } from './AppRouter'
 
 export function App() {
   return (
     <AppProviders>
-      <h1>TicketYa</h1>
+      <AppRouter />
     </AppProviders>
   )
 }
