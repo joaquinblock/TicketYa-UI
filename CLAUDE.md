@@ -43,6 +43,9 @@ Seguí siempre la skill `atomic-design`: features con Atomic Design en lo compar
 
 Inicio combina `catalog` y `preferences`, así que vive en `src/pages/`.
 
+- **Cliente HTTP:** los services de cada feature usan `apiClient.get/post/put/patch/delete` de `src/shared/lib/http/apiClient.ts`.
+- **Ruteo:** React Router con `BrowserRouter`, `<Routes>` en `src/app/AppRouter.tsx` y un `routes/<feature>.route.tsx` por feature. Los paths viven todos en `src/shared/lib/routes.ts`, porque el header, el footer y la compra enlazan entre features.
+
 ## Tests
 
 **Sin MSW.** Los tests que tocan la red van contra el backend real a través del gateway, con el perfil `dev` del auth-service. La fuente de verdad son los datos que devuelven los seeders del backend. Esto reemplaza lo que dice `workflow-ui` sobre MSW.

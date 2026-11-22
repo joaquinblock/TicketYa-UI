@@ -18,9 +18,9 @@ La consigna valora una interfaz gráfica que consuma la API por el gateway y cub
 
 ## Alternativas consideradas
 
-- **Monorepo con Turborepo** (una app por rol y un paquete de UI), como Hestia y Kairos: el producto es uno solo, con el mismo login, y la configuración de paquetes no se paga en dos días.
+- **Monorepo con Turborepo** (una app por rol y un paquete de UI): el producto es uno solo, con el mismo login, y la configuración de paquetes no se paga en dos días.
 - **MSW para la red:** descartado para no probar contra respuestas inventadas.
-- **Carpeta `components/ui` plana**, como Kairos: crece sin orden cuando entran componentes de una sola pantalla.
+- **Carpeta `components/ui` plana:** crece sin orden cuando entran componentes de una sola pantalla.
 
 ## Consecuencias
 
