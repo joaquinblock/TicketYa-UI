@@ -27,3 +27,13 @@ describe('parseEventFilters con fechas', () => {
     expect(parse('from=mañana&to=2026-13-45')).toEqual({ sort: 'DATE', page: 1 })
   })
 })
+
+describe('parseEventFilters con un rango invertido', () => {
+  it('descarta "hasta" si es anterior a "desde" y mantiene "desde"', () => {
+    expect(parse('from=2026-12-20&to=2026-12-10')).toEqual({
+      from: '2026-12-20',
+      sort: 'DATE',
+      page: 1,
+    })
+  })
+})
