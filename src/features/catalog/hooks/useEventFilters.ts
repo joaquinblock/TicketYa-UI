@@ -14,7 +14,15 @@ export function useEventFilters() {
     setSearchParams(toSearchParams({ ...filters, page: FIRST_PAGE, ...changes }))
   }
 
-  return { filters, updateFilters }
+  /** Conserva el orden elegido: no es un filtro. Sin texto, el schema descarta la relevancia. */
+  const clearFilters = () => {
+    setSearchParams(toSearchParams({ sort: filters.sort, page: FIRST_PAGE }))
+  }
+
+  const { q, type, city, from, to } = filters
+  const hasActiveFilters = [q, type, city, from, to].some(Boolean)
+
+  return { filters, hasActiveFilters, updateFilters, clearFilters }
 }
 
 /**

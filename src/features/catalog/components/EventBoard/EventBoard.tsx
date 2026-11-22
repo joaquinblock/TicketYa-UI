@@ -1,3 +1,5 @@
+import { SearchX } from 'lucide-react'
+import { Button } from '@/shared/components/atoms/Button'
 import { Select } from '@/shared/components/atoms/Select'
 import { EVENT_SORT_LABEL, EVENT_SORTS } from '../../constants/catalog.constants'
 import { useEventFilters, useSanitizedFiltersUrl } from '../../hooks/useEventFilters'
@@ -20,11 +22,42 @@ export function EventBoard() {
       <EventFilters />
       {data && (
         <>
-          <ResultCount total={data.totalElements} />
-          <EventGrid events={data.content} />
+          <ResultSummary total={data.totalElements} />
+          {data.totalElements > 0 ? <EventGrid events={data.content} /> : <NoResults />}
         </>
       )}
     </section>
+  )
+}
+
+/** "Limpiar filtros" queda a la vista siempre que haya algo que limpiar. */
+function ResultSummary({ total }: { total: number }) {
+  const { hasActiveFilters, clearFilters } = useEventFilters()
+
+  return (
+    <div className="flex min-h-11 flex-wrap items-center justify-between gap-3">
+      <ResultCount total={total} />
+      {hasActiveFilters && (
+        <Button variant="ghost" onClick={clearFilters}>
+          Limpiar filtros
+        </Button>
+      )}
+    </div>
+  )
+}
+
+function NoResults() {
+  const { clearFilters } = useEventFilters()
+
+  return (
+    <div className="flex flex-col items-center gap-2.5 rounded-card border border-dashed border-line-strong px-5 py-12 text-center text-subtle">
+      <SearchX aria-hidden className="size-11 text-line-strong" />
+      <h3 className="text-2xl text-ink">No encontramos eventos con esos filtros</h3>
+      <p>Probá con otra ciudad, otro tipo o un rango de fechas más amplio.</p>
+      <Button variant="ghost" onClick={clearFilters}>
+        Limpiar filtros
+      </Button>
+    </div>
   )
 }
 
