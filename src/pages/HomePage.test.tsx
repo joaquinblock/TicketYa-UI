@@ -123,3 +123,17 @@ describe('Cartelera: filtros desde la URL', () => {
     await waitFor(() => expect(getCurrentUrl().search).toBe(''))
   })
 })
+
+const LONGER_THAN_DEBOUNCE_MS = 400
+
+describe('Buscador: sugerencias', () => {
+  it('con una sola letra no muestra sugerencias', async () => {
+    const user = userEvent.setup()
+    renderHome()
+
+    await user.type(screen.getByRole('searchbox', { name: 'Buscar eventos' }), 's')
+    await new Promise((resolve) => setTimeout(resolve, LONGER_THAN_DEBOUNCE_MS))
+
+    expect(screen.queryByRole('list', { name: 'Sugerencias' })).not.toBeInTheDocument()
+  })
+})
