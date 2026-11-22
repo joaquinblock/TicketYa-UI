@@ -4,12 +4,19 @@ import {
   EVENT_SORTS,
   EVENT_TYPES,
   FIRST_PAGE,
+  MAX_QUERY_LENGTH,
 } from '../constants/catalog.constants'
 import type { EventFilters } from '../types/catalog.types'
 
+const queryText = z
+  .string()
+  .transform((text) => text.trim().slice(0, MAX_QUERY_LENGTH) || undefined)
+  .optional()
+  .catch(undefined)
+
 const eventFiltersSchema = z
   .object({
-    q: z.string().optional().catch(undefined),
+    q: queryText,
     type: z.enum(EVENT_TYPES).optional().catch(undefined),
     from: z.iso.date().optional().catch(undefined),
     to: z.iso.date().optional().catch(undefined),
