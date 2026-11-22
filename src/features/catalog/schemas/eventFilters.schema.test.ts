@@ -47,3 +47,13 @@ describe('parseEventFilters con la página', () => {
     expect(parse(`page=${page}`)).toEqual({ sort: 'DATE', page: 1 })
   })
 })
+
+describe('parseEventFilters con el orden por relevancia', () => {
+  it('ordena por relevancia si hay un texto buscado', () => {
+    expect(parse('q=serr&sort=RELEVANCE')).toEqual({ q: 'serr', sort: 'RELEVANCE', page: 1 })
+  })
+
+  it('sin texto buscado pasa a ordenar por fecha', () => {
+    expect(parse('sort=RELEVANCE')).toEqual({ sort: 'DATE', page: 1 })
+  })
+})
