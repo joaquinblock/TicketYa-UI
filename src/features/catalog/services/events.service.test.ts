@@ -22,3 +22,24 @@ describe('searchEvents', () => {
     })
   })
 })
+
+describe('searchEvents con filtros', () => {
+  it('con el tipo recital trae solo los 3 recitales', async () => {
+    const result = await searchEvents({ type: 'CONCERT', sort: 'DATE', page: 1 }, EVENTS_PAGE_SIZE)
+
+    expect(result.content.map((event) => event.name)).toEqual([
+      'Jazz en el puerto',
+      'Peña folklórica serrana',
+      'Los Serranos en vivo',
+    ])
+  })
+
+  it('con la ciudad en minúscula trae los 2 eventos de Tandil', async () => {
+    const result = await searchEvents({ city: 'tandil', sort: 'DATE', page: 1 }, EVENTS_PAGE_SIZE)
+
+    expect(result.content.map((event) => event.name)).toEqual([
+      'Peña folklórica serrana',
+      'La casa de las sierras',
+    ])
+  })
+})
