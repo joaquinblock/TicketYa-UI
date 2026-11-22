@@ -4,6 +4,13 @@
 
 Frontend de TicketYa. Consume la API del backend a través del api-gateway (`http://localhost:8080`).
 
+## UX
+
+- Las decisiones de UX (ítems por página, opciones visibles, tamaño y posición de las acciones, agrupación, mensajes) se justifican con la skill `ux-psychology`, citando la ley, en `/ticket`, `/tracker` y `/rdd`. No se deciden por lo que trae el seeder.
+- **Antes de crear la rama `feat/` de una página**, repasá su pantalla en el mockup (artifact y copia en `project/`, ver `MOCKUP.md`) con `ux-psychology`, en escritorio y mobile. Si algo está mal, se corrige primero el mockup y se trabaja desde la versión corregida: el mockup sigue siendo el contrato visual.
+
+**Es un TP de facultad.** No hay que perderlo de vista: ante dos soluciones, va la más simple que cumple la consigna. Por ejemplo, las imágenes de los eventos son una URL de internet guardada como atributo del evento (el organizador la pega al publicar, no sube un archivo). Guardarlas en otra base o en un storage aparte sería lo correcto en producción, pero acá es sobreingeniería.
+
 ## Específico de Claude Code
 
 - Los reviewers están en `~/.claude/agents/`. No los lances directamente: `/rdd` decide cuáles hacen falta.
