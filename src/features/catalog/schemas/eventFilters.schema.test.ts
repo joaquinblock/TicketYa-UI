@@ -8,3 +8,10 @@ describe('parseEventFilters', () => {
     expect(parse('')).toEqual({ sort: 'DATE', page: 1 })
   })
 })
+
+describe('parseEventFilters descarta lo inválido', () => {
+  it('conserva un tipo que existe e ignora uno que no', () => {
+    expect(parse('type=CONCERT')).toEqual({ type: 'CONCERT', sort: 'DATE', page: 1 })
+    expect(parse('type=FOO')).toEqual({ sort: 'DATE', page: 1 })
+  })
+})
