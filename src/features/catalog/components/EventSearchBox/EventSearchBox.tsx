@@ -1,23 +1,74 @@
 import { Search } from 'lucide-react'
+import type { FocusEvent } from 'react'
+import { Link } from 'react-router-dom'
+import { ROUTES } from '@/shared/lib/routes'
+import { getEventDateParts } from '../../lib/eventFormat'
+import type { EventSummary } from '../../types/catalog.types'
 import { useEventSearchBox } from './useEventSearchBox'
 
+const SUGGESTIONS_ID = 'sugerencias'
+
 export function EventSearchBox() {
-  const { text, setText } = useEventSearchBox()
+  const searchBox = useEventSearchBox()
+
+  /** Se cierra solo si el foco sale del buscador entero, no si pasa a una sugerencia. */
+  const closeWhenFocusLeaves = (event: FocusEvent<HTMLDivElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) searchBox.closeSuggestions()
+  }
 
   return (
-    <form role="search" className="flex max-w-155 gap-2 rounded-card bg-surface p-2 shadow-2xl">
-      <label className="flex min-h-13 flex-1 items-center gap-2.5 px-3 text-subtle">
-        <Search aria-hidden className="size-5" />
-        <span className="sr-only">Buscar eventos</span>
-        <input
-          type="search"
-          autoComplete="off"
-          placeholder="Artista, equipo, obra o disertante"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          className="w-full min-w-0 bg-transparent text-control text-ink outline-none"
-        />
-      </label>
-    </form>
+    <div className="relative max-w-155" onBlur={closeWhenFocusLeaves}>
+      <form role="search" className="flex gap-2 rounded-card bg-surface p-2 shadow-2xl">
+        <label className="flex min-h-13 flex-1 items-center gap-2.5 px-3 text-subtle">
+          <Search aria-hidden className="size-5" />
+          <span className="sr-only">Buscar eventos</span>
+          <input
+            type="search"
+            autoComplete="off"
+            placeholder="Artista, equipo, obra o disertante"
+            aria-controls={SUGGESTIONS_ID}
+            aria-expanded={searchBox.areSuggestionsOpen}
+            value={searchBox.text}
+            onChange={(event) => searchBox.setText(event.target.value)}
+            onFocus={searchBox.openSuggestions}
+            className="w-full min-w-0 bg-transparent text-control text-ink outline-none"
+          />
+        </label>
+      </form>
+      {searchBox.areSuggestionsOpen && <SuggestionList suggestions={searchBox.suggestions} />}
+    </div>
+  )
+}
+
+function SuggestionList({ suggestions }: { suggestions: EventSummary[] }) {
+  return (
+    <ul
+      id={SUGGESTIONS_ID}
+      aria-label="Sugerencias"
+      // Que el input no pierda el foco al tocar una sugerencia: si no, la lista se cierra antes del click.
+      onMouseDown={(event) => event.preventDefault()}
+      className="absolute inset-x-0 top-[calc(100%+6px)] z-15 flex flex-col rounded-xl border border-line-strong bg-surface p-1.5 text-ink shadow-2xl"
+    >
+      {suggestions.map((event) => (
+        <li key={event.id}>
+          <SuggestionLink event={event} />
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function SuggestionLink({ event }: { event: EventSummary }) {
+  const { day, month } = getEventDateParts(event.dateTime)
+  return (
+    <Link
+      to={ROUTES.event(event.id)}
+      className="flex min-h-11 flex-col justify-center gap-0.5 rounded-lg px-3 py-1.5 text-control text-ink no-underline hover:bg-surface-hover hover:text-ink"
+    >
+      <strong>{event.name}</strong>
+      <span className="text-label text-muted">
+        {Number(day)} {month.toLowerCase()} · {event.venue.city}
+      </span>
+    </Link>
   )
 }
