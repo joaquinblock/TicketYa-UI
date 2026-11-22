@@ -12,7 +12,7 @@ export function MainNav() {
   return (
     <nav
       aria-label="Principal"
-      className="col-span-full row-start-2 flex min-h-11 justify-center gap-6 self-stretch md:col-span-1 md:row-start-1 md:gap-8"
+      className="col-span-full row-start-2 flex min-h-11 justify-center gap-6 self-stretch md:col-span-1 md:col-start-2 md:row-start-1 md:gap-8"
     >
       {NAV_ITEMS.map(({ to, label }) => (
         <NavLink
