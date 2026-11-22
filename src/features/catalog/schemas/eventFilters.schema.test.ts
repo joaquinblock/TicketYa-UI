@@ -37,3 +37,13 @@ describe('parseEventFilters con un rango invertido', () => {
     })
   })
 })
+
+describe('parseEventFilters con la página', () => {
+  it('conserva una página válida', () => {
+    expect(parse('page=3')).toEqual({ sort: 'DATE', page: 3 })
+  })
+
+  it.each(['dos', '0', '-3', '1.5'])('con page=%s vuelve a la página 1', (page) => {
+    expect(parse(`page=${page}`)).toEqual({ sort: 'DATE', page: 1 })
+  })
+})
