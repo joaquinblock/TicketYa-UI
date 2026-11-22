@@ -42,6 +42,13 @@ export function parseEventFilters(searchParams: URLSearchParams): EventFilters {
   return eventFiltersSchema.parse(Object.fromEntries(searchParams))
 }
 
-export function toSearchParams(_filters: EventFilters): URLSearchParams {
-  return new URLSearchParams('sin=implementar')
+/** Escribe solo lo que no es el valor por defecto, para que la URL sin filtros quede limpia. */
+export function toSearchParams({ sort, page, ...textFilters }: EventFilters): URLSearchParams {
+  const params = new URLSearchParams()
+  Object.entries(textFilters).forEach(([key, value]) => {
+    if (value) params.set(key, value)
+  })
+  if (sort !== DEFAULT_EVENT_SORT) params.set('sort', sort)
+  if (page !== FIRST_PAGE) params.set('page', String(page))
+  return params
 }
