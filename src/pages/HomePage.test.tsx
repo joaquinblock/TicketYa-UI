@@ -137,3 +137,45 @@ describe('Buscador: sugerencias', () => {
     expect(screen.queryByRole('list', { name: 'Sugerencias' })).not.toBeInTheDocument()
   })
 })
+
+const SUGGESTIONS_TIMEOUT = { timeout: 3000 }
+
+async function typeInSearchBox(text: string) {
+  const user = userEvent.setup()
+  await user.type(screen.getByRole('searchbox', { name: 'Buscar eventos' }), text)
+  return user
+}
+
+async function findSuggestionLinks() {
+  const list = await screen.findByRole('list', { name: 'Sugerencias' }, SUGGESTIONS_TIMEOUT)
+  return within(list).getAllByRole('link')
+}
+
+describe('Buscador: sugerencias que coinciden', () => {
+  it('con "serr" sugiere hasta 5 eventos, entre ellos la peña y Los Serranos', async () => {
+    renderHome()
+
+    await typeInSearchBox('serr')
+    const links = await findSuggestionLinks()
+
+    expect(links.length).toBeLessThanOrEqual(5)
+    const names = links.map((link) => link.textContent)
+    expect(names).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('Peña folklórica serrana'),
+        expect.stringContaining('Los Serranos en vivo'),
+      ]),
+    )
+  })
+
+  it('al tocar una sugerencia voy al detalle de ese evento', async () => {
+    renderHome()
+
+    const user = await typeInSearchBox('serr')
+    const links = await findSuggestionLinks()
+    const peña = links.find((link) => link.textContent?.includes('Peña folklórica serrana'))
+    await user.click(peña!)
+
+    expect(getCurrentUrl().pathname).toBe('/eventos/11')
+  })
+})
