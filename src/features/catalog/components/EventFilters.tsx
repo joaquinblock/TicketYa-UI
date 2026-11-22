@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Chip } from '@/shared/components/atoms/Chip'
+import { Input } from '@/shared/components/atoms/Input'
 import { Select } from '@/shared/components/atoms/Select'
 import { EVENT_TYPE_LABEL, EVENT_TYPES } from '../constants/catalog.constants'
 import { useCities } from '../hooks/useCities'
@@ -11,6 +12,7 @@ export function EventFilters() {
       <EventTypeChips />
       <div className="grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-2.5 border-t border-line pt-3">
         <CityFilter />
+        <DateRangeFilter />
       </div>
     </div>
   )
@@ -51,6 +53,31 @@ function CityFilter() {
         ))}
       </Select>
     </FilterField>
+  )
+}
+
+/** "Hasta" arranca en "Desde": el backend rechaza un rango invertido. */
+function DateRangeFilter() {
+  const { filters, updateFilters } = useEventFilters()
+
+  return (
+    <>
+      <FilterField label="Desde">
+        <Input
+          type="date"
+          value={filters.from ?? ''}
+          onChange={(event) => updateFilters({ from: event.target.value })}
+        />
+      </FilterField>
+      <FilterField label="Hasta">
+        <Input
+          type="date"
+          min={filters.from}
+          value={filters.to ?? ''}
+          onChange={(event) => updateFilters({ to: event.target.value })}
+        />
+      </FilterField>
+    </>
   )
 }
 

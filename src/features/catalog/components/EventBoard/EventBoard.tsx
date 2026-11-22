@@ -1,4 +1,4 @@
-import { useEventFilters } from '../../hooks/useEventFilters'
+import { useEventFilters, useSanitizedFiltersUrl } from '../../hooks/useEventFilters'
 import { useEventSearch } from '../../hooks/useEventSearch'
 import type { EventSummary } from '../../types/catalog.types'
 import { EventCard } from '../EventCard/EventCard'
@@ -8,6 +8,7 @@ const COUNT_DIGITS = 2
 
 /** La cartelera: filtros, contador, resultados y sus estados. */
 export function EventBoard() {
+  useSanitizedFiltersUrl()
   const { filters } = useEventFilters()
   const { data } = useEventSearch(filters)
 
