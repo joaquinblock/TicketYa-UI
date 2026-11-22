@@ -1,19 +1,11 @@
 import { NavLink } from 'react-router-dom'
 import { cn } from '@/shared/lib/cn'
-import { ROUTES } from '@/shared/lib/routes'
+import { NAV_ITEMS } from './navItems.constants'
 
-const NAV_ITEMS = [
-  { to: ROUTES.home, label: 'Explorar' },
-  { to: ROUTES.myTickets, label: 'Mis entradas' },
-  { to: ROUTES.preferences, label: 'Preferencias' },
-] as const
-
+/** Navegación de escritorio. En mobile la reemplaza `MobileNav`. */
 export function MainNav() {
   return (
-    <nav
-      aria-label="Principal"
-      className="col-span-full row-start-2 flex min-h-11 justify-center gap-6 self-stretch md:col-span-1 md:col-start-2 md:row-start-1 md:gap-8"
-    >
+    <nav aria-label="Principal" className="hidden gap-8 self-stretch md:col-start-2 md:flex">
       {NAV_ITEMS.map(({ to, label }) => (
         <NavLink
           key={to}
