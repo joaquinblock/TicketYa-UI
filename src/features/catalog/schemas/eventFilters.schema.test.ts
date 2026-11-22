@@ -71,3 +71,17 @@ describe('parseEventFilters con el texto buscado', () => {
     expect(parse(`q=${'a'.repeat(101)}`).q).toBe('a'.repeat(100))
   })
 })
+
+describe('parseEventFilters con la ciudad', () => {
+  it('conserva la ciudad elegida', () => {
+    expect(parse('city=Mar%20del%20Plata')).toEqual({
+      city: 'Mar del Plata',
+      sort: 'DATE',
+      page: 1,
+    })
+  })
+
+  it('una ciudad vacía es como no filtrar', () => {
+    expect(parse('city=')).toEqual({ sort: 'DATE', page: 1 })
+  })
+})
