@@ -1,0 +1,59 @@
+@import 'tailwindcss';
+
+/* Tokens del mockup (MOCKUP.md → Design system usado). Ningún componente usa colores sueltos. */
+@theme {
+  --color-background: #f2f1ec;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f6f5f1;
+  --color-ink: #141414;
+  --color-ink-hover: #2b2926;
+  --color-muted: #5c5a55;
+  --color-subtle: #77736b;
+  --color-line: #e4e1d9;
+  --color-line-strong: #d9d6ce;
+  --color-accent: #ffc531;
+  --color-accent-hover: #f0b51c;
+  --color-link: #1d4ed8;
+  --color-link-hover: #1e3a8a;
+  --color-success: #ddf1e6;
+  --color-success-ink: #14532d;
+  --color-error: #fbe3e1;
+  --color-error-ink: #8a1c13;
+  --color-warning: #fff1cc;
+  --color-warning-ink: #5c4200;
+  --color-seat-free: #eef3e9;
+  --color-footer: #f8f7f3;
+  --color-footer-line: #e1ded7;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Archivo', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --text-micro: 11px;
+  --text-label: 13px;
+  --text-control: 15px;
+  --text-brand: 22px;
+
+  --radius-control: 10px;
+  --radius-card: 14px;
+}
+
+@layer base {
+  body {
+    @apply bg-background font-sans text-ink;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+
+  a {
+    @apply text-link hover:text-link-hover;
+  }
+
+  :focus-visible {
+    @apply outline-3 outline-offset-3 outline-link;
+  }
+}
