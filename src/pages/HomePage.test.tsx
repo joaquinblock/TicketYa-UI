@@ -5,6 +5,7 @@ import { LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
 import userEvent from '@testing-library/user-event'
 import { getCurrentUrl } from '@/test/LocationProbe'
+import { waitFor } from '@testing-library/react'
 
 function renderHome(route = '/') {
   return renderWithProviders(
@@ -50,5 +51,29 @@ describe('Cartelera: ir al detalle', () => {
     await user.click(within(jazz).getByRole('link'))
 
     expect(getCurrentUrl().pathname).toBe('/eventos/6')
+  })
+})
+
+async function expectEventNames(names: string[]) {
+  await waitFor(async () => {
+    const cards = await findEventCards()
+    expect(cards.map((card) => within(card).getByRole('heading').textContent)).toEqual(names)
+  })
+}
+
+const CONCERTS = ['Jazz en el puerto', 'Peña folklórica serrana', 'Los Serranos en vivo']
+
+describe('Cartelera: filtrar por tipo', () => {
+  it('al elegir "Recitales" veo los 3 recitales, el contador dice 03 y la URL tiene el tipo', async () => {
+    const user = userEvent.setup()
+    renderHome()
+    await findEventCards()
+
+    const types = screen.getByRole('group', { name: 'Tipo de evento' })
+    await user.click(within(types).getByRole('button', { name: 'Recitales' }))
+
+    await expectEventNames(CONCERTS)
+    expect(screen.getByText('03')).toBeInTheDocument()
+    expect(getCurrentUrl().searchParams.get('type')).toBe('CONCERT')
   })
 })
