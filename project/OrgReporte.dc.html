@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Reporte del evento</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F2F1EC;color:#141414;font-family:Inter,system-ui,sans-serif}
+a{color:#1D4ED8}a:hover{color:#1E3A8A}
+h1,h2,h3{font-family:Archivo,sans-serif;letter-spacing:-0.02em;margin:0}
+.mock{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 24px;background:#141414;color:#F2F1EC;font-size:13px}
+.mock a{color:#F2F1EC;text-decoration:none;padding:4px 12px;border-radius:999px;border:1px solid #57544E}
+.mock a.on{background:#FFC531;color:#141414;border-color:#FFC531}
+.shell{display:flex;flex-wrap:wrap;flex:1}
+.side{flex:1 1 240px;max-width:100%;background:#141414;color:#F2F1EC;padding:20px 16px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box}
+.side .logo{font-family:Archivo,sans-serif;font-weight:800;font-size:22px;color:#FFFFFF;text-decoration:none;display:flex;align-items:center;gap:8px;padding:0 8px}
+.side nav{display:flex;flex-direction:column;gap:2px}
+.side nav a{color:#E8E6E0;text-decoration:none;padding:12px;border-radius:8px;font-weight:500}
+.side nav a.on{background:#2B2926;color:#FFFFFF;box-shadow:inset 3px 0 0 #FFC531}
+.content{flex:999 1 640px;min-width:0;padding:32px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px}
+.card{background:#FFFFFF;border:1px solid #D9D6CE;border-radius:14px}
+.muted{color:#5C5A55}
+.label{font-size:13px;font-weight:600;color:#5C5A55;display:block;margin-bottom:6px}
+.field{width:100%;box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #BDB9AF;border-radius:10px;background:#FFFFFF;font:15px Inter,sans-serif;color:#141414}
+.kpi{padding:20px;display:flex;flex-direction:column;gap:6px}
+.kpi .v{font-family:Archivo,sans-serif;font-weight:800;font-size:34px;letter-spacing:-0.02em}
+.kpi .l{font-size:13px;font-weight:600;color:#5C5A55}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#5C5A55;padding:12px 16px;border-bottom:1px solid #D9D6CE;font-weight:600;white-space:nowrap}
+td{padding:14px 16px;border-bottom:1px solid #ECEAE3;vertical-align:middle;white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.occ{display:flex;align-items:center;gap:10px;min-width:180px}
+.occ .t{flex:1;height:10px;border-radius:999px;background:#ECEAE3;overflow:hidden}
+.occ .t span{display:block;height:100%;background:#141414}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column">
+  <nav class="mock" aria-label="Vistas del mockup">
+    <strong style="margin-right: 4px">Mockup · ver como</strong>
+    <a href="Main.dc.html">Cliente</a>
+    <a class="on" href="OrgEventos.dc.html">Organizador</a>
+    <a href="AdminGestion.dc.html">Administrador</a>
+    <a href="Acceso.dc.html">Personal de acceso</a>
+  </nav>
+  <div class="shell">
+    <aside class="side">
+      <a class="logo" href="OrgEventos.dc.html">
+        <svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true"><path d="M2 2h24v5a3 3 0 0 0 0 6v5H2v-5a3 3 0 0 0 0-6z" fill="#FFC531" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/></svg>
+        TicketYa
+      </a>
+      <div style="padding: 0 12px; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; color: #BDB9AF">Organización</span>
+        <strong>Producciones del Sur</strong>
+      </div>
+      <nav aria-label="Organizador">
+        <a href="OrgEventos.dc.html">Mis eventos</a>
+        <a href="OrgEditor.dc.html">Nuevo evento</a>
+        <a class="on" href="OrgReporte.dc.html">Reportes</a>
+      </nav>
+      <span style="margin-top: auto; padding: 0 12px; font-size: 13px; color: #BDB9AF">Martín López · Organizador</span>
+    </aside>
+
+    <main class="content">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="font-size: 34px">Reporte del evento</h1>
+          <span class="muted">Entradas vendidas y devueltas por sector, ocupación y recaudación.</span>
+        </div>
+        <div style="min-width: 280px">
+          <label class="label" for="ev">Evento</label>
+          <select id="ev" class="field" value="{{eventId}}" onChange="{{pick}}">
+            <option value="1">Los Serranos en vivo · 13 dic</option>
+            <option value="4">Atlético Sur vs. Deportivo Norte · 6 dic</option>
+            <option value="7">Jazz en el Patio · 2 nov</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+        <div class="card kpi"><span class="l">Entradas vendidas</span><span class="v">{{sold}}</span><span class="muted" style="font-size: 13px">de {{cap}} lugares</span></div>
+        <div class="card kpi"><span class="l">Devueltas</span><span class="v">{{returned}}</span><span class="muted" style="font-size: 13px">reintegradas al cliente</span></div>
+        <div class="card kpi"><span class="l">Ocupación</span><span class="v">{{occ}}</span><span class="muted" style="font-size: 13px">vendidas menos devueltas</span></div>
+        <div class="card kpi" style="background: #141414; color: #FFFFFF; border-color: #141414"><span class="l" style="color: #D9D6CE">Recaudación</span><span class="v">{{revenue}}</span><span style="font-size: 13px; color: #D9D6CE">neta de devoluciones</span></div>
+      </div>
+
+      <section class="card" style="overflow-x: auto" aria-labelledby="porsector">
+        <h2 id="porsector" style="font-size: 20px; padding: 18px 16px 6px">Por sector</h2>
+        <table>
+          <thead><tr><th scope="col">Sector</th><th scope="col" class="num">Capacidad</th><th scope="col" class="num">Vendidas</th><th scope="col" class="num">Devueltas</th><th scope="col">Ocupación</th><th scope="col" class="num">Recaudación</th></tr></thead>
+          <tbody>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+              <tr>
+                <td><strong>{{r.name}}</strong></td>
+                <td class="num">{{r.cap}}</td>
+                <td class="num">{{r.sold}}</td>
+                <td class="num">{{r.returned}}</td>
+                <td><div class="occ"><span class="t" aria-hidden="true"><span style="{{r.bar}}"></span></span><span style="font-variant-numeric: tabular-nums; min-width: 44px; text-align: right">{{r.occ}}</span></div></td>
+                <td class="num"><strong>{{r.revenue}}</strong></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </section>
+      <p class="muted" style="margin: 0; font-size: 13px">Actualizado hace 1 minuto. Los datos de venta no se cachean.</p>
+    </main>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { eventId: '1' };
+  }
+  renderVals() {
+    const data = {
+      '1': [['Campo', 5000, 3812, 46, 45000], ['Platea baja', 112, 74, 3, 68000], ['Platea alta', 140, 140, 2, 55000], ['Palco VIP', 16, 13, 0, 120000]],
+      '4': [['Popular', 4000, 4000, 12, 15000], ['Platea', 1268, 1268, 5, 22000]],
+      '7': [['Patio', 74, 61, 4, 12000]]
+    }[this.state.eventId];
+    const fmt = (n) => n.toLocaleString('es-AR');
+    const money = (n) => '$' + (n >= 1e6 ? (n / 1e6).toLocaleString('es-AR', { maximumFractionDigits: 1 }) + ' M' : fmt(n));
+    const pct = (n) => Math.round(n * 100) + '%';
+    const rows = data.map(([name, cap, sold, returned, price]) => {
+      const net = sold - returned;
+      return { name, cap: fmt(cap), sold: fmt(sold), returned: fmt(returned), occ: pct(net / cap), bar: 'width:' + Math.round(100 * net / cap) + '%', revenue: money(net * price), _net: net, _cap: cap, _sold: sold, _ret: returned, _rev: net * price };
+    });
+    const sum = (k) => rows.reduce((a, r) => a + r[k], 0);
+    return {
+      eventId: this.state.eventId,
+      pick: (e) => this.setState({ eventId: e.target.value }),
+      rows,
+      sold: fmt(sum('_sold')), cap: fmt(sum('_cap')), returned: fmt(sum('_ret')),
+      occ: pct(sum('_net') / sum('_cap')), revenue: money(sum('_rev'))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>TicketYa inicio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F2F1EC;color:#141414;font-family:Inter,system-ui,sans-serif}
+a{color:#1D4ED8}a:hover{color:#1E3A8A}
+h1,h2,h3{font-family:Archivo,sans-serif;letter-spacing:-0.02em;margin:0}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #1D4ED8;outline-offset:3px}
+.mock{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 24px;background:#141414;color:#F2F1EC;font-size:13px}
+.mock a{color:#F2F1EC;text-decoration:none;padding:4px 12px;border-radius:999px;border:1px solid #57544E}
+.mock a.on{background:#FFC531;color:#141414;border-color:#FFC531}
+.top{position:sticky;top:0;z-index:20;background:#FFFFFF;border-bottom:1px solid #E9E7E1}
+.top-in{max-width:1240px;margin:0 auto;padding:0 28px;min-height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.brand{display:inline-flex;align-items:center;gap:9px;font-family:Archivo,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.03em;color:#141414;text-decoration:none;justify-self:start}
+.brand-icon{width:35px;height:35px;border-radius:10px;background:#FFC531;display:grid;place-items:center}
+.cnav{display:flex;gap:32px;align-self:stretch}
+.cnav a{display:flex;align-items:center;color:#5C5A55;text-decoration:none;font-size:14px;font-weight:600;position:relative}
+.cnav a:hover,.cnav a.on{color:#141414}
+.cnav a.on:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:#FFC531;border-radius:3px 3px 0 0}
+.acts{justify-self:end;display:flex;align-items:center;gap:14px;position:relative}
+.icon-btn{position:relative;width:44px;height:44px;border-radius:50%;border:0;background:#FFFFFF;display:grid;place-items:center;cursor:pointer;color:#141414}
+.icon-btn:hover{background:#F6F5F1}
+.dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:#D44335;border:1px solid #FFFFFF}
+.avatar{width:34px;height:34px;border-radius:50%;background:#EEE9DD;display:grid;place-items:center;font-size:12px;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 20px;border-radius:10px;border:1px solid #141414;background:#141414;color:#FFFFFF;font:600 15px Inter,sans-serif;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.btn:hover{background:#2B2926;color:#FFFFFF}
+.btn.accent{background:#FFC531;border-color:#FFC531;color:#141414}
+.btn.accent:hover{background:#F0B51C;color:#141414}
+.btn.ghost{background:#FFFFFF;color:#141414;border-color:#D9D6CE}
+.hero{position:relative;overflow:hidden;background:#1A1612;color:#FFFFFF}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%}
+.hero-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,20,20,.88) 0%,rgba(20,20,20,.62) 55%,rgba(20,20,20,.35) 100%)}
+.hero-in{position:relative;max-width:1240px;margin:0 auto;padding:72px 28px 64px;display:flex;flex-wrap:wrap;gap:48px;align-items:center;box-sizing:border-box}
+.kicker{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#E8E4DA;display:flex;align-items:center;gap:10px}
+.kicker i{display:inline-block;width:22px;height:2px;background:#FFC531}
+.search{background:#FFFFFF;border-radius:14px;padding:8px;display:flex;gap:8px;box-shadow:0 18px 50px rgba(0,0,0,.25);max-width:620px}
+.search-field{flex:1;display:flex;align-items:center;gap:10px;padding:0 12px;min-height:52px;color:#77736B;border-radius:10px}
+.search-field input{border:0;outline:0;font:15px Inter,sans-serif;color:#141414;width:100%;min-width:0;background:transparent}
+.quick{display:flex;flex-wrap:wrap;gap:8px}
+.quick button{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(20,20,20,.35);color:#FFFFFF;font:500 13px Inter,sans-serif;cursor:pointer}
+.quick button:hover{background:rgba(20,20,20,.6)}
+.tk{width:340px;max-width:100%;background:#FFFFFF;color:#141414;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.35);transform:rotate(1.5deg)}
+.tk-img{height:130px;position:relative;overflow:hidden;background:#E4E1D8}
+.tk-img img{width:100%;height:100%;object-fit:cover;display:block}
+.perf{position:relative;border-top:2px dashed #D9D6CE;margin:0 14px}
+.perf i{position:absolute;top:-10px;width:18px;height:18px;border-radius:50%;background:#1A1612}
+.perf i:first-child{left:-24px}.perf i:last-child{right:-24px}
+.clock{display:flex;gap:6px;align-items:baseline;font-family:'JetBrains Mono',monospace}
+.clock span{background:#141414;color:#FFFFFF;border-radius:6px;padding:6px 8px;font-size:22px;font-weight:500}
+.wrap{max-width:1240px;margin:0 auto;padding:56px 28px;box-sizing:border-box;width:100%}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:#77736B;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.eyebrow i{display:inline-block;width:19px;height:2px;background:#FFC531}
+.panel{background:#FFFFFF;border:1px solid #E4E1D9;border-radius:14px;padding:14px 16px}
+.chip{min-height:36px;padding:0 14px;border-radius:999px;border:1px solid transparent;background:transparent;font:500 13px Inter,sans-serif;cursor:pointer;color:#5C5A55}
+.chip:hover{background:#F7F5EF}
+.chip.on{background:#141414;color:#FFFFFF}
+.sel{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:#77736B}
+.sel select,.sel input{min-height:40px;border:1px solid #E1DED6;border-radius:8px;padding:0 10px;background:#FFFFFF;font:13px Inter,sans-serif;color:#141414}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:18px}
+.card{display:flex;flex-direction:column;text-decoration:none;color:#141414;background:#FFFFFF;border:1px solid #E6E3DC;border-radius:14px;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(23,19,12,.08);color:#141414}
+.card-img{aspect-ratio:16/9;position:relative;background:#E4E1D8;overflow:hidden}
+.card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+.card:hover .card-img img{transform:scale(1.035)}
+.date{position:absolute;left:13px;bottom:0;width:57px;height:65px;background:#141414;color:#FFFFFF;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:8px 8px 0 0}
+.date span{font-size:10px;letter-spacing:.1em;color:#D4D1CA;font-weight:600}
+.date b{font-family:Archivo,sans-serif;font-size:27px;line-height:1.05}
+.flag{position:absolute;right:11px;top:11px;border-radius:5px;padding:6px 9px;font-size:11px;font-weight:700}
+.flag.hot{background:#FFC531;color:#141414}
+.flag.out{background:#FFFFFF;color:#5C5A55}
+.meta{display:flex;align-items:center;gap:7px;color:#74716A;font-size:11px;font-weight:700;letter-spacing:.08em}
+.meta i{width:3px;height:3px;background:#C2BFB6;border-radius:50%}
+.venue{display:flex;align-items:center;gap:5px;margin:0;color:#56544F;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bottom{border-top:1px solid #EFEDE7;margin-top:auto;padding-top:12px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#77736B}
+.bottom b{color:#141414;font-size:15px;margin-left:3px}
+.rec{position:relative;border-radius:14px;overflow:hidden;min-height:280px;background:#292823;color:#FFFFFF;text-decoration:none;display:block}
+.rec img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rec .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,20,20,.85) 0%,rgba(20,20,20,.35) 62%,rgba(20,20,20,0) 100%)}
+.rec-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #EFEDE7;text-decoration:none;color:#141414}
+.foot{background:#F8F7F3;color:#5C5A55;border-top:1px solid #E1DED7}
+.foot a{color:#5C5A55;text-decoration:none;font-size:14px}
+.foot a:hover{color:#141414;text-decoration:underline}
+.foot h3{font:700 13px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#141414;margin:0 0 14px}
+.foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.overlay{position:fixed;inset:0;background:rgba(20,20,20,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:40}
+.pop{position:absolute;right:0;top:56px;width:340px;max-width:calc(100vw - 32px);background:#FFFFFF;border:1px solid #D9D6CE;border-radius:14px;box-shadow:0 15px 45px rgba(20,20,20,.1);z-index:30}
+.pop-item{display:flex;gap:11px;padding:12px 14px;border-top:1px solid #F0EFEB;font-size:13px}
+.mini{width:8px;height:8px;border-radius:50%;background:#FFC531;margin-top:6px;flex:none}
+@media (max-width:760px){
+.mock{display:none}
+.steps li:not(.cur){font-size:0;gap:0}
+.steps li:not(.cur) .n{font-size:11px}
+.steps li+li:before{width:10px}
+.top-in{grid-template-columns:1fr auto;padding:0 16px}
+.cnav{grid-column:1/-1;grid-row:2;justify-content:center;gap:24px;min-height:44px}
+.hero-in{padding:44px 16px}
+.tk{transform:none}
+.wrap{padding:40px 16px}
+.name-lbl{display:none}
+}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column">
+  <nav class="mock" aria-label="Vistas del mockup">
+    <strong style="margin-right: 4px">Mockup · ver como</strong>
+    <a class="on" href="MainMobile.dc.html">Cliente</a>
+    <a href="OrgEventos.dc.html">Organizador</a>
+    <a href="AdminGestion.dc.html">Administrador</a>
+    <a href="Acceso.dc.html">Personal de acceso</a>
+  </nav>
+
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="MainMobile.dc.html" aria-label="TicketYa, inicio">
+        <span class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></span>
+        TicketYa
+      </a>
+      <nav class="cnav" aria-label="Principal">
+        <a class="on" href="MainMobile.dc.html">Explorar</a>
+        <a href="EntradasMobile.dc.html">Mis entradas</a>
+        <a href="PerfilMobile.dc.html">Preferencias</a>
+      </nav>
+      <div class="acts">
+        <sc-if value="{{logged}}" hint-placeholder-val="{{ true }}">
+          <button class="icon-btn" aria-label="Notificaciones, 2 sin leer" onClick="{{toggleBell}}">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            <span class="dot"></span>
+          </button>
+          <button class="icon-btn" style="width: auto; border-radius: 999px; padding: 0 6px; gap: 8px; display: flex; font: 600 14px Inter, sans-serif" onClick="{{logout}}" aria-label="Ana García, salir">
+            <span class="avatar" aria-hidden="true">AG</span><span class="name-lbl">Ana García</span>
+          </button>
+        </sc-if>
+        <sc-if value="{{loggedOut}}" hint-placeholder-val="{{ false }}">
+          <button class="btn" onClick="{{openLogin}}">Ingresar</button>
+        </sc-if>
+        <sc-if value="{{bellOpen}}" hint-placeholder-val="{{ false }}">
+          <div class="pop" role="dialog" aria-label="Notificaciones">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px"><strong>Notificaciones</strong><a href="PerfilMobile.dc.html" style="font-size: 13px; font-weight: 600">Ver todas</a></div>
+            <div class="pop-item"><span class="mini"></span><div><strong>Los Serranos en tu ciudad</strong><br><span style="color: #67645E">Publicaron una fecha en el Estadio del Sur · Hace 2 h</span></div></div>
+            <div class="pop-item"><span class="mini" style="background: #D44335"></span><div><strong>Noche de Stand-up se canceló</strong><br><span style="color: #67645E">Tu reintegro de $18.000 está en camino · Ayer</span></div></div>
+            <div class="pop-item"><span class="mini" style="background: #1C8A54"></span><div><strong>Compra confirmada</strong><br><span style="color: #67645E">2 entradas para Hamlet · Hace 3 días</span></div></div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <img class="hero-img" src="/_blob/18000e265ddf3a48ea891ba80c163e42" alt="">
+    <div class="hero-shade"></div>
+    <div class="hero-in">
+      <div style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 22px">
+        <span class="kicker"><i></i>Recitales · festivales · teatro · partidos · conferencias</span>
+        <h1 id="hero-title" style="font-size: clamp(44px, 6.4vw, 84px); line-height: .95; letter-spacing: -0.035em; max-width: 760px">Nadie más tiene <span style="color: #FFC531">tu lugar.</span></h1>
+        <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #ECE9E2; max-width: 560px">Elegís el asiento, te lo guardamos 10 minutos mientras pagás y la entrada te llega con un QR que vale una sola vez. Aunque haya miles comprando al mismo tiempo.</p>
+        <form class="search" role="search" onSubmit="{{submitSearch}}">
+          <label class="search-field">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span style="position: absolute; left: -9999px">Buscar eventos</span>
+            <input type="search" placeholder="Artista, equipo, obra o disertante" value="{{q}}" onChange="{{setQ}}">
+          </label>
+          <a class="btn accent" href="#eventos" style="min-height: 52px; padding: 0 24px">Buscar</a>
+        </form>
+        <div class="quick" aria-label="Accesos rápidos">
+          <sc-for list="{{quick}}" as="k" hint-placeholder-count="5">
+            <button onClick="{{k.pick}}">{{k.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <aside class="tk" aria-labelledby="tk-title" style="flex: 1 1 300px">
+        <div class="tk-img">
+          <img src="/_blob/cde25477e7c85f8e4ff03d6a38fb93d8" alt="Escenario iluminado del recital de Los Serranos">
+          <span class="flag hot">Alta demanda</span>
+        </div>
+        <div style="padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 6px">
+          <span class="eyebrow" style="color: #77736B"><i></i>Sale a la venta</span>
+          <h2 id="tk-title" style="font-size: 24px">Los Serranos en vivo</h2>
+          <span style="font-size: 14px; color: #5C5A55">Sáb 13 dic · 21:00 · Estadio del Sur</span>
+        </div>
+        <div class="perf"><i></i><i></i></div>
+        <div style="padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+          <span style="font-size: 13px; font-weight: 600; color: #5C5A55">La fila virtual abre en</span>
+          <div class="clock" role="timer" aria-label="Tiempo para que abra la fila"><span>{{hh}}</span>:<span>{{mm}}</span>:<span>{{ss}}</span></div>
+          <a class="btn" href="EventoMobile.dc.html" style="width: 100%">Ver el evento</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <main id="eventos" class="wrap" style="display: flex; flex-direction: column; gap: 22px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <span class="eyebrow"><i></i>Cartelera</span>
+        <h2 style="font-size: 38px">Próximos eventos</h2>
+      </div>
+      <label class="sel" style="flex-direction: row; align-items: center; gap: 8px">Ordenar por
+        <select value="{{sort}}" onChange="{{setSort}}"><option value="DATE">Fecha</option><option value="PRICE">Precio</option><option value="RELEVANCE">Relevancia</option></select>
+      </label>
+    </div>
+
+    <div class="panel" style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; flex-wrap: wrap; gap: 4px" role="group" aria-label="Tipo de evento">
+        <sc-for list="{{types}}" as="t" hint-placeholder-count="6">
+          <button class="{{t.cls}}" aria-pressed="{{t.pressed}}" onClick="{{t.pick}}">{{t.label}}</button>
+        </sc-for>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; padding-top: 12px; border-top: 1px solid #F0EFEB">
+        <label class="sel">Ciudad
+          <select value="{{city}}" onChange="{{setCity}}"><option value="">Todas</option><option value="Buenos Aires">Buenos Aires</option><option value="Tandil">Tandil</option><option value="Rosario">Rosario</option><option value="Córdoba">Córdoba</option></select>
+        </label>
+        <label class="sel">Organizador
+          <select value="{{org}}" onChange="{{setOrg}}"><option value="">Todos</option><option value="Producciones del Sur">Producciones del Sur</option><option value="Club Social Tandil">Club Social Tandil</option><option value="Comunidad Dev Pampa">Comunidad Dev Pampa</option></select>
+        </label>
+        <label class="sel">Desde<input type="date" value="{{from}}" onChange="{{setFrom}}"></label>
+        <label class="sel">Hasta<input type="date" value="{{to}}" onChange="{{setTo}}"></label>
+      </div>
+    </div>
+
+    <p style="margin: 0; display: flex; align-items: baseline; gap: 8px" aria-live="polite"><span style="font: 500 22px 'JetBrains Mono', monospace">{{count}}</span><span style="color: #77736B">{{countWord}}</span></p>
+
+    <sc-if value="{{hasResults}}" hint-placeholder-val="{{ true }}">
+      <div class="grid">
+        <sc-for list="{{results}}" as="e" hint-placeholder-count="6">
+          <a class="card" href="EventoMobile.dc.html">
+            <div class="card-img">
+              <img src="{{e.img}}" alt="{{e.alt}}" style="{{e.imgStyle}}">
+              <div class="date"><span>{{e.month}}</span><b>{{e.day}}</b></div>
+              <sc-if value="{{e.hot}}" hint-placeholder-val="{{ false }}"><span class="flag hot">Alta demanda</span></sc-if>
+              <sc-if value="{{e.soldOut}}" hint-placeholder-val="{{ false }}"><span class="flag out">Agotado</span></sc-if>
+            </div>
+            <div style="padding: 15px 16px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1">
+              <div class="meta"><span>{{e.typeLabel}}</span><i></i><span>{{e.time}} HS</span></div>
+              <h3 style="font-size: 21px; line-height: 1.18">{{e.name}}</h3>
+              <p class="venue"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#88857F" stroke-width="2" aria-hidden="true" style="flex: none"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>{{e.venue}} <span style="color: #77736B">· {{e.city}}</span></p>
+              <div class="bottom"><span>{{e.org}}</span><span>desde<b>{{e.priceLabel}}</b></span></div>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+      <nav aria-label="Páginas" style="display: flex; justify-content: center; align-items: center; gap: 18px; color: #77736B; font-size: 13px">
+        <button class="btn ghost" disabled="" style="min-height: 38px; opacity: .5">Anterior</button><span>Página 1 de 1</span><button class="btn ghost" disabled="" style="min-height: 38px; opacity: .5">Siguiente</button>
+      </nav>
+    </sc-if>
+
+    <sc-if value="{{noResults}}" hint-placeholder-val="{{ false }}">
+      <div style="text-align: center; padding: 48px 20px; border: 1px dashed #D3D0C8; border-radius: 14px; color: #77736B; display: flex; flex-direction: column; align-items: center; gap: 10px">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#AAA69C" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <h3 style="color: #141414; font-size: 22px">No encontramos eventos con esos filtros</h3>
+        <p style="margin: 0">Probá con otra ciudad, otro tipo o un rango de fechas más amplio.</p>
+        <button class="btn ghost" onClick="{{clear}}">Limpiar filtros</button>
+      </div>
+    </sc-if>
+
+    <section aria-labelledby="paravos" style="display: flex; flex-direction: column; gap: 16px; padding-top: 24px">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 8px">
+        <div style="display: flex; flex-direction: column; gap: 6px"><span class="eyebrow"><i></i>Según tus gustos</span><h2 id="paravos" style="font-size: 32px">Para vos</h2></div>
+        <sc-if value="{{logged}}" hint-placeholder-val="{{ true }}"><a href="PerfilMobile.dc.html" style="font-size: 14px; font-weight: 600">Editar preferencias</a></sc-if>
+      </div>
+      <sc-if value="{{logged}}" hint-placeholder-val="{{ true }}">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 18px">
+          <a class="rec" href="EventoMobile.dc.html">
+            <img src="/_blob/cde25477e7c85f8e4ff03d6a38fb93d8" alt="">
+            <span class="shade"></span>
+            <span style="position: absolute; left: 24px; bottom: 22px; right: 24px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start">
+              <span style="font-size: 11px; letter-spacing: .12em; font-weight: 700; color: #DEDBD3">TU ARTISTA FAVORITO TOCA EN TU CIUDAD</span>
+              <span style="font: 800 30px/1.05 Archivo, sans-serif; letter-spacing: -.02em">Los Serranos en vivo</span>
+              <span style="font-size: 14px; color: #ECE9E2">Sáb 13 dic · Estadio del Sur · desde $45.000</span>
+              <span class="btn accent" style="min-height: 40px">Ver el evento</span>
+            </span>
+          </a>
+          <div style="background: #FFFFFF; border: 1px solid #E6E3DC; border-radius: 14px; padding: 22px; display: flex; flex-direction: column">
+            <span style="font-size: 11px; letter-spacing: .12em; font-weight: 700; color: #77736B">QUIENES COMPRARON HAMLET TAMBIÉN COMPRARON</span>
+            <h3 style="font-size: 22px; margin: 10px 0 12px">Seguí la noche</h3>
+            <a class="rec-row" href="EventoMobile.dc.html"><span style="width: 34px; text-align: center; font: 700 16px Archivo, sans-serif">28<br><small style="font: 700 9px Inter, sans-serif; color: #77736B">NOV</small></span><span style="flex: 1; min-width: 0"><strong style="display: block">Peña folklórica serrana</strong><span style="font-size: 13px; color: #77736B">Teatro de la Sierra · Tandil</span></span><strong>$7.000</strong></a>
+            <a class="rec-row" href="EventoMobile.dc.html"><span style="width: 34px; text-align: center; font: 700 16px Archivo, sans-serif">17<br><small style="font: 700 9px Inter, sans-serif; color: #77736B">ENE</small></span><span style="flex: 1; min-width: 0"><strong style="display: block">Festival Río Abierto</strong><span style="font-size: 13px; color: #77736B">Parque Costanero · Rosario</span></span><strong>$38.000</strong></a>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{loggedOut}}" hint-placeholder-val="{{ false }}">
+        <div style="background: #FFFFFF; border: 1px solid #E6E3DC; border-radius: 14px; padding: 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+          <span>Ingresá para ver sugerencias según tus gustos y lo que compraste.</span>
+          <button class="btn" onClick="{{openLogin}}">Ingresar</button>
+        </div>
+      </sc-if>
+    </section>
+  </main>
+
+  <footer class="foot" style="margin-top: auto">
+    <div class="wrap" style="padding-top: 64px; padding-bottom: 36px; display: flex; flex-direction: column; gap: 48px">
+      <div style="display: flex; flex-wrap: wrap; gap: 40px 56px">
+        <div style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 16px; max-width: 360px">
+          <a class="brand" href="MainMobile.dc.html" style="color: #141414"><span class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></span>TicketYa<sup style="font-size: 12px; font-weight: 600">®</sup></a>
+          <p style="margin: 0; line-height: 1.6; font-size: 14px">Entradas para todo tipo de eventos, desde el club del barrio hasta el estadio. Comprás desde el celular, sin filas ni sobresaltos.</p>
+          <a href="PerfilMobile.dc.html" style="color: #141414; font-weight: 700; text-decoration: underline; text-decoration-color: #FFC531; text-decoration-thickness: 3px; text-underline-offset: 4px">Avisame cuando toque mi artista favorito →</a>
+        </div>
+        <nav aria-labelledby="f1" style="flex: 1 1 150px"><h3 id="f1">Explorar</h3><ul><li><a href="#eventos">Recitales</a></li><li><a href="#eventos">Festivales</a></li><li><a href="#eventos">Teatro</a></li><li><a href="#eventos">Deportes</a></li><li><a href="#eventos">Conferencias</a></li></ul></nav>
+        <nav aria-labelledby="f2" style="flex: 1 1 150px"><h3 id="f2">Ciudades</h3><ul><li><a href="#eventos">Buenos Aires</a></li><li><a href="#eventos">Rosario</a></li><li><a href="#eventos">Córdoba</a></li><li><a href="#eventos">Tandil</a></li></ul></nav>
+        <nav aria-labelledby="f3" style="flex: 1 1 170px"><h3 id="f3">Ayuda</h3><ul><li><a href="EntradasMobile.dc.html">Mis entradas y QR</a></li><li><a href="EntradasMobile.dc.html">Devoluciones</a></li><li><a href="FilaMobile.dc.html">Cómo funciona la fila virtual</a></li><li><a href="PagoMobile.dc.html">Medios de pago</a></li></ul></nav>
+        <nav aria-labelledby="f4" style="flex: 1 1 170px"><h3 id="f4">Organizadores</h3><ul><li><a href="OrgEditor.dc.html">Publicá tu evento</a></li><li><a href="OrgEventos.dc.html">Panel de organizador</a></li><li><a href="OrgReporte.dc.html">Reportes de venta</a></li><li><a href="Acceso.dc.html">Control de acceso</a></li></ul></nav>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 22px; border-top: 1px solid #E1DED7; font-size: 13px; color: #77736B">
+        <span>© 2026 TicketYa® · Hecho en Argentina · Grupo 10 · Arquitectura Web, TUDAI</span>
+        <span style="display: flex; flex-wrap: wrap; gap: 20px"><a href="#eventos" style="font-size: 13px; color: #77736B">Términos</a><a href="#eventos" style="font-size: 13px; color: #77736B">Privacidad</a><a href="#eventos" style="font-size: 13px; color: #77736B">Defensa del consumidor</a><span>Pagás con crédito, débito o dinero en cuenta</span></span>
+      </div>
+    </div>
+  </footer>
+
+  <sc-if value="{{loginOpen}}" hint-placeholder-val="{{ false }}">
+    <div class="overlay">
+      <div role="dialog" aria-modal="true" aria-labelledby="logintitle" style="width: 420px; max-width: 100%; background: #FFFFFF; border-radius: 16px; padding: 34px; text-align: center; position: relative; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px">
+        <button class="icon-btn" aria-label="Cerrar" onClick="{{closeLogin}}" style="position: absolute; right: 10px; top: 10px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        <span class="brand-icon" style="margin: 0 auto; width: 44px; height: 44px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/></svg></span>
+        <h2 id="logintitle" style="font-size: 28px">Ingresá a TicketYa</h2>
+        <p style="margin: 0; color: #5C5A55; line-height: 1.6">Usamos tu cuenta de Google. Si es la primera vez, te creamos una cuenta de cliente.</p>
+        <button class="btn ghost" style="min-height: 50px" onClick="{{login}}"><strong style="color: #4285F4; font-size: 18px">G</strong>Continuar con Google</button>
+        <small style="color: #77736B">Organizadores y personal de acceso entran con el mismo botón.</small>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":5600}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { q: '', type: 'ALL', city: '', org: '', from: '', to: '', sort: 'DATE', logged: true, loginOpen: false, bellOpen: false, left: 2 * 3600 + 14 * 60 + 33 };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => this.setState({ left: Math.max(0, this.state.left - 1) }), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+  events() {
+    return [
+      { name: 'Los Serranos en vivo', type: 'CONCERT', date: '2026-12-13', time: '21:00', venue: 'Estadio del Sur', city: 'Buenos Aires', people: 'Los Serranos', org: 'Producciones del Sur', price: 45000, hot: true, soldOut: false, rel: 1, img: '/_blob/cde25477e7c85f8e4ff03d6a38fb93d8', alt: 'Escenario de recital con luces' },
+      { name: 'Peña folklórica serrana', type: 'CONCERT', date: '2026-11-28', time: '21:00', venue: 'Teatro de la Sierra', city: 'Tandil', people: 'Ballet Folklórico Serrano', org: 'Club Social Tandil', price: 7000, hot: false, soldOut: false, rel: 3, img: '/_blob/9e28a372fa0d76707034c06ca92cca2e', alt: 'Músicos en una peña folklórica' },
+      { name: 'Festival Río Abierto', type: 'FESTIVAL', date: '2027-01-17', time: '16:00', venue: 'Parque Costanero', city: 'Rosario', people: 'Marea Baja, Los Serranos, DJ Ceibo', org: 'Producciones del Sur', price: 38000, hot: true, soldOut: false, rel: 2, img: '/_blob/f138f8236d4d4c37ff7b95476851bc8c', alt: 'Público en un festival al aire libre' },
+      { name: 'Atlético Sur vs. Deportivo Norte', type: 'SPORTS', date: '2026-12-06', time: '17:30', venue: 'Estadio del Sur', city: 'Buenos Aires', people: 'Atlético Sur, Deportivo Norte', org: 'Producciones del Sur', price: 15000, hot: false, soldOut: true, rel: 5, img: '/_blob/1cd73006b76a72a1f4cdc234f5b22166', alt: 'Estadio de fútbol lleno' },
+      { name: 'Hamlet', type: 'THEATER', date: '2026-12-05', time: '20:30', venue: 'Teatro de la Sierra', city: 'Tandil', people: 'Compañía La Fragua', org: 'Club Social Tandil', price: 12000, hot: false, soldOut: false, rel: 4, img: '/_blob/7c930b38c6e1b24a9a8c775cbc8fcdab', alt: 'Sala de teatro con butacas rojas' },
+      { name: 'Jornada Dev Pampa', type: 'CONFERENCE', date: '2027-02-10', time: '09:00', venue: 'Centro de Convenciones', city: 'Córdoba', people: 'Lucía Ferreyra, Martín Ibarra', org: 'Comunidad Dev Pampa', price: 20000, hot: false, soldOut: false, rel: 6, img: '/_blob/c2f4f3af1eff3c95194f288ccc6f0fa7', alt: 'Auditorio durante una conferencia' }
+    ];
+  }
+  renderVals() {
+    const s = this.state;
+    const typeLabels = { ALL: 'Todos', CONCERT: 'Recital', FESTIVAL: 'Festival', THEATER: 'Teatro', SPORTS: 'Deporte', CONFERENCE: 'Conferencia' };
+    const months = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
+    const q = s.q.trim().toLowerCase();
+    const sorters = { DATE: (a, b) => a.date.localeCompare(b.date), PRICE: (a, b) => a.price - b.price, RELEVANCE: (a, b) => a.rel - b.rel };
+    const results = this.events()
+      .filter((e) => (s.type === 'ALL' || e.type === s.type) && (!s.city || e.city === s.city) && (!s.org || e.org === s.org) && (!s.from || e.date >= s.from) && (!s.to || e.date <= s.to) && (!q || (e.name + ' ' + e.people).toLowerCase().includes(q)))
+      .sort(sorters[s.sort])
+      .map((e) => ({ ...e, typeLabel: typeLabels[e.type].toUpperCase(), day: e.date.slice(8), month: months[Number(e.date.slice(5, 7)) - 1], priceLabel: '$' + e.price.toLocaleString('es-AR'), imgStyle: e.soldOut ? 'filter:grayscale(1)' : '' }));
+    const set = (key) => (ev) => this.setState({ [key]: ev.target.value });
+    const pad = (n) => String(n).padStart(2, '0');
+    return {
+      q: s.q, city: s.city, org: s.org, from: s.from, to: s.to, sort: s.sort,
+      setQ: set('q'), setCity: set('city'), setOrg: set('org'), setFrom: set('from'), setTo: set('to'), setSort: set('sort'),
+      submitSearch: (ev) => ev.preventDefault(),
+      quick: [['CONCERT', 'Recitales'], ['FESTIVAL', 'Festivales'], ['THEATER', 'Teatro'], ['SPORTS', 'Fútbol y deportes'], ['CONFERENCE', 'Conferencias']].map(([k, label]) => ({ label, pick: () => this.setState({ type: k }) })),
+      types: Object.keys(typeLabels).map((k) => ({ label: typeLabels[k], cls: s.type === k ? 'chip on' : 'chip', pressed: s.type === k ? 'true' : 'false', pick: () => this.setState({ type: k }) })),
+      results, hasResults: results.length > 0, noResults: results.length === 0,
+      count: String(results.length).padStart(2, '0'), countWord: results.length === 1 ? 'evento' : 'eventos',
+      clear: () => this.setState({ q: '', type: 'ALL', city: '', org: '', from: '', to: '' }),
+      hh: pad(Math.floor(s.left / 3600)), mm: pad(Math.floor(s.left % 3600 / 60)), ss: pad(s.left % 60),
+      logged: s.logged, loggedOut: !s.logged, loginOpen: s.loginOpen, bellOpen: s.bellOpen && s.logged,
+      toggleBell: () => this.setState({ bellOpen: !s.bellOpen }),
+      openLogin: () => this.setState({ loginOpen: true }),
+      closeLogin: () => this.setState({ loginOpen: false }),
+      login: () => this.setState({ logged: true, loginOpen: false }),
+      logout: () => this.setState({ logged: false, bellOpen: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

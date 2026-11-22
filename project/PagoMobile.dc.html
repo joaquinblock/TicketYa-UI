@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Reserva y pago</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F2F1EC;color:#141414;font-family:Inter,system-ui,sans-serif}
+a{color:#1D4ED8}a:hover{color:#1E3A8A}
+h1,h2,h3{font-family:Archivo,sans-serif;letter-spacing:-0.02em;margin:0}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #1D4ED8;outline-offset:3px}
+.mock{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 24px;background:#141414;color:#F2F1EC;font-size:13px}
+.mock a{color:#F2F1EC;text-decoration:none;padding:4px 12px;border-radius:999px;border:1px solid #57544E}
+.mock a.on{background:#FFC531;color:#141414;border-color:#FFC531}
+.top{position:sticky;top:0;z-index:20;background:#FFFFFF;border-bottom:1px solid #E9E7E1}
+.top-in{max-width:1240px;margin:0 auto;padding:0 28px;min-height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.brand{display:inline-flex;align-items:center;gap:9px;font-family:Archivo,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.03em;color:#141414;text-decoration:none;justify-self:start}
+.brand-icon{width:35px;height:35px;border-radius:10px;background:#FFC531;display:grid;place-items:center}
+.cnav{display:flex;gap:32px;align-self:stretch}
+.cnav a{display:flex;align-items:center;color:#5C5A55;text-decoration:none;font-size:14px;font-weight:600;position:relative}
+.cnav a:hover,.cnav a.on{color:#141414}
+.cnav a.on:after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:#FFC531;border-radius:3px 3px 0 0}
+.acts{justify-self:end;display:flex;align-items:center;gap:14px}
+.icon-btn{position:relative;width:44px;height:44px;border-radius:50%;border:0;background:#FFFFFF;display:grid;place-items:center;cursor:pointer;color:#141414}
+.dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:#D44335;border:1px solid #FFFFFF}
+.avatar{width:34px;height:34px;border-radius:50%;background:#EEE9DD;display:grid;place-items:center;font-size:12px;font-weight:700}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px;box-sizing:border-box;width:100%}
+.back{display:inline-flex;align-items:center;gap:8px;color:#5C5A55;font-size:14px;font-weight:600;text-decoration:none;min-height:44px}
+.back:hover{color:#141414}
+.steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px;list-style:none;margin:0;padding:0;font-size:13px}
+.steps li{display:flex;align-items:center;gap:7px;color:#77736B;font-weight:600}
+.steps li+li:before{content:"";width:18px;height:1px;background:#C9C5BB;margin-right:4px}
+.steps a{color:#5C5A55;text-decoration:none}
+.steps a:hover{color:#141414;text-decoration:underline}
+.steps .n{width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;font-size:11px;font-weight:700;background:#E6E3DC;color:#5C5A55}
+.steps .done .n{background:#141414;color:#FFC531}
+.steps .cur{color:#141414}
+.steps .cur .n{background:#FFC531;color:#141414}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:#77736B;text-transform:uppercase}
+.panel{background:#FFFFFF;border:1px solid #E4E1D9;border-radius:16px}
+.banner{min-height:68px;border-radius:12px;padding:12px 18px;display:flex;align-items:center;gap:12px;box-sizing:border-box}
+.opt{min-height:64px;border:1px solid #E5E2DB;border-radius:12px;display:flex;align-items:center;gap:14px;padding:0 16px;cursor:pointer;background:#FFFFFF;position:relative}
+.opt.on{border-color:#141414;background:#FFFAF0;box-shadow:inset 0 0 0 1px #141414}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.radio{width:18px;height:18px;border:1.5px solid #A9A59D;border-radius:50%;box-sizing:border-box;flex:none}
+.opt.on .radio{border:6px solid #141414}
+.opt:focus-within{outline:3px solid #1D4ED8;outline-offset:2px}
+.pm{display:inline-flex;align-items:center;justify-content:center;height:26px;min-width:40px;border-radius:5px;background:#FFFFFF;border:1px solid #E1DED6;box-sizing:border-box;padding:0 5px}
+.cta{display:flex;align-items:center;justify-content:center;gap:10px;min-height:54px;border-radius:12px;border:0;background:#FFC531;color:#141414;font:700 16px Inter,sans-serif;text-decoration:none;cursor:pointer;width:100%;box-sizing:border-box}
+.cta:hover{background:#F0B51C;color:#141414}
+.cta[disabled]{background:#FFE7A3;color:#7A6A3E;cursor:progress}
+.ghost{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 20px;border-radius:12px;border:1px solid #D9D6CE;background:#FFFFFF;color:#141414;font:600 15px Inter,sans-serif;text-decoration:none;cursor:pointer}
+.linkbtn{border:0;background:none;color:#5C5A55;font:500 13px Inter,sans-serif;text-decoration:underline;cursor:pointer;min-height:36px}
+.alert{padding:14px 16px;border-radius:12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.ticket{border-radius:16px;overflow:hidden;background:#FFFFFF;border:1px solid #E4E1D9}
+.ticket-top{position:relative;min-height:190px;color:#FFFFFF;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;gap:6px;box-sizing:border-box;background:#292823}
+.ticket-top img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ticket-top .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,20,20,.9) 0%,rgba(20,20,20,.55) 60%,rgba(20,20,20,.3) 100%)}
+.perf{position:relative;border-top:2px dashed #D9D6CE;margin:0 14px}
+.perf i{position:absolute;top:-10px;width:18px;height:18px;border-radius:50%;background:#F2F1EC}
+.perf i:first-child{left:-24px}.perf i:last-child{right:-24px}
+.line{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:8px 0;color:#5C5A55}
+.line b{color:#141414}
+.foot{background:#F8F7F3;color:#5C5A55;border-top:1px solid #E1DED7}
+.foot a{color:#5C5A55;text-decoration:none;font-size:14px}
+.foot a:hover{color:#141414;text-decoration:underline}
+.foot h3{font:700 13px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#141414;margin:0 0 14px}
+.foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+@media (max-width:760px){
+.mock{display:none}
+.steps li:not(.cur){font-size:0;gap:0}
+.steps li:not(.cur) .n{font-size:11px}
+.steps li+li:before{width:10px}
+.top-in{grid-template-columns:1fr auto;padding:0 16px}
+.cnav{grid-column:1/-1;grid-row:2;justify-content:center;gap:24px;min-height:44px}
+.wrap{padding:0 16px}
+.name-lbl{display:none}
+.pm-hint{display:none}
+}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column">
+  <nav class="mock" aria-label="Vistas del mockup">
+    <strong style="margin-right: 4px">Mockup · ver como</strong>
+    <a class="on" href="MainMobile.dc.html">Cliente</a>
+    <a href="OrgEventos.dc.html">Organizador</a>
+    <a href="AdminGestion.dc.html">Administrador</a>
+    <a href="Acceso.dc.html">Personal de acceso</a>
+  </nav>
+
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="MainMobile.dc.html" aria-label="TicketYa, inicio">
+        <span class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></span>
+        TicketYa
+      </a>
+      <nav class="cnav" aria-label="Principal">
+        <a class="on" href="MainMobile.dc.html">Explorar</a>
+        <a href="EntradasMobile.dc.html">Mis entradas</a>
+        <a href="PerfilMobile.dc.html">Preferencias</a>
+      </nav>
+      <div class="acts">
+        <button class="icon-btn" aria-label="Notificaciones, 2 sin leer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+        <span style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px"><span class="avatar" aria-hidden="true">AG</span><span class="name-lbl">Ana García</span></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="display: flex; flex-direction: column; gap: 22px; padding-top: 16px; padding-bottom: 72px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px">
+      <a class="back" href="AsientosMobile.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Volver a tus lugares</a>
+      <nav aria-label="Pasos de la compra">
+        <ol class="steps">
+          <li class="done"><span class="n"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><a href="MainMobile.dc.html">Explorar</a></li>
+          <li class="done"><span class="n"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><a href="EventoMobile.dc.html">Evento</a></li>
+          <li class="done"><span class="n"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><a href="FilaMobile.dc.html">Fila virtual</a></li>
+          <li class="done"><span class="n"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><a href="AsientosMobile.dc.html">Lugares</a></li>
+          <li class="{{payStepCls}}" aria-current="step"><span class="n">{{payStepMark}}</span>Pago</li>
+        </ol>
+      </nav>
+    </div>
+
+    <sc-if value="{{active}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+        <div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+          <div class="banner" style="background: #DDF1E6; color: #14532D">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true" style="flex: none"><path d="m5 12 5 5 9-10"/></svg>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 3px"><strong style="font-size: 15px">Tus lugares están reservados</strong><span style="font-size: 13px">El tiempo corre, completá el pago antes de que venza.</span></span>
+            <strong role="timer" aria-label="Tiempo restante de la reserva" style="font: 500 22px 'JetBrains Mono', monospace">{{clock}}</strong>
+          </div>
+
+          <section class="panel" aria-labelledby="medio" style="padding: 26px; display: flex; flex-direction: column; gap: 18px">
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <span class="eyebrow">Paso final</span>
+              <h1 id="medio" style="font-size: clamp(28px, 3.4vw, 36px); letter-spacing: -0.03em">¿Cómo querés pagar?</h1>
+            </div>
+            <fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px">
+              <legend style="position: absolute; left: -9999px">Medio de pago</legend>
+              <sc-for list="{{methods}}" as="m" hint-placeholder-count="3">
+                <label class="{{m.cls}}">
+                  <input type="radio" name="method" checked="{{m.checked}}" onChange="{{m.pick}}">
+                  <span class="radio" aria-hidden="true"></span>
+                  <sc-if value="{{m.isWallet}}" hint-placeholder-val="{{ false }}">
+                    <span class="pm" style="background: #FFC531; border-color: #FFC531" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round"><path d="M4 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a1 1 0 0 1-1-1z"/><path d="M4 7V6a2 2 0 0 1 2-2h10v3"/><circle cx="16" cy="13.5" r="1.3" fill="#141414"/></svg></span>
+                  </sc-if>
+                  <sc-if value="{{m.isCard}}" hint-placeholder-val="{{ true }}">
+                    <span class="pm" aria-hidden="true"><svg width="30" height="20" viewBox="0 0 30 20"><rect x="1" y="2" width="28" height="16" rx="3" fill="#F2F1EC" stroke="#141414" stroke-width="1.4"/><path d="M1 7h28" stroke="#141414" stroke-width="2.2"/><rect x="4" y="11" width="8" height="3" rx="1" fill="#C9A227"/></svg></span>
+                  </sc-if>
+                  <strong style="font-size: 15px; flex: 1">{{m.label}}</strong>
+                  <span class="pm-hint" style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #77736B">
+                    <sc-if value="{{m.isCard}}" hint-placeholder-val="{{ true }}">
+                      <span class="pm" aria-label="Visa"><svg width="34" height="12" viewBox="0 0 34 12" aria-hidden="true"><text x="0" y="11" font-family="Arial, sans-serif" font-size="13" font-weight="900" font-style="italic" fill="#1A1F71">VISA</text></svg></span>
+                      <span class="pm" aria-label="Mastercard"><svg width="28" height="18" viewBox="0 0 28 18" aria-hidden="true"><circle cx="10" cy="9" r="7" fill="#EB001B"/><circle cx="18" cy="9" r="7" fill="#F79E1B"/><path d="M14 3.3a7 7 0 0 1 0 11.4 7 7 0 0 1 0-11.4z" fill="#FF5F00"/></svg></span>
+                    </sc-if>
+                    <sc-if value="{{m.isWallet}}" hint-placeholder-val="{{ false }}"><span>Saldo disponible: $210.500</span></sc-if>
+                  </span>
+                </label>
+              </sc-for>
+            </fieldset>
+
+            <sc-if value="{{rejected}}" hint-placeholder-val="{{ false }}">
+              <div class="alert" role="alert" style="background: #FBE3E1; color: #8A1C13"><strong>El pago fue rechazado: fondos insuficientes</strong><span>Intento {{attempts}} de 3. Probá con otro medio de pago; tus lugares siguen reservados.</span></div>
+            </sc-if>
+            <sc-if value="{{noAnswer}}" hint-placeholder-val="{{ false }}">
+              <div class="alert" role="alert" style="background: #FFF1CC; color: #5C4200"><strong>No pudimos confirmar el pago</strong><span>Reintentá con el mismo botón: si ya se había cobrado, no te cobramos dos veces.</span></div>
+            </sc-if>
+
+            <button class="cta" disabled="{{paying}}" onClick="{{pay}}">{{payLabel}}
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+            </button>
+            <div style="display: flex; justify-content: center"><button class="linkbtn" onClick="{{abandon}}">Abandonar la reserva</button></div>
+            <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; border-top: 1px solid #F0EFEB; padding-top: 6px">
+              <button class="linkbtn" onClick="{{simNoAnswer}}">Prototipo: pasarela sin respuesta</button>
+              <button class="linkbtn" onClick="{{simExpire}}">Prototipo: venció la reserva</button>
+            </div>
+            <p style="margin: 0; font-size: 12px; color: #77736B; text-align: center">En la pasarela simulada, la tarjeta de débito siempre se rechaza para probar los reintentos.</p>
+          </section>
+        </div>
+
+        <aside class="ticket" aria-labelledby="orden" style="flex: 1 1 320px; min-width: 0">
+          <div class="ticket-top">
+            <img src="/_blob/cde25477e7c85f8e4ff03d6a38fb93d8" alt="Escenario iluminado del recital de Los Serranos">
+            <span class="shade"></span>
+            <span style="position: relative; font-size: 11px; letter-spacing: .14em; font-weight: 700; color: #E2DED5" id="orden">TICKETYA · ORDEN #4</span>
+            <h2 style="position: relative; font-size: 24px">Los Serranos en vivo</h2>
+            <span style="position: relative; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #EEECE8"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>13 dic 2026 · 21:00 hs</span>
+            <span style="position: relative; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #EEECE8"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>Estadio del Sur · Buenos Aires</span>
+          </div>
+          <div class="perf"><i></i><i></i></div>
+          <div style="padding: 16px 20px 20px">
+            <div class="line"><span>Platea baja · Fila F, asientos 6 y 7</span><b>$136.000</b></div>
+            <div class="line"><span>Servicio de gestión</span><b>Incluido</b></div>
+            <div class="line" style="border-top: 1px solid #EEECE6; margin-top: 8px; padding-top: 14px; align-items: center"><span style="color: #141414; font-size: 15px">Total</span><b style="font: 500 22px 'JetBrains Mono', monospace">$136.000</b></div>
+            <p style="margin: 8px 0 0; font-size: 12px; color: #77736B">El QR aparece cuando se confirma el pago.</p>
+          </div>
+        </aside>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{paid}}" hint-placeholder-val="{{ false }}">
+      <section style="max-width: 600px; margin: 32px auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px" aria-labelledby="listo">
+        <span style="width: 72px; height: 72px; border-radius: 50%; background: #DDF1E6; display: grid; place-items: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#14532D" stroke-width="2.5" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span>
+        <span class="eyebrow">Orden #4 · pago aprobado</span>
+        <h1 id="listo" style="font-size: clamp(38px, 5vw, 54px); letter-spacing: -0.04em">¡Listo! Ya tenés tus entradas<span style="color: #FFC531">.</span></h1>
+        <p style="margin: 0; color: #5C5A55; line-height: 1.7">Pagaste $136.000 con {{methodLabel}}. Te mandamos la confirmación por email con los 2 códigos QR. Cada uno sirve para entrar una sola vez.</p>
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 8px">
+          <a class="cta" href="EntradasMobile.dc.html" style="width: auto; padding: 0 28px">Ver mis entradas</a>
+          <a class="ghost" href="MainMobile.dc.html" style="min-height: 54px">Seguir explorando</a>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ended}}" hint-placeholder-val="{{ false }}">
+      <section class="panel" style="max-width: 640px; margin: 24px auto; padding: 36px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start" aria-labelledby="fin">
+        <span class="eyebrow">Orden #4</span>
+        <h1 id="fin" style="font-size: 32px">{{endTitle}}</h1>
+        <p style="margin: 0; color: #5C5A55; font-size: 16px; line-height: 1.6">{{endText}}</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px">
+          <a class="cta" href="AsientosMobile.dc.html" style="width: auto; padding: 0 24px">Elegir lugares de nuevo</a>
+          <button class="ghost" onClick="{{restart}}" style="min-height: 54px">Reiniciar demo</button>
+        </div>
+      </section>
+    </sc-if>
+  </main>
+
+  <footer class="foot" style="margin-top: auto">
+    <div class="wrap" style="padding-top: 64px; padding-bottom: 36px; display: flex; flex-direction: column; gap: 48px">
+      <div style="display: flex; flex-wrap: wrap; gap: 40px 56px">
+        <div style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 16px; max-width: 360px">
+          <a class="brand" href="MainMobile.dc.html" style="color: #141414"><span class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></span>TicketYa<sup style="font-size: 12px; font-weight: 600">®</sup></a>
+          <p style="margin: 0; line-height: 1.6; font-size: 14px">Entradas para todo tipo de eventos, desde el club del barrio hasta el estadio. Comprás desde el celular, sin filas ni sobresaltos.</p>
+          <a href="PerfilMobile.dc.html" style="color: #141414; font-weight: 700; text-decoration: underline; text-decoration-color: #FFC531; text-decoration-thickness: 3px; text-underline-offset: 4px">Avisame cuando toque mi artista favorito →</a>
+        </div>
+        <nav aria-labelledby="f1" style="flex: 1 1 150px"><h3 id="f1">Explorar</h3><ul><li><a href="MainMobile.dc.html">Recitales</a></li><li><a href="MainMobile.dc.html">Festivales</a></li><li><a href="MainMobile.dc.html">Teatro</a></li><li><a href="MainMobile.dc.html">Deportes</a></li><li><a href="MainMobile.dc.html">Conferencias</a></li></ul></nav>
+        <nav aria-labelledby="f2" style="flex: 1 1 150px"><h3 id="f2">Ciudades</h3><ul><li><a href="MainMobile.dc.html">Buenos Aires</a></li><li><a href="MainMobile.dc.html">Rosario</a></li><li><a href="MainMobile.dc.html">Córdoba</a></li><li><a href="MainMobile.dc.html">Tandil</a></li></ul></nav>
+        <nav aria-labelledby="f3" style="flex: 1 1 170px"><h3 id="f3">Ayuda</h3><ul><li><a href="EntradasMobile.dc.html">Mis entradas y QR</a></li><li><a href="EntradasMobile.dc.html">Devoluciones</a></li><li><a href="FilaMobile.dc.html">Cómo funciona la fila virtual</a></li><li><a href="PagoMobile.dc.html">Medios de pago</a></li></ul></nav>
+        <nav aria-labelledby="f4" style="flex: 1 1 170px"><h3 id="f4">Organizadores</h3><ul><li><a href="OrgEditor.dc.html">Publicá tu evento</a></li><li><a href="OrgEventos.dc.html">Panel de organizador</a></li><li><a href="OrgReporte.dc.html">Reportes de venta</a></li><li><a href="Acceso.dc.html">Control de acceso</a></li></ul></nav>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 22px; border-top: 1px solid #E1DED7; font-size: 13px; color: #77736B">
+        <span>© 2026 TicketYa® · Hecho en Argentina · Grupo 10 · Arquitectura Web, TUDAI</span>
+        <span style="display: flex; flex-wrap: wrap; gap: 20px"><a href="MainMobile.dc.html" style="font-size: 13px; color: #77736B">Términos</a><a href="MainMobile.dc.html" style="font-size: 13px; color: #77736B">Privacidad</a><a href="MainMobile.dc.html" style="font-size: 13px; color: #77736B">Defensa del consumidor</a><span>Pagás con crédito, débito o dinero en cuenta</span></span>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":2800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initial();
+  }
+  initial() {
+    return { left: 582, method: 'CREDIT_CARD', status: 'RESERVED', attempts: 0, paying: false, noAnswer: false, end: '' };
+  }
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      if (this.state.status !== 'RESERVED') return;
+      const left = this.state.left - 1;
+      this.setState(left <= 0 ? { left: 0, status: 'ENDED', end: 'EXPIRED' } : { left });
+    }, 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    clearTimeout(this.payTimer);
+  }
+  pay() {
+    this.setState({ paying: true, noAnswer: false });
+    this.payTimer = setTimeout(() => {
+      if (this.state.method !== 'DEBIT_CARD') return this.setState({ paying: false, status: 'PAID' });
+      const attempts = this.state.attempts + 1;
+      this.setState(attempts >= 3 ? { paying: false, attempts, status: 'ENDED', end: 'REJECTED' } : { paying: false, attempts });
+    }, 1200);
+  }
+  renderVals() {
+    const s = this.state;
+    const methods = [['CREDIT_CARD', 'Tarjeta de crédito', 'card'], ['DEBIT_CARD', 'Tarjeta de débito', 'card'], ['ACCOUNT_MONEY', 'Dinero en cuenta', 'wallet']];
+    const ends = {
+      EXPIRED: ['Se venció tu reserva', 'Pasaron los 10 minutos sin pago confirmado y liberamos los lugares. No se te cobró nada.'],
+      REJECTED: ['El pago se rechazó 3 veces', 'Cancelamos la orden y liberamos los lugares. Podés volver a elegirlos si siguen libres.'],
+      ABANDONED: ['Abandonaste la reserva', 'Liberamos tus lugares para que otra persona pueda comprarlos.']
+    };
+    const pad = (n) => String(n).padStart(2, '0');
+    const paid = s.status === 'PAID';
+    return {
+      active: s.status === 'RESERVED', paid, ended: s.status === 'ENDED',
+      payStepCls: paid ? 'done' : 'cur', payStepMark: paid ? '✓' : '5',
+      clock: pad(Math.floor(s.left / 60)) + ':' + pad(s.left % 60),
+      methods: methods.map(([k, label, kind]) => ({ label, checked: s.method === k, isCard: kind === 'card', isWallet: kind === 'wallet', cls: s.method === k ? 'opt on' : 'opt', pick: () => this.setState({ method: k }) })),
+      methodLabel: methods.find((m) => m[0] === s.method)[1].toLowerCase(),
+      rejected: s.attempts > 0 && s.status === 'RESERVED', attempts: s.attempts, noAnswer: s.noAnswer,
+      paying: s.paying, payLabel: s.paying ? 'Procesando el pago…' : (s.noAnswer ? 'Reintentar el pago' : 'Pagar $136.000'),
+      pay: () => this.pay(),
+      abandon: () => this.setState({ status: 'ENDED', end: 'ABANDONED' }),
+      simNoAnswer: () => this.setState({ noAnswer: true }),
+      simExpire: () => this.setState({ left: 0, status: 'ENDED', end: 'EXPIRED' }),
+      endTitle: s.end ? ends[s.end][0] : '', endText: s.end ? ends[s.end][1] : '',
+      restart: () => this.setState(this.initial())
+    };
+  }
+}
+</script>
+</body>
+</html>

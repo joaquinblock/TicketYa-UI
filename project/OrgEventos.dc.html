@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mis eventos</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F2F1EC;color:#141414;font-family:Inter,system-ui,sans-serif}
+a{color:#1D4ED8}a:hover{color:#1E3A8A}
+h1,h2,h3{font-family:Archivo,sans-serif;letter-spacing:-0.02em;margin:0}
+.mock{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 24px;background:#141414;color:#F2F1EC;font-size:13px}
+.mock a{color:#F2F1EC;text-decoration:none;padding:4px 12px;border-radius:999px;border:1px solid #57544E}
+.mock a.on{background:#FFC531;color:#141414;border-color:#FFC531}
+.shell{display:flex;flex-wrap:wrap;flex:1}
+.side{flex:1 1 240px;max-width:100%;background:#141414;color:#F2F1EC;padding:20px 16px;display:flex;flex-direction:column;gap:20px;box-sizing:border-box}
+.side .logo{font-family:Archivo,sans-serif;font-weight:800;font-size:22px;color:#FFFFFF;text-decoration:none;display:flex;align-items:center;gap:8px;padding:0 8px}
+.side nav{display:flex;flex-direction:column;gap:2px}
+.side nav a{color:#E8E6E0;text-decoration:none;padding:12px;border-radius:8px;font-weight:500}
+.side nav a.on{background:#2B2926;color:#FFFFFF;box-shadow:inset 3px 0 0 #FFC531}
+.content{flex:999 1 640px;min-width:0;padding:32px;box-sizing:border-box;display:flex;flex-direction:column;gap:22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid #141414;background:#141414;color:#FFFFFF;font:600 14px Inter,sans-serif;text-decoration:none;cursor:pointer;box-sizing:border-box;white-space:nowrap}
+.btn:hover{background:#2B2926;color:#FFFFFF}
+.btn.accent{background:#FFC531;border-color:#FFC531;color:#141414}
+.btn.ghost{background:transparent;color:#141414;border-color:#BDB9AF}
+.btn.sm{min-height:36px;padding:0 12px;font-size:13px}
+.btn.danger{background:#B42318;border-color:#B42318;color:#FFFFFF}
+.card{background:#FFFFFF;border:1px solid #D9D6CE;border-radius:14px}
+.chip{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid #BDB9AF;background:#FFFFFF;font:500 14px Inter,sans-serif;cursor:pointer;color:#141414}
+.chip.on{background:#141414;color:#FFFFFF;border-color:#141414}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.s-DRAFT{background:#ECEAE3;color:#3F3D39}
+.s-PUBLISHED{background:#DDF1E6;color:#14532D}
+.s-SOLD_OUT{background:#FFC531;color:#141414}
+.s-SUSPENDED{background:#FFF1CC;color:#5C4200}
+.s-CANCELLED{background:#FBE3E1;color:#8A1C13}
+.s-FINISHED{background:#DCE6FB;color:#1E3A8A}
+.muted{color:#5C5A55}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#5C5A55;padding:12px 16px;border-bottom:1px solid #D9D6CE;font-weight:600}
+td{padding:14px 16px;border-bottom:1px solid #ECEAE3;vertical-align:middle}
+.label{font-size:13px;font-weight:600;color:#5C5A55;display:block;margin-bottom:6px}
+.field{width:100%;box-sizing:border-box;min-height:44px;padding:0 12px;border:1px solid #BDB9AF;border-radius:10px;background:#FFFFFF;font:15px Inter,sans-serif;color:#141414}
+.overlay{position:fixed;inset:0;background:rgba(20,20,20,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.toast{padding:14px 18px;border-radius:12px;background:#141414;color:#FFFFFF;display:flex;justify-content:space-between;gap:12px;align-items:center}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column">
+  <nav class="mock" aria-label="Vistas del mockup">
+    <strong style="margin-right: 4px">Mockup · ver como</strong>
+    <a href="Main.dc.html">Cliente</a>
+    <a class="on" href="OrgEventos.dc.html">Organizador</a>
+    <a href="AdminGestion.dc.html">Administrador</a>
+    <a href="Acceso.dc.html">Personal de acceso</a>
+  </nav>
+  <div class="shell">
+    <aside class="side">
+      <a class="logo" href="OrgEventos.dc.html">
+        <svg width="28" height="20" viewBox="0 0 28 20" aria-hidden="true"><path d="M2 2h24v5a3 3 0 0 0 0 6v5H2v-5a3 3 0 0 0 0-6z" fill="#FFC531" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/></svg>
+        TicketYa
+      </a>
+      <div style="padding: 0 12px; display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 12px; color: #BDB9AF">Organización</span>
+        <strong>Producciones del Sur</strong>
+      </div>
+      <nav aria-label="Organizador">
+        <a class="on" href="OrgEventos.dc.html">Mis eventos</a>
+        <a href="OrgEditor.dc.html">Nuevo evento</a>
+        <a href="OrgReporte.dc.html">Reportes</a>
+      </nav>
+      <span style="margin-top: auto; padding: 0 12px; font-size: 13px; color: #BDB9AF">Martín López · Organizador</span>
+    </aside>
+
+    <main class="content">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="font-size: 34px">Mis eventos</h1>
+          <span class="muted">Los borradores se publican cuando tienen lugar, fecha y sectores con precio.</span>
+        </div>
+        <a class="btn accent" href="OrgEditor.dc.html">+ Nuevo evento</a>
+      </div>
+
+      <sc-if value="{{toast}}" hint-placeholder-val="{{ false }}">
+        <div class="toast" role="status"><span>{{toast}}</span><button class="btn sm ghost" style="color: #FFFFFF; border-color: #57544E" onClick="{{hideToast}}">Cerrar</button></div>
+      </sc-if>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="Filtrar por estado">
+        <sc-for list="{{filters}}" as="f" hint-placeholder-count="7">
+          <button class="{{f.cls}}" aria-pressed="{{f.pressed}}" onClick="{{f.pick}}">{{f.label}}</button>
+        </sc-for>
+      </div>
+
+      <div class="card" style="overflow-x: auto">
+        <table>
+          <thead><tr><th scope="col">Evento</th><th scope="col">Fecha</th><th scope="col">Estado</th><th scope="col">Vendidas</th><th scope="col"><span style="position: absolute; left: -9999px">Acciones</span></th></tr></thead>
+          <tbody>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+              <tr>
+                <td><div style="display: flex; flex-direction: column; gap: 2px"><strong>{{r.name}}</strong><span class="muted" style="font-size: 13px">{{r.venue}}</span></div></td>
+                <td style="white-space: nowrap">{{r.date}}</td>
+                <td><span class="{{r.badgeCls}}">{{r.statusLabel}}</span></td>
+                <td style="white-space: nowrap">{{r.sold}}</td>
+                <td>
+                  <div style="display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap">
+                    <sc-for list="{{r.actions}}" as="a" hint-placeholder-count="2">
+                      <sc-if value="{{a.isLink}}" hint-placeholder-val="{{ false }}"><a class="{{a.cls}}" href="{{a.href}}">{{a.label}}</a></sc-if>
+                      <sc-if value="{{a.isButton}}" hint-placeholder-val="{{ true }}"><button class="{{a.cls}}" onClick="{{a.run}}">{{a.label}}</button></sc-if>
+                    </sc-for>
+                  </div>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+        <sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+          <p class="muted" style="margin: 0; padding: 32px; text-align: center">No tenés eventos en este estado.</p>
+        </sc-if>
+      </div>
+    </main>
+  </div>
+
+  <sc-if value="{{dialog}}" hint-placeholder-val="{{ false }}">
+    <div class="overlay">
+      <div class="card" role="dialog" aria-modal="true" aria-labelledby="dlg" style="width: 480px; max-width: 100%; padding: 28px; display: flex; flex-direction: column; gap: 16px; box-sizing: border-box">
+        <h2 id="dlg" style="font-size: 24px">{{dlgTitle}}</h2>
+        <p class="muted" style="margin: 0">{{dlgText}}</p>
+        <sc-if value="{{isResume}}" hint-placeholder-val="{{ false }}">
+          <div>
+            <label class="label" for="nf">Nueva fecha y hora (opcional)</label>
+            <input id="nf" class="field" type="datetime-local" value="2026-12-20T21:00">
+          </div>
+        </sc-if>
+        <div style="display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap">
+          <button class="btn ghost" onClick="{{closeDialog}}">Volver</button>
+          <button class="{{dlgBtnCls}}" onClick="{{confirm}}">{{dlgBtn}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      filter: 'ALL', dialog: null, toast: '',
+      events: [
+        { id: 13, name: 'Los Serranos · segunda fecha', venue: 'Estadio del Sur', date: '14 dic 2026', status: 'DRAFT', sold: 0, cap: 5268 },
+        { id: 1, name: 'Los Serranos en vivo', venue: 'Estadio del Sur', date: '13 dic 2026', status: 'PUBLISHED', sold: 4012, cap: 5268 },
+        { id: 3, name: 'Festival Río Abierto', venue: 'Parque Costanero', date: '17 ene 2027', status: 'SUSPENDED', sold: 8200, cap: 12000 },
+        { id: 4, name: 'Atlético Sur vs. Deportivo Norte', venue: 'Estadio del Sur', date: '6 dic 2026', status: 'SOLD_OUT', sold: 5268, cap: 5268 },
+        { id: 8, name: 'Noche de Stand-up', venue: 'Teatro de la Sierra', date: '20 nov 2026', status: 'CANCELLED', sold: 0, cap: 74 },
+        { id: 7, name: 'Jazz en el Patio', venue: 'Teatro de la Sierra', date: '2 nov 2026', status: 'FINISHED', sold: 61, cap: 74 }
+      ]
+    };
+  }
+  setStatus(id, status, toast) {
+    this.setState({ dialog: null, toast, events: this.state.events.map((e) => e.id === id ? { ...e, status } : e) });
+  }
+  renderVals() {
+    const s = this.state;
+    const labels = { DRAFT: 'Borrador', PUBLISHED: 'Publicado', SOLD_OUT: 'Agotado', SUSPENDED: 'Suspendido', CANCELLED: 'Cancelado', FINISHED: 'Finalizado' };
+    const ask = (kind, e) => () => this.setState({ dialog: { kind, id: e.id, name: e.name } });
+    const btn = (label, run, cls) => ({ isButton: true, isLink: false, label, run, cls: 'btn sm ' + (cls || 'ghost') });
+    const link = (label, href) => ({ isButton: false, isLink: true, label, href, cls: 'btn sm ghost' });
+    const actionsFor = (e) => ({
+      DRAFT: [link('Editar', 'OrgEditor.dc.html'), btn('Publicar', () => this.setStatus(e.id, 'PUBLISHED', e.name + ' quedó publicado y a la venta.'), 'accent'), btn('Borrar', ask('DELETE', e))],
+      PUBLISHED: [link('Reporte', 'OrgReporte.dc.html'), btn('Suspender', ask('SUSPEND', e)), btn('Cancelar', ask('CANCEL', e))],
+      SOLD_OUT: [link('Reporte', 'OrgReporte.dc.html'), btn('Suspender', ask('SUSPEND', e)), btn('Cancelar', ask('CANCEL', e))],
+      SUSPENDED: [btn('Reanudar', ask('RESUME', e), 'accent'), btn('Cancelar', ask('CANCEL', e))],
+      CANCELLED: [link('Reporte', 'OrgReporte.dc.html')],
+      FINISHED: [link('Reporte', 'OrgReporte.dc.html')]
+    })[e.status];
+    const visible = s.events.filter((e) => s.filter === 'ALL' || e.status === s.filter);
+    const dialogs = {
+      CANCEL: ['¿Cancelar el evento?', 'Es definitivo. Todas las entradas vendidas pasan a reintegro y avisamos por email a cada comprador.', 'Sí, cancelar', 'btn danger'],
+      SUSPEND: ['¿Suspender el evento?', 'Se frena la venta. Después podés reanudarlo, con la misma fecha o una nueva.', 'Suspender', 'btn'],
+      RESUME: ['Reanudar el evento', 'Vuelve al estado que tenía antes de suspenderse. Si cambiás la fecha, avisamos a los compradores.', 'Reanudar', 'btn accent'],
+      DELETE: ['¿Borrar el borrador?', 'Se borra con sus sectores y participantes. No se puede deshacer.', 'Borrar', 'btn danger']
+    };
+    const d = s.dialog ? dialogs[s.dialog.kind] : null;
+    const confirm = () => {
+      const { kind, id, name } = s.dialog;
+      if (kind === 'DELETE') return this.setState({ dialog: null, toast: 'Borrador eliminado.', events: s.events.filter((e) => e.id !== id) });
+      const before = s.events.find((e) => e.id === id).sold === s.events.find((e) => e.id === id).cap ? 'SOLD_OUT' : 'PUBLISHED';
+      const next = { CANCEL: 'CANCELLED', SUSPEND: 'SUSPENDED', RESUME: before }[kind];
+      const msgs = { CANCEL: name + ' se canceló. Iniciamos los reintegros.', SUSPEND: name + ' quedó suspendido.', RESUME: name + ' se reanudó.' };
+      this.setStatus(id, next, msgs[kind]);
+    };
+    return {
+      filters: ['ALL', 'DRAFT', 'PUBLISHED', 'SOLD_OUT', 'SUSPENDED', 'CANCELLED', 'FINISHED'].map((k) => ({ label: k === 'ALL' ? 'Todos' : labels[k], cls: s.filter === k ? 'chip on' : 'chip', pressed: s.filter === k ? 'true' : 'false', pick: () => this.setState({ filter: k }) })),
+      rows: visible.map((e) => ({ ...e, statusLabel: labels[e.status], badgeCls: 'badge s-' + e.status, sold: e.status === 'DRAFT' ? '—' : e.sold.toLocaleString('es-AR') + ' / ' + e.cap.toLocaleString('es-AR'), actions: actionsFor(e) })),
+      empty: visible.length === 0,
+      dialog: Boolean(d), dlgTitle: d ? d[0] : '', dlgText: d ? d[1] : '', dlgBtn: d ? d[2] : '', dlgBtnCls: d ? d[3] : 'btn',
+      isResume: Boolean(s.dialog && s.dialog.kind === 'RESUME'),
+      closeDialog: () => this.setState({ dialog: null }), confirm,
+      toast: s.toast, hideToast: () => this.setState({ toast: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

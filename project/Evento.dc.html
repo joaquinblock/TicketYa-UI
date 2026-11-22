@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Detalle del evento</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F2F1EC;color:#141414;font-family:Inter,system-ui,sans-serif}
+a{color:#1D4ED8}a:hover{color:#1E3A8A}
+h1,h2,h3{font-family:Archivo,sans-serif;letter-spacing:-0.02em;margin:0}
+button:focus-visible,a:focus-visible{outline:3px solid #1D4ED8;outline-offset:3px}
+.mock{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:8px 24px;background:#141414;color:#F2F1EC;font-size:13px}
+.mock a{color:#F2F1EC;text-decoration:none;padding:4px 12px;border-radius:999px;border:1px solid #57544E}
+.mock a.on{background:#FFC531;color:#141414;border-color:#FFC531}
+.top{position:sticky;top:0;z-index:20;background:#FFFFFF;border-bottom:1px solid #E9E7E1}
+.top-in{max-width:1240px;margin:0 auto;padding:0 28px;min-height:76px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.brand{display:inline-flex;align-items:center;gap:9px;font-family:Archivo,sans-serif;font-size:22px;font-weight:800;letter-spacing:-.03em;color:#141414;text-decoration:none;justify-self:start}
+.brand-icon{width:35px;height:35px;border-radius:10px;background:#FFC531;display:grid;place-items:center}
+.cnav{display:flex;gap:32px;align-self:stretch}
+.cnav a{display:flex;align-items:center;color:#5C5A55;text-decoration:none;font-size:14px;font-weight:600;position:relative}
+.cnav a:hover{color:#141414}
+.acts{justify-self:end;display:flex;align-items:center;gap:14px}
+.icon-btn{position:relative;width:44px;height:44px;border-radius:50%;border:0;background:#FFFFFF;display:grid;place-items:center;cursor:pointer;color:#141414}
+.dot{position:absolute;top:9px;right:10px;width:8px;height:8px;border-radius:50%;background:#D44335;border:1px solid #FFFFFF}
+.avatar{width:34px;height:34px;border-radius:50%;background:#EEE9DD;display:grid;place-items:center;font-size:12px;font-weight:700}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px;box-sizing:border-box;width:100%}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 34px;border-radius:10px;border:0;background:#FFC531;color:#141414;font:700 15px Inter,sans-serif;text-decoration:none;cursor:pointer;box-sizing:border-box}
+.btn:hover{background:#F0B51C;color:#141414}
+.hero{position:relative;overflow:hidden;border-radius:16px;min-height:420px;background:#292823;color:#FFFFFF;display:flex;align-items:flex-end}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,20,20,.85) 0%,rgba(20,20,20,.62) 50%,rgba(20,20,20,.15) 100%),linear-gradient(0deg,rgba(20,20,20,.6),rgba(20,20,20,0) 70%)}
+.hb{padding:7px 10px;border-radius:5px;font-size:12px;font-weight:700}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:.14em;color:#77736B;text-transform:uppercase}
+.alert{padding:14px 16px;border-radius:12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.srow{min-height:76px;border-bottom:1px solid #DFDCD4;display:grid;grid-template-columns:minmax(0,1fr) minmax(140px,1.2fr) auto;align-items:center;gap:20px}
+.occ{display:flex;align-items:center;gap:10px}
+.occ .t{flex:1;height:6px;border-radius:6px;background:#E9E6DF;overflow:hidden}
+.occ .t i{display:block;height:100%;background:#F0BD30;border-radius:6px}
+.aside{background:#FFFFFF;border:1px solid #E5E2DB;border-radius:14px;padding:20px}
+.item{display:flex;gap:12px;padding:13px 0;border-top:1px solid #EFEDE7;color:#77736B}
+.item svg{flex:none;margin-top:1px}
+.item b{display:block;color:#141414;font-size:14px}
+.item small{display:block;font-size:13px;margin-top:4px;line-height:1.45}
+.map{height:130px;margin-top:12px;border-radius:10px;background-color:#E9E8DF;background-image:linear-gradient(35deg,transparent 46%,#D5D3C9 47%,#D5D3C9 50%,transparent 51%),linear-gradient(125deg,transparent 44%,#D5D3C9 45%,#D5D3C9 48%,transparent 49%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1D4ED8}
+.foot{background:#F8F7F3;color:#5C5A55;border-top:1px solid #E1DED7}
+.foot a{color:#5C5A55;text-decoration:none;font-size:14px}
+.back{display:inline-flex;align-items:center;gap:8px;color:#5C5A55;font-size:14px;font-weight:600;text-decoration:none;min-height:44px}
+.back:hover{color:#141414}
+.steps{display:flex;flex-wrap:wrap;align-items:center;gap:6px;list-style:none;margin:0;padding:0;font-size:13px}
+.steps li{display:flex;align-items:center;gap:7px;color:#77736B;font-weight:600}
+.steps li+li:before{content:"";width:18px;height:1px;background:#C9C5BB;margin-right:4px}
+.steps a{color:#5C5A55;text-decoration:none}
+.steps a:hover{color:#141414;text-decoration:underline}
+.steps .n{width:22px;height:22px;border-radius:50%;display:inline-grid;place-items:center;font-size:11px;font-weight:700;background:#E6E3DC;color:#5C5A55}
+.steps .done .n{background:#141414;color:#FFC531}
+.steps .cur{color:#141414}
+.steps .cur .n{background:#FFC531;color:#141414}
+.foot a:hover{color:#141414;text-decoration:underline}
+.foot h3{font:700 13px Inter,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#141414;margin:0 0 14px}
+.foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+@media (max-width:760px){
+.mock{display:none}
+.steps li:not(.cur){font-size:0;gap:0}
+.steps li:not(.cur) .n{font-size:11px}
+.steps li+li:before{width:10px}
+.top-in{grid-template-columns:1fr auto;padding:0 16px}
+.cnav{grid-column:1/-1;grid-row:2;justify-content:center;gap:24px;min-height:44px}
+.wrap{padding:0 16px}
+.srow{grid-template-columns:1fr auto;gap:6px 12px;padding:12px 0}
+.srow .occ{grid-column:1;grid-row:2}
+.srow .price{grid-column:2;grid-row:1/3}
+.name-lbl{display:none}
+}
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; flex-direction: column">
+  <nav class="mock" aria-label="Vistas del mockup">
+    <strong style="margin-right: 4px">Mockup · ver como</strong>
+    <a class="on" href="Main.dc.html">Cliente</a>
+    <a href="OrgEventos.dc.html">Organizador</a>
+    <a href="AdminGestion.dc.html">Administrador</a>
+    <a href="Acceso.dc.html">Personal de acceso</a>
+  </nav>
+
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="Main.dc.html" aria-label="TicketYa, inicio">
+        <span class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></span>
+        TicketYa
+      </a>
+      <nav class="cnav" aria-label="Principal">
+        <a href="Main.dc.html">Explorar</a>
+        <a href="Entradas.dc.html">Mis entradas</a>
+        <a href="Perfil.dc.html">Preferencias</a>
+      </nav>
+      <div class="acts">
+        <button class="icon-btn" aria-label="Notificaciones, 2 sin leer">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="dot"></span>
+        </button>
+        <span style="display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px"><span class="avatar" aria-hidden="true">AG</span><span class="name-lbl">Ana García</span></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" style="display: flex; flex-direction: column; gap: 32px; padding-top: 16px; padding-bottom: 64px">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 24px; margin-bottom: -16px">
+      <a class="back" href="Main.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Volver a explorar</a>
+      <nav aria-label="Pasos de la compra">
+        <ol class="steps">
+          <li class="done"><span class="n"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></span><a href="Main.dc.html">Explorar</a></li>
+          <li class="cur" aria-current="step"><span class="n">2</span>Evento</li>
+          <li><span class="n">3</span>Fila virtual</li>
+          <li><span class="n">4</span>Lugares</li>
+          <li><span class="n">5</span>Pago</li>
+        </ol>
+      </nav>
+    </div>
+    <section class="hero" aria-labelledby="ev-title">
+      <img src="/_blob/18000e265ddf3a48ea891ba80c163e42" alt="Público frente al escenario iluminado">
+      <div class="shade"></div>
+      <div style="position: relative; padding: 0 64px 40px; display: flex; flex-direction: column; gap: 14px; max-width: 720px">
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <span class="hb" style="background: #F2F1EC; color: #141414">Recital</span>
+          <span class="hb" style="background: #FFC531; color: #141414">Alta demanda · fila virtual</span>
+          <sc-if value="{{showStatus}}" hint-placeholder-val="{{ false }}"><span class="hb" style="{{statusStyle}}">{{statusLabel}}</span></sc-if>
+        </div>
+        <h1 id="ev-title" style="font-size: clamp(40px, 6vw, 64px); line-height: .98; letter-spacing: -0.035em">Los Serranos en vivo</h1>
+        <p style="margin: 0; font-size: 16px; line-height: 1.6; color: #EEECE8; max-width: 580px">Una noche para cantar bien fuerte. Los Serranos llegan con un show único, invitados sorpresa y todos sus clásicos.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: 14px; font-weight: 600">
+          <span style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>13 dic 2026 · 21:00 hs</span>
+          <span style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>Estadio del Sur · Buenos Aires</span>
+        </div>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start">
+      <section aria-labelledby="sectores" style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 8px">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <span class="eyebrow">Encontrá tu lugar</span>
+            <h2 id="sectores" style="font-size: 30px">Sectores y precios</h2>
+          </div>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #5C5A55"><i style="width: 8px; height: 8px; border-radius: 50%; background: #1C8A54; display: inline-block"></i>Disponibilidad en tiempo real</span>
+        </div>
+
+        <div class="alert" role="status" style="{{alertStyle}}">
+          <strong>{{alertTitle}}</strong>
+          <span>{{alertText}}</span>
+        </div>
+
+        <div style="border-top: 1px solid #DFDCD4">
+          <sc-for list="{{sectors}}" as="s" hint-placeholder-count="4">
+            <div class="srow">
+              <div style="display: flex; flex-direction: column; gap: 4px"><strong style="font-size: 16px">{{s.name}}</strong><span style="font-size: 13px; color: #77736B">{{s.kind}}</span></div>
+              <div class="occ"><span class="t" aria-hidden="true"><i style="{{s.bar}}"></i></span><span style="font-size: 12px; color: #5C5A55; white-space: nowrap">{{s.left}}</span></div>
+              <strong class="price" style="font-size: 18px">{{s.price}}</strong>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin: 0; font-size: 13px; color: #77736B">Hasta 4 entradas por persona · Devoluciones hasta 72 horas antes del evento</p>
+        <sc-if value="{{canBuy}}" hint-placeholder-val="{{ true }}">
+          <a class="btn" href="Fila.dc.html" style="align-self: flex-start">Entrar a la fila
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
+          </a>
+        </sc-if>
+      </section>
+
+      <aside class="aside" aria-labelledby="elevento" style="flex: 1 1 300px; min-width: 0; max-width: 100%">
+        <h3 id="elevento" style="font-size: 20px; margin-bottom: 14px">El evento</h3>
+        <div class="item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/></svg>
+          <span><b>Organiza</b><small>Producciones del Sur</small></span>
+        </div>
+        <div class="item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5 6.5-5s5.7 1.5 6.5 5M16 4.5a3.5 3.5 0 0 1 0 7M18 15c2 .6 3.2 2.3 3.5 5"/></svg>
+          <span><b>Participan</b><small>Los Serranos</small></span>
+        </div>
+        <div class="item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+          <span><b>Venta desde</b><small>20 nov 2026 · 10:00 hs</small></span>
+        </div>
+        <div class="item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <span><b>Ubicación</b><small>Estadio del Sur · Av. del Estadio 1000, Buenos Aires</small></span>
+        </div>
+        <div class="map" role="img" aria-label="Mapa del Estadio del Sur, en Buenos Aires">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s7-6.3 7-12a7 7 0 0 0-14 0c0 5.7 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          <span style="font-size: 11px; font-weight: 700; letter-spacing: .1em; color: #5C5A55; margin-top: 6px">BUENOS AIRES</span>
+          <small style="font: 11px 'JetBrains Mono', monospace; color: #77736B; margin-top: 3px">-34.5453, -58.4498</small>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="foot" style="margin-top: auto">
+    <div class="wrap" style="padding-top: 64px; padding-bottom: 36px; display: flex; flex-direction: column; gap: 48px">
+      <div style="display: flex; flex-wrap: wrap; gap: 40px 56px">
+        <div style="flex: 2 1 260px; display: flex; flex-direction: column; gap: 16px; max-width: 360px">
+          <a class="brand" href="Main.dc.html" style="color: #141414"><span class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#141414" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a3 3 0 0 0 0 6v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a3 3 0 0 0 0-6z"/><path d="M13 5v2M13 11v2M13 17v2"/></svg></span>TicketYa<sup style="font-size: 12px; font-weight: 600">®</sup></a>
+          <p style="margin: 0; line-height: 1.6; font-size: 14px">Entradas para todo tipo de eventos, desde el club del barrio hasta el estadio. Comprás desde el celular, sin filas ni sobresaltos.</p>
+          <a href="Perfil.dc.html" style="color: #141414; font-weight: 700; text-decoration: underline; text-decoration-color: #FFC531; text-decoration-thickness: 3px; text-underline-offset: 4px">Avisame cuando toque mi artista favorito →</a>
+        </div>
+        <nav aria-labelledby="f1" style="flex: 1 1 150px"><h3 id="f1">Explorar</h3><ul><li><a href="Main.dc.html">Recitales</a></li><li><a href="Main.dc.html">Festivales</a></li><li><a href="Main.dc.html">Teatro</a></li><li><a href="Main.dc.html">Deportes</a></li><li><a href="Main.dc.html">Conferencias</a></li></ul></nav>
+        <nav aria-labelledby="f2" style="flex: 1 1 150px"><h3 id="f2">Ciudades</h3><ul><li><a href="Main.dc.html">Buenos Aires</a></li><li><a href="Main.dc.html">Rosario</a></li><li><a href="Main.dc.html">Córdoba</a></li><li><a href="Main.dc.html">Tandil</a></li></ul></nav>
+        <nav aria-labelledby="f3" style="flex: 1 1 170px"><h3 id="f3">Ayuda</h3><ul><li><a href="Entradas.dc.html">Mis entradas y QR</a></li><li><a href="Entradas.dc.html">Devoluciones</a></li><li><a href="Fila.dc.html">Cómo funciona la fila virtual</a></li><li><a href="Pago.dc.html">Medios de pago</a></li></ul></nav>
+        <nav aria-labelledby="f4" style="flex: 1 1 170px"><h3 id="f4">Organizadores</h3><ul><li><a href="OrgEditor.dc.html">Publicá tu evento</a></li><li><a href="OrgEventos.dc.html">Panel de organizador</a></li><li><a href="OrgReporte.dc.html">Reportes de venta</a></li><li><a href="Acceso.dc.html">Control de acceso</a></li></ul></nav>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 22px; border-top: 1px solid #E1DED7; font-size: 13px; color: #77736B">
+        <span>© 2026 TicketYa® · Hecho en Argentina · Grupo 10 · Arquitectura Web, TUDAI</span>
+        <span style="display: flex; flex-wrap: wrap; gap: 20px"><a href="Main.dc.html" style="font-size: 13px; color: #77736B">Términos</a><a href="Main.dc.html" style="font-size: 13px; color: #77736B">Privacidad</a><a href="Main.dc.html" style="font-size: 13px; color: #77736B">Defensa del consumidor</a><span>Pagás con crédito, débito o dinero en cuenta</span></span>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"status":{"editor":"enum","options":["PUBLISHED","NOT_STARTED","SOLD_OUT","SUSPENDED","CANCELLED"],"default":"PUBLISHED"},"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const status = this.props.status ?? 'PUBLISHED';
+    const sectors = [
+      { name: 'Campo', kind: 'No numerado · de pie', cap: 5000, left: 1240, price: '$45.000' },
+      { name: 'Platea baja', kind: 'Numerado · filas A a H', cap: 112, left: 3, price: '$68.000' },
+      { name: 'Platea alta', kind: 'Numerado · filas J a P', cap: 140, left: 0, price: '$55.000' },
+      { name: 'Palco VIP', kind: 'Numerado · 4 palcos', cap: 16, left: 3, price: '$120.000' }
+    ].map((s) => ({
+      ...s,
+      left: s.left === 0 ? 'Agotado' : (s.left < 10 ? 'Últimos ' + s.left + ' lugares' : s.left.toLocaleString('es-AR') + ' disponibles'),
+      bar: 'width:' + Math.round(100 * (s.cap - s.left) / s.cap) + '%'
+    }));
+    const alerts = {
+      PUBLISHED: ['Alta demanda · fila virtual', 'La venta ya abrió. Entrá a la fila para asegurar tu lugar: te habilitamos por tandas y tenés 10 minutos para reservar.', 'background:#EAF0FF;color:#1E3A8A'],
+      NOT_STARTED: ['La venta todavía no empezó', 'Abre el 20 de noviembre a las 10:00. Ese día vas a poder entrar a la fila.', 'background:#EAF0FF;color:#1E3A8A'],
+      SOLD_OUT: ['Entradas agotadas', 'Si alguien devuelve una entrada, el evento vuelve a estar a la venta.', 'background:#FBE3E1;color:#8A1C13'],
+      SUSPENDED: ['Evento suspendido', 'El organizador suspendió el evento. Te avisamos por email si se reprograma.', 'background:#FFF1CC;color:#5C4200'],
+      CANCELLED: ['Evento cancelado', 'Todas las entradas vendidas se reintegran automáticamente al medio de pago.', 'background:#FBE3E1;color:#8A1C13']
+    };
+    const badges = { SOLD_OUT: ['Agotado', 'background:#FFFFFF;color:#5C5A55'], SUSPENDED: ['Suspendido', 'background:#FFF1CC;color:#5C4200'], CANCELLED: ['Cancelado', 'background:#FBE3E1;color:#8A1C13'] };
+    const a = alerts[status];
+    const b = badges[status];
+    return {
+      sectors,
+      alertTitle: a[0], alertText: a[1], alertStyle: a[2],
+      showStatus: Boolean(b), statusLabel: b ? b[0] : '', statusStyle: b ? b[1] : '',
+      canBuy: status === 'PUBLISHED'
+    };
+  }
+}
+</script>
+</body>
+</html>

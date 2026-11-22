@@ -1,0 +1,49 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-11-21T15:00:00Z" },
+  "title": "TicketYa UI",
+  "launch": { "view": "canvas", "page": "cliente" },
+  "pages": [
+    { "id": "cliente", "name": "Cliente" },
+    { "id": "organizador", "name": "Organizador" },
+    { "id": "admin", "name": "Administrador" },
+    { "id": "acceso", "name": "Personal de acceso" }
+  ],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 2400, "title": "Inicio: hero, cartelera y footer", "page": "cliente", "expand": "fill", "is_interactive": true },
+    "Evento.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 1700, "title": "Detalle del evento", "page": "cliente", "expand": "fill", "is_interactive": true },
+    "Fila.dc.html": { "x": 3040, "y": 0, "w": 1440, "h": 1000, "title": "Fila virtual", "page": "cliente", "expand": "fill", "is_interactive": true },
+    "Asientos.dc.html": { "x": 4560, "y": 0, "w": 1440, "h": 1300, "title": "Elegir sector y asientos", "page": "cliente", "expand": "fill", "is_interactive": true },
+    "Pago.dc.html": { "x": 6080, "y": 0, "w": 1440, "h": 1200, "title": "Reserva y pago", "page": "cliente", "expand": "fill", "is_interactive": true },
+    "Entradas.dc.html": { "x": 7600, "y": 0, "w": 1440, "h": 1500, "title": "Mis entradas", "page": "cliente", "expand": "fill", "is_interactive": true },
+    "Perfil.dc.html": { "x": 9120, "y": 0, "w": 1440, "h": 1300, "title": "Preferencias y notificaciones", "page": "cliente", "expand": "fill", "is_interactive": true },
+    "MainMobile.dc.html": { "x": 0, "y": 2800, "w": 390, "h": 5600, "title": "Inicio · mobile", "page": "cliente", "is_interactive": true },
+    "EventoMobile.dc.html": { "x": 1520, "y": 2800, "w": 390, "h": 3400, "title": "Detalle del evento · mobile", "page": "cliente", "is_interactive": true },
+    "FilaMobile.dc.html": { "x": 3040, "y": 2800, "w": 390, "h": 2000, "title": "Fila virtual · mobile", "page": "cliente", "is_interactive": true },
+    "AsientosMobile.dc.html": { "x": 4560, "y": 2800, "w": 390, "h": 2400, "title": "Elegir lugares · mobile", "page": "cliente", "is_interactive": true },
+    "PagoMobile.dc.html": { "x": 6080, "y": 2800, "w": 390, "h": 2800, "title": "Reserva y pago · mobile", "page": "cliente", "is_interactive": true },
+    "EntradasMobile.dc.html": { "x": 7600, "y": 2800, "w": 390, "h": 2600, "title": "Mis entradas · mobile", "page": "cliente", "is_interactive": true },
+    "PerfilMobile.dc.html": { "x": 9120, "y": 2800, "w": 390, "h": 2900, "title": "Preferencias · mobile", "page": "cliente", "is_interactive": true },
+    "OrgEventos.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 1200, "title": "Mis eventos", "page": "organizador", "expand": "fill", "is_interactive": true },
+    "OrgEditor.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 1600, "title": "Crear y publicar un evento", "page": "organizador", "expand": "fill", "is_interactive": true },
+    "OrgReporte.dc.html": { "x": 3040, "y": 0, "w": 1440, "h": 1200, "title": "Reporte del evento", "page": "organizador", "expand": "fill", "is_interactive": true },
+    "AdminGestion.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 1300, "title": "Eventos y devoluciones", "page": "admin", "expand": "fill", "is_interactive": true },
+    "AdminLugares.dc.html": { "x": 1520, "y": 0, "w": 1440, "h": 1400, "title": "Lugares, sectores y participantes", "page": "admin", "expand": "fill", "is_interactive": true },
+    "Acceso.dc.html": { "x": 0, "y": 0, "w": 390, "h": 844, "title": "Escanear QR en el ingreso", "page": "acceso", "is_interactive": true }
+  },
+  "order": [
+    "Main.dc.html", "Evento.dc.html", "Fila.dc.html", "Asientos.dc.html", "Pago.dc.html", "Entradas.dc.html", "Perfil.dc.html",
+    "MainMobile.dc.html", "EventoMobile.dc.html", "FilaMobile.dc.html", "AsientosMobile.dc.html", "PagoMobile.dc.html", "EntradasMobile.dc.html", "PerfilMobile.dc.html",
+    "OrgEventos.dc.html", "OrgEditor.dc.html", "OrgReporte.dc.html",
+    "AdminGestion.dc.html", "AdminLugares.dc.html",
+    "Acceso.dc.html"
+  ],
+  "notes": {
+    "tCliente": { "x": 0, "y": -300, "text": "Cliente: buscar, elegir, comprar y ver mis entradas", "kind": "title1", "maxW": 10560, "page": "cliente" },
+    "tClienteMobile": { "x": 0, "y": 2550, "text": "Cliente en el celular (390 px)", "kind": "title1", "maxW": 10560, "page": "cliente" },
+    "tOrg": { "x": 0, "y": -300, "text": "Organizador: armar, publicar y medir sus eventos", "kind": "title1", "maxW": 4480, "page": "organizador" },
+    "tAdmin": { "x": 0, "y": -300, "text": "Administrador: operar la plataforma", "kind": "title1", "maxW": 2960, "page": "admin" },
+    "tAcceso": { "x": 0, "y": -300, "text": "Personal de acceso", "kind": "title1", "maxW": 1200, "page": "acceso" }
+  },
+  "designSystems": []
+}
