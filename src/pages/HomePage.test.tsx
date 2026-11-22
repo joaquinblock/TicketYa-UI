@@ -93,3 +93,33 @@ describe('Cartelera: combinar filtros', () => {
     await expectEventNames(['Peña folklórica serrana'])
   })
 })
+
+describe('Cartelera: filtros desde la URL', () => {
+  it('al entrar con el tipo en la URL el chip está marcado y veo los recitales', async () => {
+    renderHome('/?type=CONCERT')
+
+    await expectEventNames(CONCERTS)
+    const types = screen.getByRole('group', { name: 'Tipo de evento' })
+    expect(within(types).getByRole('button', { name: 'Recitales' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+  })
+
+  it('al elegir "Desde", "Hasta" no permite fechas anteriores', async () => {
+    const user = userEvent.setup()
+    renderHome()
+    await findEventCards()
+
+    await user.type(screen.getByLabelText('Desde'), '2026-12-10')
+
+    expect(screen.getByLabelText('Hasta')).toHaveAttribute('min', '2026-12-10')
+  })
+
+  it('al entrar con parámetros inválidos veo la cartelera completa y la URL queda limpia', async () => {
+    renderHome('/?type=FOO&page=-3')
+
+    expect(await findEventCards()).toHaveLength(6)
+    await waitFor(() => expect(getCurrentUrl().search).toBe(''))
+  })
+})
