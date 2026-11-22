@@ -4,20 +4,17 @@ import { ROUTES } from '@/shared/lib/routes'
 
 type FooterLink = { label: string; to: string }
 
+const linksToHome = (labels: string[]): FooterLink[] =>
+  labels.map((label) => ({ label, to: ROUTES.home }))
+
 const FOOTER_COLUMNS: { title: string; links: FooterLink[] }[] = [
   {
     title: 'Explorar',
-    links: ['Recitales', 'Festivales', 'Teatro', 'Deportes', 'Conferencias'].map((label) => ({
-      label,
-      to: ROUTES.home,
-    })),
+    links: linksToHome(['Recitales', 'Festivales', 'Teatro', 'Deportes', 'Conferencias']),
   },
   {
     title: 'Ciudades',
-    links: ['Buenos Aires', 'Rosario', 'Córdoba', 'Tandil'].map((label) => ({
-      label,
-      to: ROUTES.home,
-    })),
+    links: linksToHome(['Buenos Aires', 'Rosario', 'Córdoba', 'Tandil']),
   },
   {
     title: 'Ayuda',
@@ -28,16 +25,20 @@ const FOOTER_COLUMNS: { title: string; links: FooterLink[] }[] = [
       { label: 'Medios de pago', to: ROUTES.home },
     ],
   },
+  {
+    title: 'Organizadores',
+    links: linksToHome(['Publicá tu evento', 'Cómo funciona', 'Contacto comercial']),
+  },
 ]
 
-const LEGAL_LINKS = ['Términos', 'Privacidad', 'Defensa del consumidor']
+const LEGAL_LINKS = linksToHome(['Términos', 'Privacidad', 'Defensa del consumidor'])
 
 export function Footer() {
   return (
     <footer className="mt-auto border-t border-footer-line bg-footer text-muted">
       <div className="mx-auto flex max-w-310 flex-col gap-12 px-4 pt-16 pb-9 md:px-7">
-        <div className="flex flex-wrap gap-x-14 gap-y-10">
-          <div className="flex max-w-90 flex-[2_1_260px] flex-col gap-4">
+        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-[2fr_repeat(4,1fr)] md:gap-x-10">
+          <div className="col-span-2 flex max-w-90 flex-col gap-4 md:col-span-1">
             <BrandLogo hasRegisteredMark />
             <p className="text-sm leading-relaxed">
               Entradas para todo tipo de eventos, desde el club del barrio hasta el estadio. Comprás
@@ -51,7 +52,7 @@ export function Footer() {
             </Link>
           </div>
           {FOOTER_COLUMNS.map(({ title, links }) => (
-            <nav key={title} aria-label={title} className="flex-[1_1_150px]">
+            <nav key={title} aria-label={title}>
               <h3 className="mb-3.5 font-sans text-label font-bold tracking-widest text-ink uppercase">
                 {title}
               </h3>
@@ -70,14 +71,25 @@ export function Footer() {
             </nav>
           ))}
         </div>
-        <div className="flex flex-wrap justify-between gap-3 border-t border-footer-line pt-5.5 text-label text-subtle">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-footer-line pt-5.5 text-label text-subtle">
           <span>© 2026 TicketYa® · Hecho en Argentina · Grupo 10 · Arquitectura Web, TUDAI</span>
-          <span className="flex flex-wrap gap-5">
-            {LEGAL_LINKS.map((label) => (
-              <span key={label}>{label}</span>
+          <nav aria-label="Legal" className="flex flex-wrap items-center gap-5">
+            {LEGAL_LINKS.map(({ label, to }) => (
+              <Link
+                key={label}
+                to={to}
+                className="text-subtle no-underline hover:text-ink hover:underline"
+              >
+                {label}
+              </Link>
             ))}
-            <span>Pagás con crédito, débito o dinero en cuenta</span>
-          </span>
+            <Link
+              to={ROUTES.home}
+              className="rounded-control border border-line-strong px-3 py-1.5 font-semibold text-ink no-underline hover:bg-surface-hover"
+            >
+              Botón de arrepentimiento
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>
