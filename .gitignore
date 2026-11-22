@@ -25,3 +25,8 @@ dist-ssr
 
 # Variables de entorno locales
 .env
+
+### Flujo con agentes ###
+.work/
+.claude/settings.local.json
+CLAUDE.local.md
