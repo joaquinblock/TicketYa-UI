@@ -210,3 +210,31 @@ describe('Buscador: aplicar la búsqueda con Enter', () => {
     expect(getCurrentUrl().searchParams.get('q')).toBe('serr')
   })
 })
+
+describe('Cartelera: sin resultados', () => {
+  it('con Teatro en Mar del Plata avisa que no hay eventos y "Limpiar filtros" vuelve a los 6', async () => {
+    const user = userEvent.setup()
+    renderHome('/?type=THEATER&city=Mar%20del%20Plata')
+
+    expect(
+      await screen.findByRole('heading', { name: 'No encontramos eventos con esos filtros' }),
+    ).toBeInTheDocument()
+    const [clearInEmptyState] = screen.getAllByRole('button', { name: 'Limpiar filtros' }).reverse()
+    await user.click(clearInEmptyState)
+
+    expect(await findEventCards()).toHaveLength(6)
+    expect(getCurrentUrl().search).toBe('')
+  })
+
+  it('sin filtros no ofrece "Limpiar filtros" y con un filtro activo sí', async () => {
+    renderHome()
+    await findEventCards()
+    expect(screen.queryByRole('button', { name: 'Limpiar filtros' })).not.toBeInTheDocument()
+
+    const user = userEvent.setup()
+    const types = screen.getByRole('group', { name: 'Tipo de evento' })
+    await user.click(within(types).getByRole('button', { name: 'Recitales' }))
+
+    expect(await screen.findByRole('button', { name: 'Limpiar filtros' })).toBeInTheDocument()
+  })
+})
