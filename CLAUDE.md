@@ -50,6 +50,8 @@ Seguí siempre la skill `atomic-design`: features con Atomic Design en lo compar
 
 Inicio combina `catalog` y `preferences`, así que vive en `src/pages/`.
 
+- **Partir un componente** (inline, subcomponente en el mismo archivo o archivo propio): skill `react-components`, sección "Inline, mismo archivo o archivo propio". Se decide antes de escribir el JSX.
+
 - **Cliente HTTP:** los services de cada feature usan `apiClient.get/post/put/patch/delete` de `src/shared/lib/http/apiClient.ts`.
 - **Ruteo:** React Router con `BrowserRouter`, `<Routes>` en `src/app/AppRouter.tsx` y un `routes/<feature>.route.tsx` por feature. Los paths viven todos en `src/shared/lib/routes.ts`, porque el header, el footer y la compra enlazan entre features.
 

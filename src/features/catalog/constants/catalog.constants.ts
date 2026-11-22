@@ -31,3 +31,18 @@ export const MIN_SUGGESTION_LENGTH = 2
 export const SEARCH_DEBOUNCE_MS = 300
 /** Máximo que acepta el backend para `q`. */
 export const MAX_QUERY_LENGTH = 100
+
+export const MONTH_ABBREVIATIONS = [
+  'ENE',
+  'FEB',
+  'MAR',
+  'ABR',
+  'MAY',
+  'JUN',
+  'JUL',
+  'AGO',
+  'SEP',
+  'OCT',
+  'NOV',
+  'DIC',
+] as const
