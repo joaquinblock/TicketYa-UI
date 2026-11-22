@@ -179,3 +179,29 @@ describe('Buscador: sugerencias que coinciden', () => {
     expect(getCurrentUrl().pathname).toBe('/eventos/11')
   })
 })
+
+describe('Buscador: aplicar la búsqueda', () => {
+  it('con Enter la cartelera muestra los resultados por relevancia y la URL tiene el texto', async () => {
+    renderHome()
+    await findEventCards()
+
+    await typeInSearchBox('serr{Enter}')
+
+    await expectEventNames(['Peña folklórica serrana', 'Los Serranos en vivo'])
+    expect(screen.getByRole('combobox', { name: 'Ordenar por' })).toHaveDisplayValue('Relevancia')
+    expect(getCurrentUrl().searchParams.get('q')).toBe('serr')
+  })
+
+  it('sin texto buscado el orden no ofrece "Relevancia"', async () => {
+    renderHome()
+    await findEventCards()
+
+    const sort = screen.getByRole('combobox', { name: 'Ordenar por' })
+    expect(within(sort).queryByRole('option', { name: 'Relevancia' })).not.toBeInTheDocument()
+    expect(
+      within(sort)
+        .getAllByRole('option')
+        .map((option) => option.textContent),
+    ).toEqual(['Fecha', 'Precio'])
+  })
+})
