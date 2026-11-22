@@ -77,3 +77,19 @@ describe('Cartelera: filtrar por tipo', () => {
     expect(getCurrentUrl().searchParams.get('type')).toBe('CONCERT')
   })
 })
+
+describe('Cartelera: combinar filtros', () => {
+  it('con "Recitales" y la ciudad Tandil veo solo la peña folklórica', async () => {
+    const user = userEvent.setup()
+    renderHome()
+    await findEventCards()
+
+    const types = screen.getByRole('group', { name: 'Tipo de evento' })
+    await user.click(within(types).getByRole('button', { name: 'Recitales' }))
+    const city = screen.getByRole('combobox', { name: 'Ciudad' })
+    await within(city).findByRole('option', { name: 'Tandil' })
+    await user.selectOptions(city, 'Tandil')
+
+    await expectEventNames(['Peña folklórica serrana'])
+  })
+})
