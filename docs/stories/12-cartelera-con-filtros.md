@@ -1,7 +1,7 @@
 # 12: Cartelera con filtros y búsqueda
 
 **Tipo:** Story
-**Estado:** borrador
+**Estado:** aprobado
 **Funcionalidad:** Inicio (épica #10 Cliente, página #11)
 
 ## Historia
