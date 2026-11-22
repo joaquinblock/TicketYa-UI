@@ -1,6 +1,7 @@
 import { Search } from 'lucide-react'
 import type { FocusEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { Button } from '@/shared/components/atoms/Button'
 import { ROUTES } from '@/shared/lib/routes'
 import { getEventDateParts } from '../../lib/eventFormat'
 import type { EventSummary } from '../../types/catalog.types'
@@ -18,7 +19,11 @@ export function EventSearchBox() {
 
   return (
     <div className="relative max-w-155" onBlur={closeWhenFocusLeaves}>
-      <form role="search" className="flex gap-2 rounded-card bg-surface p-2 shadow-2xl">
+      <form
+        role="search"
+        onSubmit={searchBox.submitSearch}
+        className="flex gap-2 rounded-card bg-surface p-2 shadow-2xl"
+      >
         <label className="flex min-h-13 flex-1 items-center gap-2.5 px-3 text-subtle">
           <Search aria-hidden className="size-5" />
           <span className="sr-only">Buscar eventos</span>
@@ -34,13 +39,28 @@ export function EventSearchBox() {
             className="w-full min-w-0 bg-transparent text-control text-ink outline-none"
           />
         </label>
+        <Button type="submit" variant="accent" className="min-h-13 px-6">
+          Buscar
+        </Button>
       </form>
-      {searchBox.areSuggestionsOpen && <SuggestionList suggestions={searchBox.suggestions} />}
+      {searchBox.areSuggestionsOpen && (
+        <SuggestionList
+          suggestions={searchBox.suggestions}
+          searchText={searchBox.trimmedText}
+          onShowAll={searchBox.applySearch}
+        />
+      )}
     </div>
   )
 }
 
-function SuggestionList({ suggestions }: { suggestions: EventSummary[] }) {
+type SuggestionListProps = {
+  suggestions: EventSummary[]
+  searchText: string
+  onShowAll: () => void
+}
+
+function SuggestionList({ suggestions, searchText, onShowAll }: SuggestionListProps) {
   return (
     <ul
       id={SUGGESTIONS_ID}
@@ -54,6 +74,15 @@ function SuggestionList({ suggestions }: { suggestions: EventSummary[] }) {
           <SuggestionLink event={event} />
         </li>
       ))}
+      <li>
+        <button
+          type="button"
+          onClick={onShowAll}
+          className="mt-1 min-h-11 w-full cursor-pointer border-t border-line px-3 text-left text-sm font-semibold text-link"
+        >
+          Ver todos los resultados para «{searchText}» · Enter
+        </button>
+      </li>
     </ul>
   )
 }

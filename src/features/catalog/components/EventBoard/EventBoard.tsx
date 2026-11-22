@@ -1,6 +1,8 @@
+import { Select } from '@/shared/components/atoms/Select'
+import { EVENT_SORT_LABEL, EVENT_SORTS } from '../../constants/catalog.constants'
 import { useEventFilters, useSanitizedFiltersUrl } from '../../hooks/useEventFilters'
 import { useEventSearch } from '../../hooks/useEventSearch'
-import type { EventSummary } from '../../types/catalog.types'
+import type { EventSort, EventSummary } from '../../types/catalog.types'
 import { EventCard } from '../EventCard/EventCard'
 import { EventFilters } from '../EventFilters'
 
@@ -14,9 +16,7 @@ export function EventBoard() {
 
   return (
     <section aria-labelledby="cartelera-titulo" className="flex flex-col gap-5">
-      <h2 id="cartelera-titulo" className="text-4xl font-extrabold">
-        Próximos eventos
-      </h2>
+      <BoardHeader />
       <EventFilters />
       {data && (
         <>
@@ -25,6 +25,46 @@ export function EventBoard() {
         </>
       )}
     </section>
+  )
+}
+
+function BoardHeader() {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col gap-1.5">
+        <p className="flex items-center gap-2 text-micro font-bold tracking-widest text-subtle uppercase">
+          <span aria-hidden className="h-0.5 w-5 bg-accent" />
+          Cartelera
+        </p>
+        <h2 id="cartelera-titulo" className="text-4xl font-extrabold">
+          Próximos eventos
+        </h2>
+      </div>
+      <SortSelect />
+    </div>
+  )
+}
+
+/** "Relevancia" solo tiene sentido con un texto buscado. */
+function SortSelect() {
+  const { filters, updateFilters } = useEventFilters()
+  const sorts = EVENT_SORTS.filter((sort) => sort !== 'RELEVANCE' || filters.q)
+
+  return (
+    <label className="flex items-center gap-2 text-xs font-semibold text-subtle">
+      Ordenar por
+      <Select
+        value={filters.sort}
+        onChange={(event) => updateFilters({ sort: event.target.value as EventSort })}
+        className="w-auto"
+      >
+        {sorts.map((sort) => (
+          <option key={sort} value={sort}>
+            {EVENT_SORT_LABEL[sort]}
+          </option>
+        ))}
+      </Select>
+    </label>
   )
 }
 
