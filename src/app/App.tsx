@@ -1,3 +1,9 @@
+import { AppProviders } from './AppProviders'
+
 export function App() {
-  return <h1>TicketYa</h1>
+  return (
+    <AppProviders>
+      <h1>TicketYa</h1>
+    </AppProviders>
+  )
 }

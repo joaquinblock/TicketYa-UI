@@ -1,0 +1,27 @@
+/** Códigos que arma el front cuando no hay `ErrorDto` del backend. */
+export const CLIENT_ERROR_CODE = {
+  NETWORK: 'network_error',
+  UNEXPECTED_RESPONSE: 'unexpected_response',
+} as const
+
+/** Forma del `ErrorDto` que devuelven todos los servicios (error-handling.md del backend). */
+export type ErrorDto = {
+  error: string
+  message: string
+  status: number
+  detail?: Record<string, unknown>
+}
+
+export class ApiError extends Error {
+  readonly code: string
+  readonly status: number
+  readonly detail?: Record<string, unknown>
+
+  constructor({ error, message, status, detail }: ErrorDto, options?: ErrorOptions) {
+    super(message, options)
+    this.name = 'ApiError'
+    this.code = error
+    this.status = status
+    this.detail = detail
+  }
+}
