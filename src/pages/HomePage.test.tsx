@@ -181,17 +181,6 @@ describe('Buscador: sugerencias que coinciden', () => {
 })
 
 describe('Buscador: aplicar la búsqueda', () => {
-  it('con Enter la cartelera muestra los resultados por relevancia y la URL tiene el texto', async () => {
-    renderHome()
-    await findEventCards()
-
-    await typeInSearchBox('serr{Enter}')
-
-    await expectEventNames(['Peña folklórica serrana', 'Los Serranos en vivo'])
-    expect(screen.getByRole('combobox', { name: 'Ordenar por' })).toHaveDisplayValue('Relevancia')
-    expect(getCurrentUrl().searchParams.get('q')).toBe('serr')
-  })
-
   it('sin texto buscado el orden no ofrece "Relevancia"', async () => {
     renderHome()
     await findEventCards()
@@ -203,5 +192,21 @@ describe('Buscador: aplicar la búsqueda', () => {
         .getAllByRole('option')
         .map((option) => option.textContent),
     ).toEqual(['Fecha', 'Precio'])
+  })
+})
+
+/** El backend busca también en los participantes: el festival entra por Los Serranos. */
+const SERR_RESULTS = ['Peña folklórica serrana', 'Los Serranos en vivo', 'Festival de Verano']
+
+describe('Buscador: aplicar la búsqueda con Enter', () => {
+  it('la cartelera muestra los resultados por relevancia y la URL tiene el texto', async () => {
+    renderHome()
+    await findEventCards()
+
+    await typeInSearchBox('serr{Enter}')
+
+    await expectEventNames(SERR_RESULTS)
+    expect(screen.getByRole('combobox', { name: 'Ordenar por' })).toHaveDisplayValue('Relevancia')
+    expect(getCurrentUrl().searchParams.get('q')).toBe('serr')
   })
 })
