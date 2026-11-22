@@ -8,16 +8,17 @@ import {
 } from '../constants/catalog.constants'
 import type { EventFilters } from '../types/catalog.types'
 
-const queryText = z
+const optionalTrimmedText = z
   .string()
-  .transform((text) => text.trim().slice(0, MAX_QUERY_LENGTH) || undefined)
+  .transform((text) => text.trim() || undefined)
   .optional()
   .catch(undefined)
 
 const eventFiltersSchema = z
   .object({
-    q: queryText,
+    q: optionalTrimmedText.transform((text) => text?.slice(0, MAX_QUERY_LENGTH)),
     type: z.enum(EVENT_TYPES).optional().catch(undefined),
+    city: optionalTrimmedText,
     from: z.iso.date().optional().catch(undefined),
     to: z.iso.date().optional().catch(undefined),
     sort: z.enum(EVENT_SORTS).catch(DEFAULT_EVENT_SORT),
