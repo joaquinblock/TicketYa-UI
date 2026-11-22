@@ -1,0 +1,46 @@
+import type { EVENT_SORT, EVENT_STATUS, EVENT_TYPE } from '../constants/catalog.constants'
+
+export type EventType = (typeof EVENT_TYPE)[keyof typeof EVENT_TYPE]
+export type EventSort = (typeof EVENT_SORT)[keyof typeof EVENT_SORT]
+export type EventStatus = (typeof EVENT_STATUS)[keyof typeof EVENT_STATUS]
+
+export type Venue = {
+  id: number
+  name: string
+  address: string
+  city: string
+}
+
+/** Evento como lo devuelve `GET /api/events`. */
+export type EventSummary = {
+  id: number
+  name: string
+  type: EventType
+  status: EventStatus
+  /** Fecha y hora local del evento, sin zona (`2026-12-02T22:00:00`). */
+  dateTime: string
+  highDemand: boolean
+  venue: Pick<Venue, 'name' | 'city'>
+  priceFrom: number
+  participants: string[]
+}
+
+export type Page<T> = {
+  content: T[]
+  /** Desde 0, como lo cuenta el backend. */
+  page: number
+  size: number
+  totalElements: number
+  totalPages: number
+}
+
+/** Filtros de la cartelera tal como viven en la URL. `page` empieza en 1. */
+export type EventFilters = {
+  q?: string
+  type?: EventType
+  city?: string
+  from?: string
+  to?: string
+  sort: EventSort
+  page: number
+}
