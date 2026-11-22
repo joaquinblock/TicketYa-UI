@@ -6,6 +6,7 @@ const GENERIC_MESSAGE = 'Algo salió mal. Probá de nuevo en un rato.'
 const MESSAGE_BY_CODE: Record<string, string> = {
   [CLIENT_ERROR_CODE.NETWORK]:
     'No pudimos conectarnos con TicketYa. Revisá tu conexión y probá de nuevo.',
+  [CLIENT_ERROR_CODE.TIMEOUT]: 'TicketYa está tardando en responder. Probá de nuevo en un rato.',
   [CLIENT_ERROR_CODE.UNEXPECTED_RESPONSE]: GENERIC_MESSAGE,
   service_unavailable:
     'El servicio no está disponible en este momento. Probá de nuevo en unos minutos.',

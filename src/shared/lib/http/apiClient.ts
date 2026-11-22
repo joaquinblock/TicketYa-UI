@@ -1,58 +1,101 @@
-import { expireSession, getAccessToken } from '@/shared/lib/session'
 import { ApiError, CLIENT_ERROR_CODE, type ErrorDto } from './ApiError'
 
+const DEFAULT_TIMEOUT_MS = 10_000
 const HTTP_UNAUTHORIZED = 401
-const HTTP_NO_CONTENT = 204
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+type ApiClientConfig = {
+  baseUrl: string
+  getAccessToken: () => string | undefined
+  /** Se llama cuando el gateway rechaza el token (401). */
+  onUnauthorized: () => void
+}
 
-type ApiRequestOptions = {
-  method?: HttpMethod
+let config: ApiClientConfig | undefined
+
+export function configureApiClient(apiClientConfig: ApiClientConfig) {
+  config = apiClientConfig
+}
+
+type RequestConfig = {
   body?: unknown
-  signal?: AbortSignal
+  params?: Record<string, unknown>
+  headers?: Record<string, string>
 }
 
-export async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {
-  const response = await send(path, options)
+async function request<T>(
+  method: string,
+  endpoint: string,
+  { body, params, headers }: RequestConfig = {},
+): Promise<T> {
+  if (!config)
+    throw new Error('apiClient sin configurar: llamá a configureApiClient() al arrancar.')
 
-  if (response.status === HTTP_UNAUTHORIZED) expireSession()
+  const response = await send(method, buildUrl(config.baseUrl, endpoint, params), {
+    body,
+    headers: { ...buildAuthHeader(config.getAccessToken()), ...headers },
+  })
+
+  if (response.status === HTTP_UNAUTHORIZED) config.onUnauthorized()
   if (!response.ok) throw await toApiError(response)
-  if (response.status === HTTP_NO_CONTENT) return undefined as T
 
-  return (await response.json()) as T
+  // Un 2xx sin body (no solo el 204) rompe res.json(): se lee como texto primero.
+  const text = await response.text()
+  if (!text) return undefined as T
+  return JSON.parse(text) as T
 }
 
-async function send(path: string, { method = 'GET', body, signal }: ApiRequestOptions) {
-  const baseUrl = import.meta.env.TICKETYA_API_BASE_URL ?? ''
+function buildUrl(baseUrl: string, endpoint: string, params?: Record<string, unknown>) {
+  const url = new URL(`${baseUrl}${endpoint}`)
+  Object.entries(params ?? {}).forEach(([key, value]) => {
+    if (value != null && value !== '') url.searchParams.set(key, String(value))
+  })
+  return url
+}
+
+function buildAuthHeader(token: string | undefined): Record<string, string> {
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
+async function send(
+  method: string,
+  url: URL,
+  { body, headers }: Required<Pick<RequestConfig, 'headers'>> & Pick<RequestConfig, 'body'>,
+) {
+  // fetch no tiene timeout propio: el AbortController corta el request a los DEFAULT_TIMEOUT_MS.
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS)
+  const isJsonBody = body != null && !(body instanceof FormData) && !(body instanceof Blob)
+
   try {
-    return await fetch(`${baseUrl}${path}`, {
+    return await fetch(url, {
       method,
-      headers: buildHeaders(body !== undefined),
-      body: body === undefined ? undefined : JSON.stringify(body),
-      signal,
+      signal: controller.signal,
+      headers: { ...(isJsonBody && { 'Content-Type': 'application/json' }), ...headers },
+      body: body == null ? undefined : isJsonBody ? JSON.stringify(body) : (body as BodyInit),
     })
   } catch (error) {
-    throw new ApiError(
-      {
-        error: CLIENT_ERROR_CODE.NETWORK,
-        message: 'No se pudo conectar con el servidor',
-        status: 0,
-      },
-      { cause: error },
-    )
+    throw toClientError(error)
+  } finally {
+    clearTimeout(timer)
   }
 }
 
-function buildHeaders(hasBody: boolean): HeadersInit {
-  const token = getAccessToken()
-  return {
-    ...(hasBody && { 'Content-Type': 'application/json' }),
-    ...(token && { Authorization: `Bearer ${token}` }),
-  }
+function toClientError(error: unknown): ApiError {
+  const isTimeout = error instanceof Error && error.name === 'AbortError'
+  return new ApiError(
+    isTimeout
+      ? { error: CLIENT_ERROR_CODE.TIMEOUT, message: 'El servidor tardó demasiado', status: 408 }
+      : {
+          error: CLIENT_ERROR_CODE.NETWORK,
+          message: 'No se pudo conectar con el servidor',
+          status: 0,
+        },
+    { cause: error },
+  )
 }
 
 async function toApiError(response: Response): Promise<ApiError> {
-  const body = await response.json().catch(() => undefined)
+  const body: unknown = await response.json().catch(() => undefined)
   if (isErrorDto(body)) return new ApiError(body)
 
   return new ApiError({
@@ -64,4 +107,15 @@ async function toApiError(response: Response): Promise<ApiError> {
 
 function isErrorDto(body: unknown): body is ErrorDto {
   return typeof body === 'object' && body !== null && 'error' in body && 'message' in body
+}
+
+export const apiClient = {
+  get: <T>(url: string, cfg?: RequestConfig) => request<T>('GET', url, cfg),
+  post: <T>(url: string, body?: unknown, cfg?: RequestConfig) =>
+    request<T>('POST', url, { ...cfg, body }),
+  put: <T>(url: string, body?: unknown, cfg?: RequestConfig) =>
+    request<T>('PUT', url, { ...cfg, body }),
+  patch: <T>(url: string, body?: unknown, cfg?: RequestConfig) =>
+    request<T>('PATCH', url, { ...cfg, body }),
+  delete: <T>(url: string, cfg?: RequestConfig) => request<T>('DELETE', url, cfg),
 }

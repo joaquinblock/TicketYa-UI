@@ -1,6 +1,7 @@
 /** Códigos que arma el front cuando no hay `ErrorDto` del backend. */
 export const CLIENT_ERROR_CODE = {
   NETWORK: 'network_error',
+  TIMEOUT: 'timeout',
   UNEXPECTED_RESPONSE: 'unexpected_response',
 } as const
 
