@@ -1,32 +1,86 @@
-import { SearchX } from 'lucide-react'
+import { CircleAlert, SearchX } from 'lucide-react'
 import { Button } from '@/shared/components/atoms/Button'
 import { Select } from '@/shared/components/atoms/Select'
-import { EVENT_SORT_LABEL, EVENT_SORTS } from '../../constants/catalog.constants'
+import { Pagination } from '@/shared/components/molecules/Pagination'
+import { EVENT_SORT_LABEL, EVENT_SORTS, EVENTS_PAGE_SIZE } from '../../constants/catalog.constants'
 import { useEventFilters, useSanitizedFiltersUrl } from '../../hooks/useEventFilters'
 import { useEventSearch } from '../../hooks/useEventSearch'
 import type { EventSort, EventSummary } from '../../types/catalog.types'
 import { EventCard } from '../EventCard/EventCard'
+import { EventCardSkeleton } from '../EventCard/EventCardSkeleton'
 import { EventFilters } from '../EventFilters'
 
 const COUNT_DIGITS = 2
+/** Las cards y su skeleton comparten la grilla: 4 columnas en escritorio, 1 a 360 px. */
+const GRID_CLASS = 'grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-4.5'
 
 /** La cartelera: filtros, contador, resultados y sus estados. */
 export function EventBoard() {
   useSanitizedFiltersUrl()
-  const { filters } = useEventFilters()
-  const { data } = useEventSearch(filters)
 
   return (
     <section aria-labelledby="cartelera-titulo" className="flex flex-col gap-5">
       <BoardHeader />
       <EventFilters />
-      {data && (
-        <>
-          <ResultSummary total={data.totalElements} />
-          {data.totalElements > 0 ? <EventGrid events={data.content} /> : <NoResults />}
-        </>
-      )}
+      <BoardResults />
     </section>
+  )
+}
+
+function BoardResults() {
+  const { filters, updateFilters } = useEventFilters()
+  const { data, isPending, isError, refetch } = useEventSearch(filters)
+
+  if (isPending) return <LoadingGrid />
+  if (isError) return <LoadError onRetry={() => refetch()} />
+  if (data.totalElements === 0)
+    return (
+      <>
+        <ResultSummary total={0} />
+        <NoResults />
+      </>
+    )
+  return (
+    <>
+      <ResultSummary total={data.totalElements} />
+      <EventGrid events={data.content} />
+      {data.totalPages > 1 && (
+        <Pagination
+          page={filters.page}
+          totalPages={data.totalPages}
+          onPageChange={(page) => updateFilters({ page })}
+        />
+      )}
+    </>
+  )
+}
+
+function LoadingGrid() {
+  return (
+    <>
+      <p role="status" className="sr-only">
+        Cargando eventos
+      </p>
+      <div aria-hidden className={GRID_CLASS}>
+        {Array.from({ length: EVENTS_PAGE_SIZE }, (_, index) => (
+          <EventCardSkeleton key={index} />
+        ))}
+      </div>
+    </>
+  )
+}
+
+function LoadError({ onRetry }: { onRetry: () => void }) {
+  return (
+    <div
+      role="alert"
+      className="flex flex-col items-center gap-2.5 rounded-card border border-line bg-surface px-5 py-12 text-center text-muted"
+    >
+      <CircleAlert aria-hidden className="size-11 text-error-ink" />
+      <h3 className="text-2xl text-ink">No pudimos cargar los eventos</h3>
+      <p>Revisá tu conexión y probá de nuevo. Si sigue pasando, el problema es nuestro.</p>
+      <Button onClick={onRetry}>Reintentar</Button>
+    </div>
   )
 }
 
@@ -114,10 +168,7 @@ function ResultCount({ total }: { total: number }) {
 
 function EventGrid({ events }: { events: EventSummary[] }) {
   return (
-    <ul
-      aria-label="Eventos"
-      className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-4.5"
-    >
+    <ul aria-label="Eventos" className={GRID_CLASS}>
       {events.map((event) => (
         <li key={event.id}>
           <EventCard event={event} />

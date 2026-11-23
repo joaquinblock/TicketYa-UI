@@ -35,17 +35,19 @@ function EventTypeChips() {
   )
 }
 
+/** Si las ciudades no cargan, el resto de la cartelera sigue andando: solo este filtro queda sin usar. */
 function CityFilter() {
   const { filters, updateFilters } = useEventFilters()
-  const { data: cities = [] } = useCities()
+  const { data: cities = [], isError } = useCities()
 
   return (
     <FilterField label="Ciudad">
       <Select
-        value={filters.city ?? ''}
+        disabled={isError}
+        value={isError ? '' : (filters.city ?? '')}
         onChange={(event) => updateFilters({ city: event.target.value })}
       >
-        <option value="">Todas</option>
+        <option value="">{isError ? 'No disponible' : 'Todas'}</option>
         {cities.map((city) => (
           <option key={city} value={city}>
             {city}
