@@ -36,6 +36,9 @@ export function EventSearchBox() {
             value={searchBox.text}
             onChange={(event) => searchBox.setText(event.target.value)}
             onFocus={searchBox.openSuggestions}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape') searchBox.closeSuggestions()
+            }}
             className="w-full min-w-0 bg-transparent text-control text-ink outline-none"
           />
         </label>
