@@ -7,8 +7,8 @@ export function useSeatsPageController(eventIdParam: string) {
   const eventId = parseEventId(eventIdParam)
   const { event } = useEvent(eventId)
   const { availability } = useEventAvailability(eventId)
-  const sectors = availability?.sectors ?? []
-  const { openSector, openSectorById } = useOpenSector(sectors)
+  const sectors = availability?.sectors
+  const { openSector, openSectorById } = useOpenSector(sectors ?? [])
 
   return { event, sectors, openSector, openSectorById }
 }

@@ -13,11 +13,13 @@ export function SeatsPage() {
   return (
     <PurchaseLayout step={PURCHASE_STEP.SEATS} eventId={eventId}>
       <SeatsHeader event={event} />
-      <SectorTabs
-        sectors={sectors}
-        openSectorId={openSector?.eventSectorId}
-        onOpen={openSectorById}
-      />
+      {sectors && (
+        <SectorTabs
+          sectors={sectors}
+          openSectorId={openSector?.eventSectorId}
+          onOpen={openSectorById}
+        />
+      )}
       {openSector?.numbered && <SeatMap sector={openSector} />}
     </PurchaseLayout>
   )
