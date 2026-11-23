@@ -23,7 +23,12 @@ export function QuantityPanel({ sector, stepper }: QuantityPanelProps) {
 function QuantityStepper({ stepper }: { stepper: QuantityStepperState }) {
   return (
     <div role="group" aria-label="Cantidad de entradas">
-      <button type="button" aria-label="Una menos" onClick={stepper.decrease}>
+      <button
+        type="button"
+        aria-label="Una menos"
+        disabled={!stepper.canDecrease}
+        onClick={stepper.decrease}
+      >
         −
       </button>
       <span aria-live="polite">{stepper.quantity}</span>

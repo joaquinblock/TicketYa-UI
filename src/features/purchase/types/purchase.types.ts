@@ -23,6 +23,7 @@ export type UnnumberedSector = Pick<SectorAvailability, 'sectorName' | 'availabl
 /** El estado del "−" / cantidad / "+" y sus acciones. */
 export type QuantityStepper = {
   quantity: number
+  canDecrease: boolean
   increase: () => void
   decrease: () => void
 }
