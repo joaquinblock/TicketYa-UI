@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { formatPlacesLeft, formatSectorKind, getOccupancyPercent } from './sectorFormat'
+import {
+  formatPlacesLeft,
+  formatPurchaseTerms,
+  formatSectorKind,
+  getOccupancyPercent,
+} from './sectorFormat'
 
 describe('formatPlacesLeft y getOccupancyPercent', () => {
   it('con 1240 de 5000 libres dice "1.240 disponibles" y ocupa el 75 %', () => {
@@ -36,5 +41,17 @@ describe('formatSectorKind: numerado', () => {
 describe('formatSectorKind: no numerado', () => {
   it('un sector sin asientos numerados dice "No numerado"', () => {
     expect(formatSectorKind({ numbered: false, seats: null })).toBe('No numerado')
+  })
+})
+
+describe('formatPurchaseTerms', () => {
+  it('con máximo 4 avisa el límite por persona y las devoluciones', () => {
+    expect(formatPurchaseTerms(4)).toBe(
+      'Hasta 4 entradas por persona · Devoluciones hasta 72 horas antes del evento',
+    )
+  })
+
+  it('sin máximo avisa solo las devoluciones', () => {
+    expect(formatPurchaseTerms(null)).toBe('Devoluciones hasta 72 horas antes del evento')
   })
 })
