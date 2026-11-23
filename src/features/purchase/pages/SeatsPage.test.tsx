@@ -1,4 +1,6 @@
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import type { SeatAvailability } from '@/shared/types/event.types'
 import { describe, expect, it } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
@@ -114,6 +116,37 @@ describe('Lugares: CA2, sector agotado', () => {
     )
   })
 })
+
+describe('Lugares: CA3, elegir y soltar', () => {
+  it('tocar un asiento disponible lo deja elegido, y tocarlo de nuevo lo vuelve a disponible', async () => {
+    const seat = await firstFreeSeat(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    await user.click(await screen.findByRole('button', { name: seatName(seat, 'disponible') }))
+    expect(screen.getByRole('button', { name: seatName(seat, 'elegido') })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+
+    await user.click(screen.getByRole('button', { name: seatName(seat, 'elegido') }))
+    expect(screen.getByRole('button', { name: seatName(seat, 'disponible') })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
+  })
+})
+
+function seatName(seat: SeatAvailability, status: string) {
+  return `Fila ${seat.row}, asiento ${seat.number}, ${status}`
+}
+
+async function firstFreeSeat(eventId: number) {
+  const sector = await firstSectorWithPlaces(eventId)
+  const seat = sector.seats?.find((candidate) => candidate.available)
+  if (!seat) throw new Error(`El sector ${sector.sectorName} no tiene asientos libres`)
+  return seat
+}
 
 function findSectorTabs() {
   return screen.findByRole('group', { name: 'Sectores' })
