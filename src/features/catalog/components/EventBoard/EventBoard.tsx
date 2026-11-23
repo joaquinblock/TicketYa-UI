@@ -31,7 +31,26 @@ export function EventBoard() {
   )
 }
 
+/** La región viva queda montada mientras carga: si se insertara con el texto, el lector no la anunciaría. */
 function BoardResults() {
+  const { filters } = useEventFilters()
+  const { data } = useEventSearch(filters)
+
+  return (
+    <>
+      <p aria-live="polite" className="sr-only">
+        {data && formatResultCount(data.totalElements)}
+      </p>
+      <BoardResultsContent />
+    </>
+  )
+}
+
+function formatResultCount(total: number) {
+  return `${total} ${total === 1 ? 'evento' : 'eventos'}`
+}
+
+function BoardResultsContent() {
   const { filters, updateFilters } = useEventFilters()
   const { data, isPending, isError, refetch } = useEventSearch(filters)
   useLastPageWhenOutOfRange(data?.totalPages)
@@ -162,7 +181,7 @@ function SortSelect() {
 
 function ResultCount({ total }: { total: number }) {
   return (
-    <p aria-live="polite" className="flex items-baseline gap-2">
+    <p aria-hidden className="flex items-baseline gap-2">
       <span className="font-mono text-2xl font-medium">
         {String(total).padStart(COUNT_DIGITS, '0')}
       </span>
