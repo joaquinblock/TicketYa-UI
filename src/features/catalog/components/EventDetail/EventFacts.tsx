@@ -1,6 +1,7 @@
-import { CalendarDays, MapPin, Users, type LucideIcon } from 'lucide-react'
+import { CalendarDays, ExternalLink, MapPin, Users, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { formatEventDateTime } from '../../lib/eventFormat'
+import { getVenueMapUrl } from '../../lib/venueMap'
 import type { EventDetail } from '../../types/catalog.types'
 
 type EventFactsProps = { event: EventDetail }
@@ -21,6 +22,11 @@ export function EventFacts({ event }: EventFactsProps) {
           {`${event.venue.name} · ${event.venue.address}, ${event.venue.city}`}
         </EventFact>
       </dl>
+      <a href={getVenueMapUrl(event.venue)} target="_blank" rel="noopener noreferrer">
+        Ver en el mapa
+        <ExternalLink aria-hidden />
+        <span className="sr-only"> (abre en otra pestaña)</span>
+      </a>
     </aside>
   )
 }
