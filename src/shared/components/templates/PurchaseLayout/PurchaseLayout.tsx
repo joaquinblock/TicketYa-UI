@@ -4,10 +4,15 @@ import { Link } from 'react-router-dom'
 import { PurchaseSteps } from './PurchaseSteps'
 import { BACK_LINK_BY_STEP, type StepWithBackLink } from './purchaseSteps.constants'
 
-type PurchaseLayoutProps = { step: StepWithBackLink; eventId: string; children: ReactNode }
+type PurchaseLayoutProps = {
+  step: StepWithBackLink
+  eventId: string
+  completed?: boolean
+  children: ReactNode
+}
 
 /** Template de la compra: "← Volver" y los pasos arriba, y el contenido del paso abajo. */
-export function PurchaseLayout({ step, eventId, children }: PurchaseLayoutProps) {
+export function PurchaseLayout({ step, eventId, completed, children }: PurchaseLayoutProps) {
   const backLink = BACK_LINK_BY_STEP[step]
 
   return (
@@ -20,7 +25,7 @@ export function PurchaseLayout({ step, eventId, children }: PurchaseLayoutProps)
           <ArrowLeft aria-hidden className="size-4.5" />
           {backLink.label}
         </Link>
-        <PurchaseSteps currentStep={step} eventId={eventId} />
+        <PurchaseSteps currentStep={step} eventId={eventId} completed={completed} />
       </div>
       {children}
     </div>

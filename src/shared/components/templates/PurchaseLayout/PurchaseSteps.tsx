@@ -3,17 +3,17 @@ import { Link } from 'react-router-dom'
 import { cn } from '@/shared/lib/cn'
 import { PURCHASE_STEPS, type PurchaseStep } from './purchaseSteps.constants'
 
-type PurchaseStepsProps = { currentStep: PurchaseStep; eventId: string }
+type PurchaseStepsProps = { currentStep: PurchaseStep; eventId: string; completed?: boolean }
 
-export function PurchaseSteps({ currentStep, eventId }: PurchaseStepsProps) {
+export function PurchaseSteps({ currentStep, eventId, completed = false }: PurchaseStepsProps) {
   const currentIndex = PURCHASE_STEPS.findIndex(({ step }) => step === currentStep)
 
   return (
     <nav aria-label="Pasos de la compra">
       <ol className="flex flex-wrap items-center gap-1.5 text-label">
         {PURCHASE_STEPS.map(({ step, label, path }, index) => {
-          const isDone = index < currentIndex
-          const isCurrent = index === currentIndex
+          const isDone = index < currentIndex || (completed && index === currentIndex)
+          const isCurrent = index === currentIndex && !completed
           return (
             <li
               key={step}
