@@ -18,6 +18,7 @@ import { renderWithProviders } from '@/test/render'
  */
 const NUMBERED_EVENT = {
   SUMMARY: 17,
+  SEAT_LIMIT: 18,
 } as const
 
 const UNNUMBERED_EVENT = {
@@ -83,6 +84,27 @@ describe('Lugares: CA1, sin nada elegido', () => {
     const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
     expect(within(summary).queryAllByRole('listitem')).toHaveLength(0)
     expect(within(summary).getByRole('button', { name: 'Reservar y pagar' })).toBeDisabled()
+  })
+})
+
+describe('Lugares: tope de asientos por persona', () => {
+  it('con el límite completo, un asiento libre no elegido se deshabilita, y al soltar uno se vuelve a habilitar', async () => {
+    const eventId = NUMBERED_EVENT.SEAT_LIMIT
+    const { maxTicketsPerCustomer } = await getEvent(eventId)
+    if (maxTicketsPerCustomer === null) throw new Error(`El evento ${eventId} no tiene límite`)
+    const { seats } = await freeSeats(eventId, maxTicketsPerCustomer + 1)
+    const chosen = seats.slice(0, maxTicketsPerCustomer)
+    const [extra] = seats.slice(maxTicketsPerCustomer)
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+
+    for (const seat of chosen) await user.click(await findFreeSeatButton(seat))
+
+    const extraButton = screen.getByRole('button', { name: seatName(extra, 'disponible') })
+    expect(extraButton).toBeDisabled()
+    const [firstChosen] = chosen
+    await user.click(screen.getByRole('button', { name: seatName(firstChosen, 'elegido') }))
+    expect(extraButton).toBeEnabled()
   })
 })
 
@@ -166,6 +188,10 @@ function findFreeSeatButton(seat: SeatAvailability) {
   return screen.findByRole('button', {
     name: `Fila ${seat.row}, asiento ${seat.number}, disponible`,
   })
+}
+
+function seatName(seat: SeatAvailability, status: string) {
+  return `Fila ${seat.row}, asiento ${seat.number}, ${status}`
 }
 
 const AVAILABILITY_PATH = '/api/availability'
