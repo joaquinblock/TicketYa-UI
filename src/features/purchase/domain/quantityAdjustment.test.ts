@@ -15,4 +15,11 @@ describe('adjustQuantityToAvailable', () => {
       change: 'LOWERED',
     })
   })
+
+  it('si quedan 0 libres, la cantidad queda en 0 y avisa que se agotó', () => {
+    expect(adjustQuantityToAvailable({ quantity: 3, availablePlaces: 0 })).toEqual({
+      quantity: 0,
+      change: 'SOLD_OUT',
+    })
+  })
 })
