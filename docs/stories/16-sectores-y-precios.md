@@ -1,7 +1,7 @@
 # 16: Sectores y precios con disponibilidad
 
 **Tipo:** Story
-**Estado:** aprobado
+**Estado:** terminado
 **Funcionalidad:** Evento (épica #10 Cliente, página #14)
 
 ## Historia
