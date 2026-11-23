@@ -659,6 +659,32 @@ describe('Lugares no numerados: CA5, quedan menos lugares que los elegidos', () 
   })
 })
 
+describe('Lugares no numerados: CA5, quedan menos lugares pero alcanzan', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('con 2 elegidas, un refresco con 3 libres no cambia la cantidad ni avisa', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 2)
+
+    setPlacesOnNextRefreshes(field.sectorName, 3)
+    refetchByRefocusing()
+
+    expect(
+      await within(panel).findByText(
+        formatUnnumberedPlaces({ availablePlaces: 3, capacity: field.capacity }),
+      ),
+    ).toBeInTheDocument()
+    expect(quantityIn(panel)).toHaveTextContent(/^2$/)
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
 /** Sube la cantidad desde 1 tocando "Una más". */
 async function chooseQuantity(
   user: ReturnType<typeof userEvent.setup>,
