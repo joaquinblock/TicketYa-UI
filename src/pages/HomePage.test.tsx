@@ -367,3 +367,14 @@ describe('Hero: accesos rápidos por tipo', () => {
     expect(getCurrentUrl().searchParams.get('type')).toBe('CONCERT')
   })
 })
+
+describe('Cartelera: página fuera de rango', () => {
+  it('al entrar con una página mayor que la última muestra la última y la URL la refleja', async () => {
+    const { totalPages } = await fetchFromApi()
+    const { content: lastPage } = await fetchFromApi({ page: totalPages })
+    renderHome('/?page=999')
+
+    await expectEventNames(lastPage)
+    expect(getCurrentUrl().searchParams.get('page')).toBe(String(totalPages))
+  })
+})
