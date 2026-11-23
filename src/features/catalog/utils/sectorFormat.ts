@@ -2,6 +2,7 @@ import {
   LAST_PLACES_THRESHOLD,
   NUMBERED_SECTOR_LABEL,
   RETURN_NOTICE_HOURS,
+  SOLD_OUT_PLACES_LABEL,
   UNNUMBERED_SECTOR_LABEL,
 } from '../constants/sectorAvailability.constants'
 import type { SeatAvailability, SectorAvailability } from '../types/catalog.types'
@@ -12,6 +13,7 @@ type Occupancy = { capacity: number; availablePlaces: number }
 type SectorKindInput = Pick<SectorAvailability, 'numbered' | 'seats'>
 
 export function formatPlacesLeft(availablePlaces: number) {
+  if (availablePlaces === 0) return SOLD_OUT_PLACES_LABEL
   if (availablePlaces < LAST_PLACES_THRESHOLD) return `Últimos ${availablePlaces} lugares`
   return `${availablePlaces.toLocaleString('es-AR')} disponibles`
 }
