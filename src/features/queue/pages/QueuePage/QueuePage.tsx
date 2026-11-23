@@ -24,11 +24,7 @@ export function QueuePage() {
   const isExpired = entry?.status === 'EXPIRED'
   const position = entry?.position ?? 0
   const progressPercent = isWaiting ? getQueueProgressPercent(initialPosition, position) : 100
-  const etaLabel = isEnabled
-    ? 'ya'
-    : isWaiting
-      ? formatEstimatedWait(position)
-      : '—'
+  const etaLabel = isEnabled ? 'ya' : isWaiting ? formatEstimatedWait(position) : '—'
 
   return (
     <PurchaseLayout step={PURCHASE_STEP.QUEUE} eventId={eventIdParam}>
@@ -57,10 +53,7 @@ export function QueuePage() {
           {isEnabled && <QueueEnabledBody enabledUntil={entry.enabledUntil} />}
           {isExpired && <QueueExpiredBody />}
 
-          <div
-            aria-hidden
-            className="mt-7 mb-3 h-1.75 overflow-hidden rounded-lg bg-[#eeece6]"
-          >
+          <div aria-hidden className="mt-7 mb-3 h-1.75 overflow-hidden rounded-lg bg-[#eeece6]">
             <span
               className="block h-full rounded-lg bg-accent transition-[width] duration-500"
               style={{ width: `${progressPercent}%` }}

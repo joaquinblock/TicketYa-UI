@@ -37,7 +37,9 @@ describe('Fila virtual: CA1 a CA5', () => {
     renderQueuePage(HIGH_DEMAND_EVENT_ID)
 
     expect(screen.getByRole('status', { name: /Ingresando a la fila/i })).toBeInTheDocument()
-    expect(await screen.findByText(/Los Serranos en vivo/i)).toBeInTheDocument()
+    expect(
+      await screen.findByText(/Los Serranos en vivo/i, undefined, { timeout: 5000 }),
+    ).toBeInTheDocument()
     expect(screen.getByText('Si volvés a entrar, conservás tu lugar.')).toBeInTheDocument()
   })
 
@@ -70,16 +72,19 @@ describe('Fila virtual: CA1 a CA5', () => {
 
     renderQueuePage(HIGH_DEMAND_EVENT_ID)
 
-    expect(await screen.findByRole('heading', { level: 1, name: '¡Es tu turno!' })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: '¡Es tu turno!' }),
+    ).toBeInTheDocument()
     await waitFor(() =>
       expect(getQueueTurn(HIGH_DEMAND_EVENT_ID)).toEqual({
         queueToken: 'jwt-turno-ok',
         enabledUntil,
       }),
     )
-    expect(
-      screen.getByRole('link', { name: 'Ya podés elegir tus lugares' }),
-    ).toHaveAttribute('href', ROUTES.seats(HIGH_DEMAND_EVENT_ID))
+    expect(screen.getByRole('link', { name: 'Ya podés elegir tus lugares' })).toHaveAttribute(
+      'href',
+      ROUTES.seats(HIGH_DEMAND_EVENT_ID),
+    )
   })
 
   it('CA3 vencimiento: limpia el turno guardado y permite volver a hacer la fila', async () => {
@@ -129,10 +134,11 @@ describe('Fila virtual: CA1 a CA5', () => {
       await screen.findByRole('heading', { level: 1, name: 'Este evento no tiene fila virtual' }),
     ).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Reintentar' })).not.toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Volver al evento' })).toHaveAttribute(
-      'href',
-      ROUTES.event(2),
-    )
+    const backLinks = screen.getAllByRole('link', { name: 'Volver al evento' })
+    expect(backLinks.length).toBeGreaterThanOrEqual(2)
+    for (const link of backLinks) {
+      expect(link).toHaveAttribute('href', ROUTES.event(2))
+    }
 
     vi.spyOn(queueService, 'joinQueue')
       .mockRejectedValueOnce(

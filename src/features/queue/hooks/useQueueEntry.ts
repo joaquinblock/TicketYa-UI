@@ -29,12 +29,12 @@ export function useQueueEntry(eventId: number | undefined) {
     queryKey: queueKeys.entry(eventId ?? 0),
     enabled: eventId != null,
     retry: false,
-    refetchInterval: (q) => (q.state.data?.entry.status === 'WAITING' ? QUEUE_POLL_INTERVAL_MS : false),
+    refetchInterval: (q) =>
+      q.state.data?.entry.status === 'WAITING' ? QUEUE_POLL_INTERVAL_MS : false,
     queryFn: async () => {
       const id = eventId!
       await ensureDevClientSession()
-      const entry =
-        joinedEventRef.current === id ? await getQueueStatus(id) : await joinQueue(id)
+      const entry = joinedEventRef.current === id ? await getQueueStatus(id) : await joinQueue(id)
       joinedEventRef.current = id
       if (entry.position != null && entry.position > initialPositionRef.current) {
         initialPositionRef.current = entry.position
