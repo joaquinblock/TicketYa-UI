@@ -24,3 +24,5 @@ export const EVENT_NOTICE_TEXT = {
     message: 'La fecha del evento ya pasó y no se venden más entradas.',
   },
 } as const satisfies Record<FixedNoticeKind, EventNoticeText>
+
+export const SALE_NOT_STARTED_TITLE = 'La venta todavía no empezó'
