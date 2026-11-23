@@ -1,4 +1,6 @@
+import { ArrowUpRight, ShieldCheck } from 'lucide-react'
 import { useId } from 'react'
+import { Button } from '@/shared/components/atoms/Button'
 import type { EventDetail } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import type { SelectionSummary as Summary } from '../types/purchase.types'
@@ -38,6 +40,14 @@ export function SelectionSummary({ summary, maxTicketsPerCustomer }: SelectionSu
         <span>Total</span>
         <strong className="font-mono text-2xl font-medium">{formatPrice(summary.total)}</strong>
       </div>
+      <Button variant="accent" size="lg" disabled={summary.count === 0}>
+        Reservar y pagar
+        <ArrowUpRight aria-hidden className="size-4.5" />
+      </Button>
+      <p className="flex gap-2 text-label text-subtle">
+        <ShieldCheck aria-hidden className="mt-0.5 size-4 flex-none text-seat-free-ink" />
+        Guardamos estos lugares 10 minutos mientras pagás.
+      </p>
     </aside>
   )
 }
