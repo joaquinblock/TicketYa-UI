@@ -19,3 +19,10 @@ export type QuantityChange = 'NONE' | 'LOWERED' | 'SOLD_OUT'
 export type UnnumberedSector = Pick<SectorAvailability, 'sectorName' | 'availablePlaces'> &
   Pick<EventSector, 'capacity'> &
   Pick<EventDetail, 'maxTicketsPerCustomer'>
+
+/** El estado del "−" / cantidad / "+" y sus acciones. */
+export type QuantityStepper = {
+  quantity: number
+  increase: () => void
+  decrease: () => void
+}

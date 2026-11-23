@@ -27,7 +27,7 @@ export function SeatsPage() {
     takenSeats,
     toggleSeat,
     unnumberedSector,
-    quantity,
+    quantityStepper,
   } = useSeatsPageController(eventId)
 
   let content: ReactNode
@@ -44,7 +44,7 @@ export function SeatsPage() {
         {openSector?.numbered && (
           <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
         )}
-        {unnumberedSector && <QuantityPanel sector={unnumberedSector} quantity={quantity} />}
+        {unnumberedSector && <QuantityPanel sector={unnumberedSector} stepper={quantityStepper} />}
         {takenSeats.length > 0 && (
           <SelectionChangedAlert message={formatTakenSeatsMessage(takenSeats)} />
         )}
