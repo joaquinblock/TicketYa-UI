@@ -332,3 +332,21 @@ describe('Cartelera: paginación', () => {
     expect(screen.queryByRole('navigation', { name: 'Paginación' })).not.toBeInTheDocument()
   })
 })
+
+describe('Cartelera en mobile: más filtros plegables', () => {
+  it('al elegir una ciudad el botón dice "Filtros (1)" y tocarlo alterna si está expandido', async () => {
+    const user = userEvent.setup()
+    renderHome()
+    const city = screen.getByRole('combobox', { name: 'Ciudad' })
+    await within(city).findByRole('option', { name: 'Tandil' })
+
+    await user.selectOptions(city, 'Tandil')
+
+    const toggle = await screen.findByRole('button', { name: 'Filtros (1)' })
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+    await user.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+    await user.click(toggle)
+    expect(toggle).toHaveAttribute('aria-expanded', 'false')
+  })
+})
