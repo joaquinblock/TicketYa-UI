@@ -15,6 +15,7 @@ export function useSeatsPageController(eventIdParam: string) {
 
   /** La selección es de un solo sector: al cambiar de pestaña se vacía. */
   const openSectorAndClearSelection = (eventSectorId: number) => {
+    if (eventSectorId === openSector?.eventSectorId) return
     openSectorById(eventSectorId)
     clear()
   }
