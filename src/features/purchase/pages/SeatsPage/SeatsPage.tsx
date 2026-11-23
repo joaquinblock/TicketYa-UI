@@ -10,6 +10,7 @@ import { QuantityPanel } from '../../components/QuantityPanel/QuantityPanel'
 import { SeatsNotForSale } from '../../components/SeatsNotForSale'
 import { SectorTabs } from '../../components/SectorTabs'
 import { SelectionChangedAlert } from '../../components/SelectionChangedAlert'
+import { SelectionSummary } from '../../components/SelectionSummary'
 import { formatQuantityChangeMessage, formatTakenSeatsMessage } from '../../utils/seatFormat'
 import { useSeatsPageController } from './useSeatsPageController'
 
@@ -29,6 +30,8 @@ export function SeatsPage() {
     unnumberedSector,
     quantityStepper,
     quantityChange,
+    selectionSummary,
+    maxTicketsPerCustomer,
   } = useSeatsPageController(eventId)
 
   let content: ReactNode
@@ -36,28 +39,36 @@ export function SeatsPage() {
   else if (hasLoadError) content = <SeatsLoadError onRetry={retryLoad} />
   else if (sectors) {
     content = (
-      <SeatsPanel>
-        <SectorTabs
-          sectors={sectors}
-          openSectorId={openSector?.eventSectorId}
-          onOpen={openSectorById}
-        />
-        {openSector?.numbered && (
-          <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
-        )}
-        {unnumberedSector && <QuantityPanel sector={unnumberedSector} stepper={quantityStepper} />}
-        {takenSeats.length > 0 && (
-          <SelectionChangedAlert message={formatTakenSeatsMessage(takenSeats)} />
-        )}
-        {unnumberedSector && quantityChange !== 'NONE' && (
-          <SelectionChangedAlert
-            message={formatQuantityChangeMessage(quantityChange, {
-              sectorName: unnumberedSector.sectorName,
-              quantity: quantityStepper.quantity,
-            })}
+      <div className="flex flex-wrap items-start gap-5">
+        <SeatsPanel>
+          <SectorTabs
+            sectors={sectors}
+            openSectorId={openSector?.eventSectorId}
+            onOpen={openSectorById}
           />
-        )}
-      </SeatsPanel>
+          {openSector?.numbered && (
+            <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
+          )}
+          {unnumberedSector && (
+            <QuantityPanel sector={unnumberedSector} stepper={quantityStepper} />
+          )}
+          {takenSeats.length > 0 && (
+            <SelectionChangedAlert message={formatTakenSeatsMessage(takenSeats)} />
+          )}
+          {unnumberedSector && quantityChange !== 'NONE' && (
+            <SelectionChangedAlert
+              message={formatQuantityChangeMessage(quantityChange, {
+                sectorName: unnumberedSector.sectorName,
+                quantity: quantityStepper.quantity,
+              })}
+            />
+          )}
+        </SeatsPanel>
+        <SelectionSummary
+          summary={selectionSummary}
+          maxTicketsPerCustomer={maxTicketsPerCustomer}
+        />
+      </div>
     )
   } else {
     content = (
@@ -77,7 +88,7 @@ export function SeatsPage() {
 
 function SeatsPanel({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-w-0 flex-col gap-5.5 rounded-2xl border border-line bg-surface p-5">
+    <div className="flex min-w-0 flex-[999_1_620px] flex-col gap-5.5 rounded-2xl border border-line bg-surface p-5">
       {children}
     </div>
   )

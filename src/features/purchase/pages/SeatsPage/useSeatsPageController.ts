@@ -4,6 +4,7 @@ import { useOpenSector } from '../../hooks/useOpenSector'
 import { useSeatSelection } from '../../hooks/useSeatSelection'
 import { useSeatsData } from '../../hooks/useSeatsData'
 import { useSectorQuantity } from '../../hooks/useSectorQuantity'
+import { summarizeSelection } from '../../domain/selectionSummary'
 import { toUnnumberedSector } from '../../domain/unnumberedSector'
 
 /** Una referencia fija: con un `[]` nuevo en cada render, la selección creería que llegaron asientos. */
@@ -25,8 +26,16 @@ export function useSeatsPageController(eventIdParam: string) {
     sectorQuantity.reset()
   }
 
+  const selectionSummary = summarizeSelection({
+    sector: openSector,
+    selection,
+    quantity: unnumberedSector ? sectorQuantity.stepper.quantity : 0,
+  })
+
   return {
     ...data,
+    maxTicketsPerCustomer: data.event?.maxTicketsPerCustomer ?? null,
+    selectionSummary,
     openSector,
     openSectorById: openSectorAndClearSelection,
     selection,
