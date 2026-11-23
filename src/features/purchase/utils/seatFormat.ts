@@ -53,3 +53,7 @@ export function formatQuantityLoweredMessage({
   const places = quantity === 1 ? 'Queda 1 lugar' : `Quedan ${quantity} lugares`
   return { lead: `${places} en ${sectorName}:`, hint: `bajamos tu cantidad a ${quantity}` }
 }
+
+export function formatSectorSoldOutMessage(sectorName: string): AlertMessage {
+  return { lead: `Se agotó ${sectorName}.`, hint: 'Elegí otro sector.' }
+}
