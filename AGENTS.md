@@ -18,6 +18,7 @@
 - Proyecto de frontend: cargá la skill `workflow-ui` en cada paso. El contrato visual es `MOCKUP.md`.
 - Sin tracker en `.work/NUM-*.md` no se escribe código de producción.
 - Un test commiteado no se cambia para que pase. Si parece mal, se anota en el Log del tracker y se pregunta.
+- Antes de commitear un test nuevo (`test:`), corré `pnpm run format:check` (o `pnpm run format`) para que no quede bajo `.work/tests.lock` con formato inválido.
 - No se toca nada de lo que el tracker marca como "Fuera de alcance".
 - Un patrón nuevo (abstracción, librería, estructura de carpetas, manejo de errores) necesita un ADR en `docs/adr/`.
 

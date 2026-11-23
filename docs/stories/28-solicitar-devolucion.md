@@ -1,7 +1,7 @@
 # 28: Solicitar la devolución de una entrada
 
 **Tipo:** Story
-**Estado:** aprobado
+**Estado:** terminado
 **Funcionalidad:** Mis entradas (épica #10 Cliente, página #26)
 
 ## Historia
