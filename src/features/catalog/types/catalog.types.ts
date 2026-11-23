@@ -1,11 +1,4 @@
-import type {
-  EventDetail,
-  EventSector,
-  EventStatus,
-  EventType,
-  SectorAvailability,
-  Venue,
-} from '@/shared/types/event.types'
+import type { EventDetail, EventStatus, EventType, Venue } from '@/shared/types/event.types'
 import type { EVENT_SORTS } from '../constants/catalog.constants'
 
 export type EventSort = (typeof EVENT_SORTS)[number]
@@ -26,9 +19,6 @@ export type EventSummary = Pick<
   priceFrom: number
   participants: string[]
 }
-
-/** Un sector del detalle con su disponibilidad, si la hay. */
-export type SectorWithAvailability = EventSector & { availability?: SectorAvailability }
 
 export type PurchaseAction = { label: string; to: string }
 

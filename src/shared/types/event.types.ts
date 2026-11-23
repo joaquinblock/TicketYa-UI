@@ -65,3 +65,6 @@ export type SectorAvailability = {
 }
 
 export type EventAvailability = { eventId: number; sectors: SectorAvailability[] }
+
+/** Un sector del detalle con su disponibilidad, si la hay. */
+export type SectorWithAvailability = EventSector & { availability?: SectorAvailability }

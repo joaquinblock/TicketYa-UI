@@ -1,20 +1,8 @@
 import { ROUTES } from '@/shared/lib/routes'
 import { QUEUE_ACTION_LABEL, SEATS_ACTION_LABEL } from '../constants/sectorAvailability.constants'
 import { hasSaleNotStarted } from '../lib/eventNotice'
-import type { EventDetail, EventSector, SectorAvailability } from '@/shared/types/event.types'
-import type { PurchaseAction, SectorWithAvailability } from '../types/catalog.types'
-
-/**
- * Los dos endpoints no comparten id de sector: se unen por nombre, que es único dentro del lugar.
- * Manda el orden del detalle.
- */
-export function joinSectorsWithAvailability(
-  sectors: EventSector[],
-  availability: SectorAvailability[],
-): SectorWithAvailability[] {
-  const availabilityByName = new Map(availability.map((sector) => [sector.sectorName, sector]))
-  return sectors.map((sector) => ({ ...sector, availability: availabilityByName.get(sector.name) }))
-}
+import type { EventDetail } from '@/shared/types/event.types'
+import type { PurchaseAction } from '../types/catalog.types'
 
 type SaleState = Pick<EventDetail, 'status' | 'saleStart'>
 
