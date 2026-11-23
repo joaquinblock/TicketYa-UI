@@ -36,6 +36,7 @@ const UNNUMBERED_EVENT = {
   WITHOUT_SESSION: 32,
   NETWORK_FAILURE: 33,
   SERVICE_UNAVAILABLE: 34,
+  NEW_KEY_AFTER_CHANGE: 35,
 } as const
 
 function renderSeatsPage(eventId: number) {
@@ -378,6 +379,32 @@ describe('Lugares: CA6, falla el servidor', () => {
       'No pudimos reservar tus lugares.',
     )
     expect(within(summary).getByRole('button', { name: 'Reintentar' })).toBeEnabled()
+  })
+})
+
+describe('Lugares: CA6 borde, cambio la selección después de una falla', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await cancelPendingOrders(UNNUMBERED_EVENT.NEW_KEY_AFTER_CHANGE)
+  })
+
+  it('si cambio la cantidad después de una falla, llego a Pago y el segundo pedido lleva otra clave', async () => {
+    const eventId = UNNUMBERED_EVENT.NEW_KEY_AFTER_CHANGE
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+    const orderBodies = failFirstOrderRequestByNetwork()
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+    await within(summary).findByRole('alert')
+
+    await user.click(screen.getByRole('button', { name: 'Una más' }))
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+
+    await waitFor(() => expect(getCurrentUrl().pathname).toBe(ROUTES.payment(eventId)))
+    const [failed, changed] = orderBodies.map((body) => body.idempotencyKey)
+    expect(orderBodies).toHaveLength(2)
+    expect(changed).not.toBe(failed)
   })
 })
 
