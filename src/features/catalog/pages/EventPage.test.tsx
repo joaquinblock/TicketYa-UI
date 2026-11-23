@@ -113,6 +113,19 @@ describe('Detalle del evento: CA2', () => {
     expect(notice).toHaveTextContent(`Abre el ${formatEventDateTime(event.saleStart ?? '')}.`)
     expect(notice).not.toHaveTextContent('fila virtual')
   })
+
+  it.each([
+    [SEEDER_EVENT.SOLD_OUT, 'Agotado', 'Entradas agotadas'],
+    [SEEDER_EVENT.SUSPENDED, 'Suspendido', 'Evento suspendido'],
+    [SEEDER_EVENT.CANCELLED, 'Cancelado', 'Evento cancelado'],
+    [SEEDER_EVENT.FINISHED, 'Finalizado', 'Este evento ya pasó'],
+  ])('el evento %i muestra el badge "%s" y el aviso "%s"', async (eventId, badge, title) => {
+    const event = await getEvent(eventId)
+    renderEventPage(event.id)
+
+    expect(within(await findEventHero(event.name)).getByText(badge)).toBeInTheDocument()
+    expect(await findEventNotice()).toHaveTextContent(title)
+  })
 })
 
 function findEventNotice() {
