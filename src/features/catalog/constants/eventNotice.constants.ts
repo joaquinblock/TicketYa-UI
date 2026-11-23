@@ -1,9 +1,10 @@
 import type { EventNoticeText, FixedNoticeKind } from '../types/catalog.types'
+import { HIGH_DEMAND_LABEL } from './catalog.constants'
 
 /** Textos de los avisos del detalle: los del mockup (`Evento.dc.html`), salvo "Este evento ya pasó", que es nuevo. */
 export const EVENT_NOTICE_TEXT = {
   HIGH_DEMAND: {
-    title: 'Alta demanda · fila virtual',
+    title: HIGH_DEMAND_LABEL,
     message:
       'La venta ya abrió. Entrá a la fila para asegurar tu lugar: te habilitamos por tandas y tenés 10 minutos para reservar.',
   },

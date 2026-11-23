@@ -49,3 +49,6 @@ export const MONTH_ABBREVIATIONS = [
 
 /** Búsqueda de Google Maps por coordenadas: abre el pin sin API key. */
 export const GOOGLE_MAPS_SEARCH_URL = 'https://www.google.com/maps/search/?api=1'
+
+/** El badge del hero y el título del aviso dicen lo mismo. */
+export const HIGH_DEMAND_LABEL = 'Alta demanda · fila virtual'
