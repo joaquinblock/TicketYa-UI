@@ -5,6 +5,7 @@ import { TICKET_STATUS_META } from '../constants/tickets.constants'
 import { formatTicketCode } from '../lib/ticketFormat'
 import type { Ticket, TicketStatus } from '../types/tickets.types'
 import { TicketRow } from './TicketRow'
+import { vi } from 'vitest'
 
 function makeTicket(status: TicketStatus): Ticket {
   return {
@@ -74,5 +75,25 @@ describe('TicketRow: devolución de entradas', () => {
       ),
     ).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /pedir la devolución/i })).not.toBeInTheDocument()
+  })
+
+  it('cuando está ISSUED sin solicitud pendiente y dentro del plazo muestra el botón habilitado y llama al callback', async () => {
+    const ticket: Ticket = {
+      ...makeTicket('ISSUED'),
+      qrCode: 'qr-123',
+      hasPendingReturnRequest: false,
+    }
+    const onRequestReturn = vi.fn()
+    const user = userEvent.setup()
+
+    render(<TicketRow ticket={ticket} canRequestReturn onRequestReturn={onRequestReturn} />)
+
+    await user.click(screen.getByRole('button', { name: new RegExp(formatTicketCode(ticket.id)) }))
+
+    const returnButton = await screen.findByRole('button', { name: /pedir la devolución/i })
+    expect(returnButton).toBeEnabled()
+
+    await user.click(returnButton)
+    expect(onRequestReturn).toHaveBeenCalledWith(ticket)
   })
 })
