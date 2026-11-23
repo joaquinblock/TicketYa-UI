@@ -58,6 +58,31 @@ describe('Lugares: CA1, mapa', () => {
   })
 })
 
+describe('Lugares: CA1, estado de cada asiento', () => {
+  it('en la Platea del evento 2, A1 y A2 están ocupados', async () => {
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    expect(
+      await screen.findByRole('button', { name: 'Fila A, asiento 1, ocupado' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Fila A, asiento 2, ocupado' })).toBeInTheDocument()
+  })
+
+  it('cada asiento que el service da como libre se llama "disponible"', async () => {
+    const sector = await firstSectorWithPlaces(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    await screen.findByRole('region', { name: `Mapa de ${sector.sectorName}` })
+    for (const seat of sector.seats?.filter((candidate) => candidate.available) ?? []) {
+      expect(
+        screen.getByRole('button', {
+          name: `Fila ${seat.row}, asiento ${seat.number}, disponible`,
+        }),
+      ).toBeInTheDocument()
+    }
+  })
+})
+
 const SEAT_NAME = /^Fila \w+, asiento \d+, /
 
 async function firstSectorWithPlaces(eventId: number) {
