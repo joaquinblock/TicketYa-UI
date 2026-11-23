@@ -48,7 +48,8 @@ export type Reservation = {
  * Por qué no se creó la reserva. `SEATS_TAKEN` no tiene texto propio: se vuelve a pedir la
  * disponibilidad y avisan los avisos de un refresco.
  */
-export type ReservationError = 'SEATS_TAKEN' | 'LIMIT' | 'UNAUTHORIZED' | 'FAILED'
+export type ReservationError =
+  'SEATS_TAKEN' | 'LIMIT' | 'QUEUE_REQUIRED' | 'UNAUTHORIZED' | 'FAILED'
 
 /** Los que se avisan en "Tu selección", arriba del botón. */
 export type ShownReservationError = Exclude<ReservationError, 'SEATS_TAKEN'>
