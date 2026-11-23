@@ -516,6 +516,21 @@ describe('Lugares no numerados: CA1, sin mapa', () => {
   })
 })
 
+describe('Lugares no numerados: CA2, sumar y restar', () => {
+  it('en el evento 43, "Una más" sube la cantidad de a una y "Una menos" la baja de a una', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    await user.click(within(panel).getByRole('button', { name: 'Una más' }))
+    expect(quantityIn(panel)).toHaveTextContent(/^2$/)
+
+    await user.click(within(panel).getByRole('button', { name: 'Una menos' }))
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
