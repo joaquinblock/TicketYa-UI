@@ -31,7 +31,7 @@ export function SeatsPage() {
   else if (hasLoadError) content = <SeatsLoadError onRetry={retryLoad} />
   else if (sectors) {
     content = (
-      <>
+      <SeatsPanel>
         <SectorTabs
           sectors={sectors}
           openSectorId={openSector?.eventSectorId}
@@ -40,15 +40,29 @@ export function SeatsPage() {
         {openSector?.numbered && (
           <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
         )}
-      </>
+        {takenSeats.length > 0 && <TakenSeatsAlert seats={takenSeats} />}
+      </SeatsPanel>
     )
-  } else content = <SeatMapSkeleton />
+  } else {
+    content = (
+      <SeatsPanel>
+        <SeatMapSkeleton />
+      </SeatsPanel>
+    )
+  }
 
   return (
     <PurchaseLayout step={PURCHASE_STEP.SEATS} eventId={eventId}>
       <SeatsHeader event={event} />
-      {takenSeats.length > 0 && <TakenSeatsAlert seats={takenSeats} />}
       {content}
     </PurchaseLayout>
+  )
+}
+
+function SeatsPanel({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex min-w-0 flex-col gap-5.5 rounded-2xl border border-line bg-surface p-5">
+      {children}
+    </div>
   )
 }

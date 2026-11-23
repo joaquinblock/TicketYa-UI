@@ -7,7 +7,7 @@ export function SeatsHeader({ event }: { event: EventDetail | undefined }) {
   return (
     <header className="flex flex-col gap-2">
       {event && (
-        <p className="text-micro font-bold tracking-wider text-subtle uppercase">
+        <p className="text-micro font-bold tracking-[.14em] text-subtle uppercase">
           {formatEventHeader(event)}
         </p>
       )}

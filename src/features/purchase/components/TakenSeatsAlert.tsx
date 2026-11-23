@@ -11,7 +11,7 @@ export function TakenSeatsAlert({ seats }: { seats: SeatAvailability[] }) {
     <div
       role="alert"
       aria-labelledby={leadId}
-      className="rounded-control bg-error px-4 py-3 text-sm text-error-ink"
+      className="rounded-control bg-error px-3.5 py-3 text-sm text-error-ink"
     >
       <strong id={leadId}>{lead}</strong> {hint}
     </div>
