@@ -47,7 +47,12 @@ export function SeatsPage() {
             onOpen={openSectorById}
           />
           {openSector?.numbered && (
-            <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
+            <SeatMap
+              sector={openSector}
+              selection={selection}
+              onToggle={toggleSeat}
+              maxTicketsPerCustomer={maxTicketsPerCustomer}
+            />
           )}
           {unnumberedSector && (
             <QuantityPanel sector={unnumberedSector} stepper={quantityStepper} />
