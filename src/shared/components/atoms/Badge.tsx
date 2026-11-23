@@ -11,6 +11,7 @@ const badgeVariants = cva(
         success: 'bg-success text-success-ink',
         error: 'bg-error text-error-ink',
         warning: 'bg-warning text-warning-ink',
+        info: 'bg-info text-info-ink',
         accent: 'bg-accent text-ink',
         /** Secundario: toma el color del texto de alrededor, para que no compita con otro badge. */
         outline: 'border border-current bg-transparent font-semibold opacity-80',
@@ -20,7 +21,7 @@ const badgeVariants = cva(
   },
 )
 
-type BadgeProps = ComponentProps<'span'> & VariantProps<typeof badgeVariants>
+export type BadgeProps = ComponentProps<'span'> & VariantProps<typeof badgeVariants>
 
 export function Badge({ tone, className, ...props }: BadgeProps) {
   return <span className={cn(badgeVariants({ tone }), className)} {...props} />
