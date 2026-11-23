@@ -156,6 +156,20 @@ describe('Lugares: CA2, cambiar de pestaña', () => {
   })
 })
 
+describe('Lugares: CA2, tocar la pestaña abierta', () => {
+  it('no vacía la selección', async () => {
+    const seat = await firstFreeSeat(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    await user.click(await screen.findByRole('button', { name: seatName(seat, 'disponible') }))
+    const tabs = screen.getByRole('group', { name: 'Sectores' })
+    await user.click(within(tabs).getByRole('button', { pressed: true }))
+
+    expect(screen.getByRole('button', { name: seatName(seat, 'elegido') })).toBeInTheDocument()
+  })
+})
+
 describe('Lugares: CA4, un asiento ocupado no se elige', () => {
   it('A1 de la Platea del evento 2 está deshabilitado, y tocarlo no lo cambia', async () => {
     const user = userEvent.setup()
