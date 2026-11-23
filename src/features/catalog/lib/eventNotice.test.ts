@@ -32,4 +32,11 @@ describe('getEventNotice: a la venta', () => {
         'La venta ya abrió. Entrá a la fila para asegurar tu lugar: te habilitamos por tandas y tenés 10 minutos para reservar.',
     })
   })
+
+  it('con la apertura en el futuro avisa que la venta no empezó y cuándo abre', () => {
+    expect(getEventNotice(onSale({ saleStart: '2026-12-12T12:00:00' }), NOW)).toMatchObject({
+      title: 'La venta todavía no empezó',
+      message: 'Abre el 12 dic 2026 · 12:00 hs. Ese día vas a poder entrar a la fila.',
+    })
+  })
 })
