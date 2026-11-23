@@ -49,6 +49,7 @@ function SeatButton({ seat, selection, onToggle }: SeatChoice & { seat: SeatAvai
       type="button"
       aria-label={formatSeatAccessibleName(seat, status)}
       aria-pressed={status === 'SELECTED'}
+      disabled={status === 'TAKEN'}
       onClick={() => onToggle(seat.seatId)}
     >
       {seat.number}
