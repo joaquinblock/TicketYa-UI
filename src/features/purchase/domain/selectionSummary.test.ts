@@ -61,4 +61,30 @@ describe('summarizeSelection, sector no numerado', () => {
       count: 2,
     })
   })
+
+  it('con cantidad 0 (el sector se agotó), no hay líneas y el total es 0', () => {
+    expect(summarizeSelection({ sector: campo, selection: [], quantity: 0 })).toEqual({
+      lines: [],
+      total: 0,
+      count: 0,
+    })
+  })
+})
+
+describe('summarizeSelection, nada elegido', () => {
+  it('sin asientos elegidos, no hay líneas y el total es 0', () => {
+    expect(summarizeSelection({ sector: plateaBaja, selection: [], quantity: 0 })).toEqual({
+      lines: [],
+      total: 0,
+      count: 0,
+    })
+  })
+
+  it('sin sector abierto (todavía cargando), no hay líneas y el total es 0', () => {
+    expect(summarizeSelection({ sector: undefined, selection: [], quantity: 0 })).toEqual({
+      lines: [],
+      total: 0,
+      count: 0,
+    })
+  })
 })
