@@ -1,15 +1,21 @@
 import { CreditCard, MapPin } from 'lucide-react'
 import { PAYMENT_METHOD_LABEL } from '../constants/tickets.constants'
-import { formatOrderPrice, getOrderEventDateParts } from '../lib/ticketFormat'
-import type { Order } from '../types/tickets.types'
+import {
+  formatOrderPrice,
+  getOrderEventDateParts,
+  isWithinReturnDeadline,
+} from '../lib/ticketFormat'
+import type { Order, Ticket } from '../types/tickets.types'
 import { TicketRow } from './TicketRow'
 
 type OrderCardProps = {
   order: Order
+  onRequestReturn?: (order: Order, ticket: Ticket) => void
 }
 
-export function OrderCard({ order }: OrderCardProps) {
+export function OrderCard({ order, onRequestReturn }: OrderCardProps) {
   const { day, month, weekday, time } = getOrderEventDateParts(order.event.dateTime)
+  const canRequestReturn = isWithinReturnDeadline(order.event.dateTime)
   const paymentLabel = order.paymentMethod
     ? PAYMENT_METHOD_LABEL[order.paymentMethod]
     : 'Pago confirmado'
@@ -54,9 +60,22 @@ export function OrderCard({ order }: OrderCardProps) {
         </span>
       </div>
 
+      {!canRequestReturn && (
+        <div className="border-b border-line bg-warning px-4 py-2.5 text-label text-warning-ink md:px-5.5">
+          Faltan menos de 72 horas para este evento: ya no se pueden pedir devoluciones.
+        </div>
+      )}
+
       <div>
         {order.tickets.map((ticket) => (
-          <TicketRow key={ticket.id} ticket={ticket} />
+          <TicketRow
+            key={ticket.id}
+            ticket={ticket}
+            canRequestReturn={canRequestReturn}
+            onRequestReturn={
+              onRequestReturn ? (selected) => onRequestReturn(order, selected) : undefined
+            }
+          />
         ))}
       </div>
     </article>
