@@ -6,4 +6,6 @@ export const catalogKeys = {
   cities: () => [...catalogKeys.all, 'cities'] as const,
   suggestions: (text: string) => [...catalogKeys.all, 'suggestions', text] as const,
   event: (id: number | undefined) => [...catalogKeys.all, 'event', id] as const,
+  availability: (eventId: number | undefined) =>
+    [...catalogKeys.all, 'availability', eventId] as const,
 }

@@ -24,6 +24,7 @@
 ## Proyecto
 
 - Fuente de verdad sobre qué construir: el backend en `C:\Projects\TicketYa` (consigna en su `README.md`, US en `docs/user-stories.md`).
+- Si algo se puede resolver en el backend (un dato del seeder, un campo que falta en la respuesta), se arregla ahí antes de parchear el front.
 - Estructura de carpetas: skill `atomic-design`. Features del proyecto en `CLAUDE.md`.
 - Los tests de red van contra el gateway real (`TICKETYA_GATEWAY_URL` en `.env`), con el auth-service en perfil `dev`. Sin MSW.
 - Configuración en `.env` con prefijo `TICKETYA_`. Copiá `.env.example` la primera vez.

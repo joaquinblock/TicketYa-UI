@@ -5,7 +5,13 @@ import { ROUTES } from '@/shared/lib/routes'
 import { EVENT_TYPE_LABEL } from '../../constants/catalog.constants'
 import { formatPrice, getEventDateParts } from '../../lib/eventFormat'
 import type { EventSummary } from '../../types/catalog.types'
-import { EVENT_TYPE_BLOCK_CLASS } from './eventCard.constants'
+import {
+  EVENT_FLAG_LABEL,
+  EVENT_TYPE_BLOCK_CLASS,
+  HIGHLIGHTED_FLAG_CLASS,
+  NEUTRAL_FLAG_CLASS,
+} from './eventCard.constants'
+import { useEventFlags } from './useEventFlags'
 
 type EventCardProps = { event: EventSummary }
 
@@ -32,7 +38,7 @@ function EventCardCover({ event }: EventCardProps) {
       )}
     >
       <EventDateBlock dateTime={event.dateTime} />
-      <EventStatusFlag event={event} />
+      <EventStatusFlags event={event} />
     </div>
   )
 }
@@ -47,15 +53,25 @@ function EventDateBlock({ dateTime }: Pick<EventSummary, 'dateTime'>) {
   )
 }
 
-const FLAG_CLASS = 'absolute top-3 right-3 rounded-md px-2 py-1.5 text-micro font-bold'
+function EventStatusFlags({ event }: EventCardProps) {
+  const flags = useEventFlags(event)
+  if (flags.length === 0) return null
 
-/** Agotado gana sobre alta demanda: ya no hay nada que apurar. */
-function EventStatusFlag({ event }: EventCardProps) {
-  if (event.status === 'SOLD_OUT')
-    return <span className={cn(FLAG_CLASS, 'bg-surface text-muted')}>Agotado</span>
-  if (event.highDemand)
-    return <span className={cn(FLAG_CLASS, 'bg-accent text-ink')}>Alta demanda</span>
-  return null
+  return (
+    <p className="absolute top-3 right-3 flex flex-wrap justify-end gap-1.5">
+      {flags.map(({ kind, isHighlighted }) => (
+        <span
+          key={kind}
+          className={cn(
+            'rounded-md px-2 py-1.5 text-micro font-bold',
+            isHighlighted ? HIGHLIGHTED_FLAG_CLASS[kind] : NEUTRAL_FLAG_CLASS,
+          )}
+        >
+          {EVENT_FLAG_LABEL[kind]}
+        </span>
+      ))}
+    </p>
+  )
 }
 
 function EventCardBody({ event }: EventCardProps) {

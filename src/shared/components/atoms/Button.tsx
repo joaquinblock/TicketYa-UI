@@ -4,7 +4,7 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/shared/lib/cn'
 
 const buttonVariants = cva(
-  'inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-control border px-5 text-control font-semibold no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex cursor-pointer items-center justify-center gap-2 rounded-control border px-5 text-control font-semibold no-underline transition-colors disabled:cursor-not-allowed disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -12,8 +12,13 @@ const buttonVariants = cva(
         accent: 'border-accent bg-accent text-ink hover:bg-accent-hover hover:text-ink',
         ghost: 'border-line-strong bg-surface text-ink hover:bg-surface-hover hover:text-ink',
       },
+      size: {
+        md: 'min-h-11',
+        /** La acción principal de una sección (Fitts): 52 px. */
+        lg: 'min-h-13',
+      },
     },
-    defaultVariants: { variant: 'primary' },
+    defaultVariants: { variant: 'primary', size: 'md' },
   },
 )
 
@@ -23,7 +28,7 @@ type ButtonProps = ComponentProps<'button'> &
     asChild?: boolean
   }
 
-export function Button({ variant, asChild = false, className, ...props }: ButtonProps) {
+export function Button({ variant, size, asChild = false, className, ...props }: ButtonProps) {
   const Component = asChild ? Slot : 'button'
-  return <Component className={cn(buttonVariants({ variant }), className)} {...props} />
+  return <Component className={cn(buttonVariants({ variant, size }), className)} {...props} />
 }
