@@ -2,12 +2,13 @@ import { Ticket } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/atoms/Button'
 import { PageTitle } from '@/shared/components/atoms/PageTitle'
+import { Spinner } from '@/shared/components/atoms/Spinner'
 import { ROUTES } from '@/shared/lib/routes'
 import { OrderCard } from '../components/OrderCard'
 import { useMyOrders } from '../hooks/useMyOrders'
 
 export function MyTicketsPage() {
-  const { orders } = useMyOrders()
+  const { orders, isPending } = useMyOrders()
 
   return (
     <section className="mx-auto flex w-full max-w-245 flex-col gap-5.5 px-4 pt-10 pb-18 md:px-7">
@@ -18,12 +19,33 @@ export function MyTicketsPage() {
         <PageTitle>Mis entradas</PageTitle>
       </div>
 
-      {orders.length === 0 ? (
+      {isPending ? (
+        <MyTicketsLoadingState />
+      ) : orders.length === 0 ? (
         <MyTicketsEmptyState />
       ) : (
         orders.map((order) => <OrderCard key={order.id} order={order} />)
       )}
     </section>
+  )
+}
+
+function MyTicketsLoadingState() {
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-2.5 text-sm text-muted">
+        <Spinner label="Cargando tus entradas" />
+        <span aria-hidden="true">Cargando tus entradas...</span>
+      </div>
+      <div
+        aria-hidden="true"
+        className="h-44 animate-pulse rounded-2xl border border-line bg-surface motion-reduce:animate-none"
+      />
+      <div
+        aria-hidden="true"
+        className="h-44 animate-pulse rounded-2xl border border-line bg-surface motion-reduce:animate-none"
+      />
+    </div>
   )
 }
 
