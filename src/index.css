@@ -47,6 +47,8 @@
 
   --radius-control: 10px;
   --radius-card: 14px;
+
+  --tracking-stage: 0.22em;
 }
 
 @layer base {

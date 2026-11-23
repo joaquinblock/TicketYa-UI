@@ -18,7 +18,7 @@ export function SectorTabs({ sectors, openSectorId, onOpen }: SectorTabsProps) {
           aria-pressed={sector.eventSectorId === openSectorId}
           disabled={sector.availablePlaces === 0}
           onClick={() => onOpen(sector.eventSectorId)}
-          className="flex min-h-14.5 cursor-pointer flex-col items-center justify-center gap-0.75 rounded-control border border-line bg-surface text-sm font-semibold text-ink disabled:cursor-not-allowed disabled:text-sold-out aria-pressed:border-ink aria-pressed:bg-tab-open aria-pressed:shadow-[inset_0_0_0_1px_var(--color-ink)]"
+          className="flex min-h-14.5 cursor-pointer flex-col items-center justify-center gap-0.75 rounded-control border border-line bg-surface text-sm font-semibold text-ink disabled:cursor-not-allowed disabled:text-sold-out aria-pressed:border-ink aria-pressed:bg-tab-open aria-pressed:inset-ring aria-pressed:inset-ring-ink"
         >
           {sector.sectorName}{' '}
           <small className="text-xs font-medium text-subtle in-disabled:text-sold-out">
