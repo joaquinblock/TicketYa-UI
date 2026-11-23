@@ -68,3 +68,11 @@ Inicio combina `catalog` y `preferences`, así que vive en `src/pages/`.
 
 - Cada issue del front enlaza la US del backend que consume (por ejemplo, `joaquinblock/TicketYa#43` para US-EVT-04).
 - Si la US del backend está abierta, el issue del front queda bloqueado por ella.
+
+## Próximos pasos (post-login #8)
+
+1. **Después de terminar `#8` (Login y sesión):**
+   - Implementar **`#13` ("Para vos" en Inicio)**: consumir `GET /api/recommendations/me` en `HomePage` cuando el cliente está autenticado (ocultar o mostrar invitación a ingresar si no hay sesión o no es cliente).
+   - Conectar los links `"Iniciar sesión"` pendientes (que hoy apuntan a `ROUTES.login` o `ROUTES.home`) y definir el retiro de `ensureDevClientSession()` en las features (`tickets`, `purchase`, `queue`, `preferences`) cuando ya no haga falta en `DEV`.
+2. **Después de `#13`:**
+   - Implementar **`#31` (Notificaciones)**: primero agregar los endpoints HTTP en `C:\Projects\TicketYa\notification-service` (`/api/notifications`, hoy solo envía emails vía RabbitMQ) y luego la sección en `PreferencesPage`.
