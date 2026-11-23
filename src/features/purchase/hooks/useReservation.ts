@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/shared/lib/routes'
 import { toReservationError } from '../domain/reservationError'
 import { createReservation } from '../services/reservations.service'
-import type { ReservationDraft } from '../types/purchase.types'
+import type {
+  ReservationDraft,
+  ReservationRequest,
+  ShownReservationError,
+} from '../types/purchase.types'
 import { useIdempotencyKey } from './useIdempotencyKey'
 
 type UseReservationVariables = {
@@ -29,5 +33,18 @@ export function useReservation({ draft, onSeatsTaken }: UseReservationVariables)
     mutation.mutate({ ...draft, idempotencyKey })
   }
 
-  return { reserve, isReserving: mutation.isPending }
+  return { reserve, isReserving: mutation.isPending, error: shownError(mutation, idempotencyKey) }
+}
+
+/**
+ * El error del intento con la selección de ahora. Si la selección cambió, la clave también, y el
+ * aviso de la anterior ya no corresponde. `SEATS_TAKEN` no se muestra acá: lo avisa el refresco.
+ */
+function shownError(
+  { error, variables }: { error: unknown; variables?: ReservationRequest },
+  idempotencyKey: string,
+): ShownReservationError | undefined {
+  if (!error || variables?.idempotencyKey !== idempotencyKey) return undefined
+  const reservationError = toReservationError(error)
+  return reservationError === 'SEATS_TAKEN' ? undefined : reservationError
 }

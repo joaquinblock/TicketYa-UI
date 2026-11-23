@@ -38,13 +38,20 @@ export type ReservationDraft =
 export type ReservationRequest = ReservationDraft & { idempotencyKey: string }
 
 /** El estado de "Reservar y pagar" y su acción. */
-export type Reservation = { isReserving: boolean; reserve: () => void }
+export type Reservation = {
+  isReserving: boolean
+  reserve: () => void
+  error: ShownReservationError | undefined
+}
 
 /**
  * Por qué no se creó la reserva. `SEATS_TAKEN` no tiene texto propio: se vuelve a pedir la
  * disponibilidad y avisan los avisos de un refresco.
  */
 export type ReservationError = 'SEATS_TAKEN' | 'LIMIT' | 'UNAUTHORIZED' | 'FAILED'
+
+/** Los que se avisan en "Tu selección", arriba del botón. */
+export type ShownReservationError = Exclude<ReservationError, 'SEATS_TAKEN'>
 
 /** El estado del "−" / cantidad / "+" y sus acciones. */
 export type QuantityStepper = {

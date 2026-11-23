@@ -4,6 +4,7 @@ import { Button } from '@/shared/components/atoms/Button'
 import type { EventDetail } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import type { Reservation, SelectionSummary as Summary } from '../types/purchase.types'
+import { formatReservationError } from '../utils/reservationFormat'
 import { formatSelectionCount } from '../utils/seatFormat'
 
 type SelectionSummaryProps = Pick<EventDetail, 'maxTicketsPerCustomer'> & {
@@ -47,6 +48,11 @@ export function SelectionSummary({
         <span>Total</span>
         <strong className="font-mono text-2xl font-medium">{formatPrice(summary.total)}</strong>
       </div>
+      {reservation.error && (
+        <p role="alert" className="rounded-control bg-error px-3.5 py-3 text-sm text-error-ink">
+          {formatReservationError(reservation.error, maxTicketsPerCustomer)}
+        </p>
+      )}
       <Button
         variant="accent"
         size="lg"

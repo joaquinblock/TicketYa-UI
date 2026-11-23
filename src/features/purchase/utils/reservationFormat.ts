@@ -1,5 +1,5 @@
 import type { EventDetail } from '@/shared/types/event.types'
-import type { ReservationError } from '../types/purchase.types'
+import type { ReservationError, ShownReservationError } from '../types/purchase.types'
 
 const RESERVATION_ERROR_MESSAGE = {
   UNAUTHORIZED: 'Iniciá sesión para reservar tus lugares.',
@@ -8,7 +8,7 @@ const RESERVATION_ERROR_MESSAGE = {
 
 /** El 409 del límite no dice cuál es: sale del evento. Sin límite no puede llegar, y cae en la falla. */
 export function formatReservationError(
-  error: Exclude<ReservationError, 'SEATS_TAKEN'>,
+  error: ShownReservationError,
   maxTicketsPerCustomer: EventDetail['maxTicketsPerCustomer'],
 ) {
   if (error === 'LIMIT') {
