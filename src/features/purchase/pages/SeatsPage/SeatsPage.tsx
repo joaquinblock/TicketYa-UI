@@ -38,7 +38,7 @@ export function SeatsPage() {
   let content: ReactNode
   if (isNotForSale) content = <SeatsNotForSale eventId={eventId} />
   else if (hasLoadError) content = <SeatsLoadError onRetry={retryLoad} />
-  else if (sectors) {
+  else if (sectors && event) {
     content = (
       <div className="flex flex-wrap items-start gap-5">
         <SeatsPanel>
