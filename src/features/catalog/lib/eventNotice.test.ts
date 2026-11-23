@@ -39,4 +39,14 @@ describe('getEventNotice: a la venta', () => {
       message: 'Abre el 12 dic 2026 · 12:00 hs. Ese día vas a poder entrar a la fila.',
     })
   })
+
+  it('con la apertura justo ahora la venta ya está abierta', () => {
+    expect(getEventNotice(onSale({ saleStart: '2026-11-22T12:00:00' }), NOW)).toBeUndefined()
+  })
+
+  it('de alta demanda y con la apertura en el futuro avisa solo que la venta no empezó', () => {
+    expect(
+      getEventNotice(onSale({ highDemand: true, saleStart: '2026-12-12T12:00:00' }), NOW),
+    ).toMatchObject({ kind: 'SALE_NOT_STARTED', title: 'La venta todavía no empezó' })
+  })
 })
