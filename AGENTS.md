@@ -31,7 +31,7 @@ Claude (Claude Code) y Gemini (Antigravity) trabajan a la vez en tickets distint
 | Gemini | `C:\Projects\TicketYa-UI-gemini` | Un worktree fijo, que no se borra         |
 
 - **Gemini usa siempre el mismo worktree.** El `.env`, `node_modules` y el workspace de Antigravity se arman una sola vez. Se crea con `git worktree add ..\TicketYa-UI-gemini origin/main` (copiá el `.env` y corré `pnpm install`).
-- **Cada ticket empieza desde `origin/main`, sin abrir `main`:** `git fetch origin` y `git switch -c <tipo>/<NUM>-<descripcion> origin/main`. Git no deja tener `main` abierta en dos carpetas, y así no hace falta.
+- **Cada ticket empieza desde `origin/main`, sin abrir `main`:** `git fetch origin` y `git switch --no-track -c <tipo>/<NUM>-<descripcion> origin/main`. Git no deja tener `main` abierta en dos carpetas, y así no hace falta. `--no-track` evita que la rama siga a `origin/main`: el primer push es `git push -u origin <rama>`.
 - **Nunca se trabaja en la carpeta del otro** ni se toma un ticket que ya tiene rama. `git worktree list` muestra en qué rama está cada uno.
 - Cuando se mergea un PR, Claude hace `git pull` en `main`. Gemini arranca el ticket siguiente desde `origin/main` como arriba.
 
