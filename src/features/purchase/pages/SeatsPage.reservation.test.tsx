@@ -33,6 +33,7 @@ const UNNUMBERED_EVENT = {
   SUMMARY: 13,
   SOLD_OUT_ON_REFRESH: 14,
   RESERVED: 31,
+  WITHOUT_SESSION: 32,
 } as const
 
 function renderSeatsPage(eventId: number) {
@@ -302,6 +303,31 @@ describe('Lugares: CA4, supero el límite por persona', () => {
     )
     expect(getCurrentUrl().pathname).toBe(ROUTES.seats(eventId))
     expect(within(summary).getAllByRole('listitem')).toHaveLength(1)
+  })
+})
+
+describe('Lugares: CA5, sin sesión', () => {
+  it('sin token, sigo en Lugares con mi selección y veo el aviso con el link para iniciar sesión', async () => {
+    const eventId = UNNUMBERED_EVENT.WITHOUT_SESSION
+    const sector = await unnumberedSectorOf(eventId)
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+
+    expect(await within(summary).findByRole('alert')).toHaveTextContent(
+      'Iniciá sesión para reservar tus lugares.',
+    )
+    expect(
+      within(summary).getByRole('link', { name: 'Iniciar sesión (falta login)' }),
+    ).toHaveAttribute('href', ROUTES.login)
+    expect(getCurrentUrl().pathname).toBe(ROUTES.seats(eventId))
+    expect(
+      within(summary)
+        .getAllByRole('listitem')
+        .map((line) => line.textContent),
+    ).toEqual([expect.stringContaining(`1 × ${sector.sectorName}`)])
   })
 })
 
