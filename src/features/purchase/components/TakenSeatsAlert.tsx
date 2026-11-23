@@ -9,11 +9,22 @@ export function TakenSeatsAlert({ seats }: { seats: SeatAvailability[] }) {
 
   return (
     <div
+      ref={takeFocusIfLost}
       role="alert"
       aria-labelledby={leadId}
+      tabIndex={-1}
       className="rounded-control bg-error px-3.5 py-3 text-sm text-error-ink"
     >
       <strong id={leadId}>{lead}</strong> {hint}
     </div>
   )
+}
+
+/**
+ * El asiento ocupado queda deshabilitado y, si tenía el foco, el navegador lo manda al `body`:
+ * el aviso lo toma para que el próximo Tab siga desde el mapa y no desde el principio de la página.
+ */
+function takeFocusIfLost(alert: HTMLDivElement | null) {
+  const focused = document.activeElement
+  if (alert && (focused === document.body || focused?.matches(':disabled'))) alert.focus()
 }
