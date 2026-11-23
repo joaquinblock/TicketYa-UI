@@ -44,4 +44,12 @@ describe('EventCard: CA6', () => {
     expect(screen.getByText('Agotado')).toBeInTheDocument()
     expect(screen.queryByText('Próximamente')).not.toBeInTheDocument()
   })
+
+  it('muestra la foto del evento cuando el backend devuelve photoUrl', async () => {
+    const summary = await fetchSummary(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+    renderWithProviders(<EventCard event={summary} />)
+
+    const img = screen.getByRole('img', { name: summary.name })
+    expect(img).toHaveAttribute('src', summary.photoUrl)
+  })
 })
