@@ -7,3 +7,13 @@ describe('formatPlacesLeft y getOccupancyPercent', () => {
     expect(getOccupancyPercent({ capacity: 5000, availablePlaces: 1240 })).toBe(75)
   })
 })
+
+describe('formatPlacesLeft: últimos lugares', () => {
+  it.each([
+    [9, 'Últimos 9 lugares'],
+    [10, '10 disponibles'],
+    [1, 'Últimos 1 lugares'],
+  ])('con %i libres dice "%s"', (availablePlaces, label) => {
+    expect(formatPlacesLeft(availablePlaces)).toBe(label)
+  })
+})
