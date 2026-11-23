@@ -6,3 +6,6 @@ export type SeatStatus = (typeof SEAT_STATUSES)[number]
 
 /** Un aviso en dos partes: `lead` se destaca y `hint` dice qué hacer. */
 export type AlertMessage = { lead: string; hint: string }
+
+/** Qué le pasó a la cantidad elegida cuando un refresco trajo otros lugares libres. */
+export type QuantityChange = 'NONE' | 'LOWERED' | 'SOLD_OUT'
