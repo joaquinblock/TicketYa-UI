@@ -4,8 +4,12 @@ import { formatEventDateTime } from './eventFormat'
 
 type NoticeInput = Pick<EventDetail, 'status' | 'highDemand' | 'saleStart'>
 
-/** El único aviso del detalle, o `undefined` si el evento está a la venta sin nada que avisar. */
+/**
+ * El único aviso del detalle, o `undefined` si el evento está a la venta sin nada que avisar.
+ * Un evento fuera de venta avisa su estado; a la venta, la apertura futura le gana a la alta demanda.
+ */
 export function getEventNotice(event: NoticeInput, now: Date): EventNotice | undefined {
+  if (event.status !== 'PUBLISHED') return fixedNotice(event.status)
   if (event.saleStart && hasSaleNotStarted(event.saleStart, now))
     return saleNotStartedNotice(event.saleStart)
   if (event.highDemand) return fixedNotice('HIGH_DEMAND')
