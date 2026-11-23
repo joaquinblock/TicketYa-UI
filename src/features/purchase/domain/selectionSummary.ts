@@ -8,19 +8,39 @@ type SelectionSummaryInput = {
   quantity: number
 }
 
-/** Lo que "Tu selección" muestra: una línea por asiento elegido, el total y cuántos son. */
-export function summarizeSelection({ sector, selection }: SelectionSummaryInput): SelectionSummary {
-  const seatsInMapOrder = groupSeatsByRow(sector?.seats ?? []).flatMap((row) => row.seats)
-  const lines: SelectionLine[] = seatsInMapOrder
+/**
+ * Lo que "Tu selección" muestra del sector abierto: una línea por asiento elegido, en el orden del
+ * mapa, o una sola con la cantidad si el sector no es numerado.
+ */
+export function summarizeSelection({
+  sector,
+  selection,
+  quantity,
+}: SelectionSummaryInput): SelectionSummary {
+  if (!sector) return { lines: [], total: 0, count: 0 }
+  const lines = sector.numbered ? seatLines(sector, selection) : quantityLines(sector, quantity)
+  const count = sector.numbered ? lines.length : quantity
+  return { lines, total: lines.reduce((sum, line) => sum + line.price, 0), count }
+}
+
+function seatLines(sector: SectorAvailability, selection: SeatId[]): SelectionLine[] {
+  const seatsInMapOrder = groupSeatsByRow(sector.seats ?? []).flatMap((row) => row.seats)
+  return seatsInMapOrder
     .filter((seat) => selection.includes(seat.seatId))
     .map((seat) => ({
       key: seat.seatId,
-      label: `${sector?.sectorName} · fila ${seat.row}, asiento ${seat.number}`,
-      price: sector?.price ?? 0,
+      label: `${sector.sectorName} · fila ${seat.row}, asiento ${seat.number}`,
+      price: sector.price,
     }))
-  return {
-    lines,
-    total: lines.reduce((sum, line) => sum + line.price, 0),
-    count: lines.length,
-  }
+}
+
+function quantityLines(sector: SectorAvailability, quantity: number): SelectionLine[] {
+  if (quantity === 0) return []
+  return [
+    {
+      key: sector.eventSectorId,
+      label: `${quantity} × ${sector.sectorName}`,
+      price: quantity * sector.price,
+    },
+  ]
 }
