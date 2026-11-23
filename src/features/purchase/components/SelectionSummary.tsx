@@ -1,9 +1,15 @@
 import { ArrowUpRight, ShieldCheck } from 'lucide-react'
 import { useId } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/atoms/Button'
+import { ROUTES } from '@/shared/lib/routes'
 import type { EventDetail } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
-import type { Reservation, SelectionSummary as Summary } from '../types/purchase.types'
+import type {
+  Reservation,
+  SelectionSummary as Summary,
+  ShownReservationError,
+} from '../types/purchase.types'
 import { formatReservationError } from '../utils/reservationFormat'
 import { formatSelectionCount } from '../utils/seatFormat'
 
@@ -49,9 +55,7 @@ export function SelectionSummary({
         <strong className="font-mono text-2xl font-medium">{formatPrice(summary.total)}</strong>
       </div>
       {reservation.error && (
-        <p role="alert" className="rounded-control bg-error px-3.5 py-3 text-sm text-error-ink">
-          {formatReservationError(reservation.error, maxTicketsPerCustomer)}
-        </p>
+        <ReservationAlert error={reservation.error} maxTicketsPerCustomer={maxTicketsPerCustomer} />
       )}
       <Button
         variant="accent"
@@ -73,5 +77,26 @@ export function SelectionSummary({
         Guardamos estos lugares 10 minutos mientras pagás.
       </p>
     </aside>
+  )
+}
+
+type ReservationAlertProps = Pick<EventDetail, 'maxTicketsPerCustomer'> & {
+  error: ShownReservationError
+}
+
+/** Al lado del botón, para que se vea donde pasó (Nielsen 9), también en mobile. */
+function ReservationAlert({ error, maxTicketsPerCustomer }: ReservationAlertProps) {
+  return (
+    <div
+      role="alert"
+      className="flex flex-col gap-1.5 rounded-control bg-error px-3.5 py-3 text-sm text-error-ink"
+    >
+      <p>{formatReservationError(error, maxTicketsPerCustomer)}</p>
+      {error === 'UNAUTHORIZED' && (
+        <Link to={ROUTES.login} className="font-semibold text-error-ink underline">
+          Iniciar sesión (falta login)
+        </Link>
+      )}
+    </div>
   )
 }
