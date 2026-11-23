@@ -65,4 +65,13 @@ describe('Sectores y precios: CA2', () => {
 
     expect(getCurrentUrl().pathname).toBe(ROUTES.queue(SEEDER_EVENT.HIGH_DEMAND_ON_SALE))
   })
+
+  it('sin alta demanda, "Elegir lugares" lleva a Lugares del evento', async () => {
+    const user = userEvent.setup()
+    renderEventPage(SEEDER_EVENT.ON_SALE_WITHOUT_HIGH_DEMAND)
+
+    await user.click(await screen.findByRole('link', { name: /Elegir lugares/ }))
+
+    expect(getCurrentUrl().pathname).toBe(ROUTES.seats(SEEDER_EVENT.ON_SALE_WITHOUT_HIGH_DEMAND))
+  })
 })
