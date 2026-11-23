@@ -1,7 +1,7 @@
 # 20: Lugares en un sector no numerado
 
 **Tipo:** Story
-**Estado:** borrador
+**Estado:** aprobado
 **Funcionalidad:** Asientos (épica #10 Cliente, página #18)
 
 ## Historia
