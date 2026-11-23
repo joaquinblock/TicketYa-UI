@@ -182,6 +182,15 @@ describe('Detalle del evento: CA3', () => {
   )
 })
 
+describe('Detalle del evento: CA4', () => {
+  it('mientras carga anuncia "Cargando evento" y no muestra los datos', () => {
+    renderEventPage(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+
+    expect(screen.getByText('Cargando evento')).toHaveAttribute('role', 'status')
+    expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument()
+  })
+})
+
 function findEventNotice() {
   return screen.findByRole('region', { name: 'Aviso' })
 }
