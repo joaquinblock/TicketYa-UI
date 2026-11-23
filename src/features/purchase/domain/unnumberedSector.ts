@@ -16,6 +16,7 @@ export function toUnnumberedSector(
   )
   if (!detail) return undefined
   return {
+    eventSectorId: openSector.eventSectorId,
     sectorName: openSector.sectorName,
     availablePlaces: openSector.availablePlaces,
     capacity: detail.capacity,

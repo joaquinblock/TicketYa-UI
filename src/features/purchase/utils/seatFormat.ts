@@ -1,7 +1,7 @@
 import type { EventSector, SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import { SEAT_STATUS_LABEL, SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
-import type { AlertMessage, SeatStatus } from '../types/purchase.types'
+import type { AlertMessage, QuantityChange, SeatStatus } from '../types/purchase.types'
 
 type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
 type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
@@ -60,4 +60,13 @@ export function formatSectorSoldOutMessage(sectorName: string): AlertMessage {
 
 export function formatTicketLimit(maxTicketsPerCustomer: number) {
   return `Hasta ${maxTicketsPerCustomer} por persona`
+}
+
+/** El aviso que corresponde a lo que el refresco le hizo a la cantidad. */
+export function formatQuantityChangeMessage(
+  change: Exclude<QuantityChange, 'NONE'>,
+  lowered: QuantityLoweredInput,
+): AlertMessage {
+  if (change === 'SOLD_OUT') return formatSectorSoldOutMessage(lowered.sectorName)
+  return formatQuantityLoweredMessage(lowered)
 }

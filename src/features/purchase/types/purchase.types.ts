@@ -16,7 +16,10 @@ export type AlertMessage = { lead: string; hint: string }
 export type QuantityChange = 'NONE' | 'LOWERED' | 'SOLD_OUT'
 
 /** Lo que el panel de cantidad muestra de un sector no numerado. */
-export type UnnumberedSector = Pick<SectorAvailability, 'sectorName' | 'availablePlaces'> &
+export type UnnumberedSector = Pick<
+  SectorAvailability,
+  'eventSectorId' | 'sectorName' | 'availablePlaces'
+> &
   Pick<EventSector, 'capacity'> &
   Pick<EventDetail, 'maxTicketsPerCustomer'>
 

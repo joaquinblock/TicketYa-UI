@@ -10,7 +10,7 @@ import { QuantityPanel } from '../../components/QuantityPanel/QuantityPanel'
 import { SeatsNotForSale } from '../../components/SeatsNotForSale'
 import { SectorTabs } from '../../components/SectorTabs'
 import { SelectionChangedAlert } from '../../components/SelectionChangedAlert'
-import { formatTakenSeatsMessage } from '../../utils/seatFormat'
+import { formatQuantityChangeMessage, formatTakenSeatsMessage } from '../../utils/seatFormat'
 import { useSeatsPageController } from './useSeatsPageController'
 
 export function SeatsPage() {
@@ -28,6 +28,7 @@ export function SeatsPage() {
     toggleSeat,
     unnumberedSector,
     quantityStepper,
+    quantityChange,
   } = useSeatsPageController(eventId)
 
   let content: ReactNode
@@ -47,6 +48,14 @@ export function SeatsPage() {
         {unnumberedSector && <QuantityPanel sector={unnumberedSector} stepper={quantityStepper} />}
         {takenSeats.length > 0 && (
           <SelectionChangedAlert message={formatTakenSeatsMessage(takenSeats)} />
+        )}
+        {unnumberedSector && quantityChange !== 'NONE' && (
+          <SelectionChangedAlert
+            message={formatQuantityChangeMessage(quantityChange, {
+              sectorName: unnumberedSector.sectorName,
+              quantity: quantityStepper.quantity,
+            })}
+          />
         )}
       </SeatsPanel>
     )
