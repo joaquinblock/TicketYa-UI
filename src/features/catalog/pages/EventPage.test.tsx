@@ -169,6 +169,17 @@ describe('Detalle del evento: CA3', () => {
 
     expect(getCurrentUrl().pathname).toBe(ROUTES.home)
   })
+
+  it.each([SEEDER_EVENT.DRAFT, 'abc'])(
+    '/eventos/%s muestra "No encontramos este evento"',
+    async (eventId) => {
+      renderEventPage(eventId)
+
+      expect(
+        await screen.findByRole('heading', { name: 'No encontramos este evento' }),
+      ).toBeInTheDocument()
+    },
+  )
 })
 
 function findEventNotice() {
