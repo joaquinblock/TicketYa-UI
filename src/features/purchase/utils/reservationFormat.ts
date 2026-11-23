@@ -2,6 +2,7 @@ import type { EventDetail } from '@/shared/types/event.types'
 import type { ReservationError, ShownReservationError } from '../types/purchase.types'
 
 const RESERVATION_ERROR_MESSAGE = {
+  QUEUE_REQUIRED: 'Necesitás un turno vigente en la fila virtual para reservar este evento.',
   UNAUTHORIZED: 'Iniciá sesión para reservar tus lugares.',
   FAILED: 'No pudimos reservar tus lugares.',
 } as const satisfies Record<Exclude<ReservationError, 'SEATS_TAKEN' | 'LIMIT'>, string>

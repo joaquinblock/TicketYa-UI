@@ -71,6 +71,7 @@ export function SeatsPage() {
           )}
         </SeatsPanel>
         <SelectionSummary
+          eventId={eventId}
           summary={selectionSummary}
           maxTicketsPerCustomer={maxTicketsPerCustomer}
           reservation={reservation}

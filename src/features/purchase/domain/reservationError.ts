@@ -7,6 +7,7 @@ const RESERVATION_ERROR_BY_CODE: Partial<Record<string, ReservationError>> = {
   seat_unavailable: 'SEATS_TAKEN',
   sector_sold_out: 'SEATS_TAKEN',
   ticket_limit_exceeded: 'LIMIT',
+  invalid_queue_token: 'QUEUE_REQUIRED',
 }
 
 /**

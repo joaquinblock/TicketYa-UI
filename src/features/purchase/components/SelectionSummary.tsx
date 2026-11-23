@@ -14,12 +14,14 @@ import { formatReservationError } from '../utils/reservationFormat'
 import { formatSelectionCount } from '../utils/seatFormat'
 
 type SelectionSummaryProps = Pick<EventDetail, 'maxTicketsPerCustomer'> & {
+  eventId: string
   summary: Summary
   reservation: Reservation
 }
 
 /** "Tu selección": lo elegido con su precio, el total y el contador contra el límite por persona. */
 export function SelectionSummary({
+  eventId,
   summary,
   maxTicketsPerCustomer,
   reservation,
@@ -56,6 +58,7 @@ export function SelectionSummary({
       </div>
       {reservation.error && (
         <ReservationAlert
+          eventId={eventId}
           error={reservation.error}
           maxTicketsPerCustomer={maxTicketsPerCustomer}
           onRetry={reservation.reserve}
@@ -85,19 +88,30 @@ export function SelectionSummary({
 }
 
 type ReservationAlertProps = Pick<EventDetail, 'maxTicketsPerCustomer'> & {
+  eventId: string
   error: ShownReservationError
   /** Manda la misma clave: si el primer pedido llegó, el backend devuelve esa orden. */
   onRetry: () => void
 }
 
 /** Al lado del botón, para que se vea donde pasó (Nielsen 9), también en mobile. */
-function ReservationAlert({ error, maxTicketsPerCustomer, onRetry }: ReservationAlertProps) {
+function ReservationAlert({
+  eventId,
+  error,
+  maxTicketsPerCustomer,
+  onRetry,
+}: ReservationAlertProps) {
   return (
     <div
       role="alert"
       className="flex flex-col gap-1.5 rounded-control bg-error px-3.5 py-3 text-sm text-error-ink"
     >
       <p>{formatReservationError(error, maxTicketsPerCustomer)}</p>
+      {error === 'QUEUE_REQUIRED' && (
+        <Link to={ROUTES.queue(eventId)} className="font-semibold text-error-ink underline">
+          Ir a la fila virtual
+        </Link>
+      )}
       {error === 'UNAUTHORIZED' && (
         <Link to={ROUTES.login} className="font-semibold text-error-ink underline">
           Iniciar sesión (falta login)

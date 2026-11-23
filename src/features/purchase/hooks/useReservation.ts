@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import { clearQueueTurn } from '@/shared/lib/queueToken'
 import { ROUTES } from '@/shared/lib/routes'
 import { toReservationError } from '../domain/reservationError'
 import { createReservation } from '../services/reservations.service'
@@ -24,8 +25,10 @@ export function useReservation({ draft, onSeatsTaken }: UseReservationVariables)
     mutationFn: createReservation,
     meta: { handlesErrorInline: true },
     onSuccess: (order) => navigate(ROUTES.orderPayment(order.eventId, order.id)),
-    onError: (error) => {
-      if (toReservationError(error) === 'SEATS_TAKEN') onSeatsTaken()
+    onError: (error, variables) => {
+      const reservationError = toReservationError(error)
+      if (reservationError === 'SEATS_TAKEN') onSeatsTaken()
+      else if (reservationError === 'QUEUE_REQUIRED') clearQueueTurn(variables.eventId)
     },
   })
 
