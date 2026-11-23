@@ -4,6 +4,7 @@ import type { SeatId } from '../types/purchase.types'
 import { formatSeatAccessibleName } from '../utils/seatFormat'
 import { groupSeatsByRow, type SeatRow } from '../utils/seatRowGroups'
 import { SeatLegend } from './SeatLegend'
+import { Stage } from './Stage'
 
 type SeatMapProps = {
   sector: SectorAvailability
@@ -17,9 +18,7 @@ type SeatChoice = Pick<SeatMapProps, 'selection' | 'onToggle'>
 export function SeatMap({ sector, selection, onToggle }: SeatMapProps) {
   return (
     <section aria-label={`Mapa de ${sector.sectorName}`} className="flex flex-col gap-5.5">
-      <div className="mx-auto grid h-8.5 w-full max-w-140 place-items-center rounded-md bg-ink text-micro font-bold tracking-stage text-surface uppercase">
-        Escenario
-      </div>
+      <Stage />
       <div className="overflow-x-auto">
         <div className="flex min-w-130 flex-col gap-1.75">
           {groupSeatsByRow(sector.seats ?? []).map((seatRow) => (
