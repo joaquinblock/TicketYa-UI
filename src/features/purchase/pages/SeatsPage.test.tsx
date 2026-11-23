@@ -10,7 +10,7 @@ import { ROUTES } from '@/shared/lib/routes'
 import { getAvailability } from '@/shared/services/availability.service'
 import { getEvent } from '@/shared/services/events.service'
 import { formatEventDateTime } from '@/shared/utils/eventFormat'
-import { LocationProbe } from '@/test/LocationProbe'
+import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
 import { formatSectorTabLabel } from '../utils/seatFormat'
 
@@ -292,6 +292,21 @@ describe('Lugares: CA6, error', () => {
       await screen.findByRole('region', { name: `Mapa de ${sector.sectorName}` }),
     ).toBeInTheDocument()
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
+describe('Lugares: CA6, sin venta', () => {
+  it('con el evento 999999 avisa que no tiene lugares a la venta, sin "Reintentar", y el link lleva al evento', async () => {
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.WITHOUT_PRICES)
+
+    const notForSale = await screen.findByRole('region', {
+      name: 'Este evento no tiene lugares a la venta',
+    })
+    expect(screen.queryByRole('button', { name: 'Reintentar' })).not.toBeInTheDocument()
+
+    await user.click(within(notForSale).getByRole('link'))
+    expect(getCurrentUrl().pathname).toBe(ROUTES.event(SEEDER_EVENT.WITHOUT_PRICES))
   })
 })
 
