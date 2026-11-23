@@ -17,6 +17,11 @@ import { formatPlacesLeft } from '../utils/sectorFormat'
 const SEEDER_EVENT = {
   HIGH_DEMAND_ON_SALE: 1,
   ON_SALE_WITHOUT_HIGH_DEMAND: 2,
+  SALE_NOT_STARTED: 4,
+  SOLD_OUT: 6,
+  SUSPENDED: 7,
+  CANCELLED: 8,
+  FINISHED: 9,
 } as const
 
 function renderEventPage(eventId: number) {
@@ -84,5 +89,40 @@ describe('Sectores y precios: CA2', () => {
       `Hasta ${event.maxTicketsPerCustomer} entradas por persona · Devoluciones hasta 72 horas antes del evento`,
     )
     expect(button.compareDocumentPosition(terms)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  })
+})
+
+const PLACES_TEXT = /disponibles|Últimos|Agotado/
+const PURCHASE_LINK = /Entrar a la fila|Elegir lugares/
+
+describe('Sectores y precios: sin compra', () => {
+  it('el evento agotado dice "Agotado" en cada sector y no tiene botón de compra', async () => {
+    const event = await getEvent(SEEDER_EVENT.SOLD_OUT)
+    renderEventPage(event.id)
+
+    const rows = await findSectorRows()
+    expect(rows).toHaveLength(event.sectors.length)
+    for (const row of rows) expect(within(row).getByText('Agotado')).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: PURCHASE_LINK })).not.toBeInTheDocument()
+  })
+
+  it.each([
+    ['con la venta todavía cerrada', SEEDER_EVENT.SALE_NOT_STARTED],
+    ['suspendido', SEEDER_EVENT.SUSPENDED],
+    ['cancelado', SEEDER_EVENT.CANCELLED],
+    ['finalizado', SEEDER_EVENT.FINISHED],
+  ])('%s muestra cada sector con nombre y precio, sin lugares ni botón', async (_, eventId) => {
+    const event = await getEvent(eventId)
+    renderEventPage(eventId)
+
+    const rows = await findSectorRows()
+    expect(rows).toHaveLength(event.sectors.length)
+    event.sectors.forEach((sector, index) => {
+      const row = within(rows[index])
+      expect(row.getByText(sector.name)).toBeInTheDocument()
+      expect(row.getByText(formatPrice(sector.price))).toBeInTheDocument()
+      expect(row.queryByText(PLACES_TEXT)).not.toBeInTheDocument()
+    })
+    expect(screen.queryByRole('link', { name: PURCHASE_LINK })).not.toBeInTheDocument()
   })
 })
