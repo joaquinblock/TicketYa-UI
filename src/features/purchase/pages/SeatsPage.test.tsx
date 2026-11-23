@@ -504,6 +504,18 @@ describe('Lugares no numerados: CA1, panel de cantidad', () => {
   })
 })
 
+describe('Lugares no numerados: CA1, sin mapa', () => {
+  it('con el Campo abierto no se ven el mapa ni la leyenda de asientos', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+
+    await findQuantityPanel(field.sectorName)
+    expect(screen.queryByRole('region', { name: /^Mapa de / })).not.toBeInTheDocument()
+    expect(screen.queryByText('Ocupado')).not.toBeInTheDocument()
+    expect(screen.queryAllByRole('button', { name: SEAT_NAME })).toHaveLength(0)
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
