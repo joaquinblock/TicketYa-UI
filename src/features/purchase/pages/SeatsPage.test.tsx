@@ -595,6 +595,24 @@ describe('Lugares no numerados: CA3, un solo lugar libre', () => {
   })
 })
 
+describe('Lugares no numerados: CA3, el foco no se pierde en el tope', () => {
+  it('al llegar al tope con el teclado, el foco pasa a "Una menos"', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const limit = Math.min(
+      field.availablePlaces,
+      field.maxTicketsPerCustomer ?? field.availablePlaces,
+    )
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    within(panel).getByRole('button', { name: 'Una más' }).focus()
+    for (let quantity = 1; quantity < limit; quantity++) await user.keyboard('{Enter}')
+
+    expect(within(panel).getByRole('button', { name: 'Una menos' })).toHaveFocus()
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
