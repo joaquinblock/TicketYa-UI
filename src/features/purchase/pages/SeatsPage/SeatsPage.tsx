@@ -8,7 +8,8 @@ import { useSeatsPageController } from './useSeatsPageController'
 
 export function SeatsPage() {
   const { eventId = '' } = useParams()
-  const { event, sectors, openSector, openSectorById } = useSeatsPageController(eventId)
+  const { event, sectors, openSector, openSectorById, selection, toggleSeat } =
+    useSeatsPageController(eventId)
 
   return (
     <PurchaseLayout step={PURCHASE_STEP.SEATS} eventId={eventId}>
@@ -20,7 +21,9 @@ export function SeatsPage() {
           onOpen={openSectorById}
         />
       )}
-      {openSector?.numbered && <SeatMap sector={openSector} />}
+      {openSector?.numbered && (
+        <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
+      )}
     </PurchaseLayout>
   )
 }
