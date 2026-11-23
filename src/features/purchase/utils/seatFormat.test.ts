@@ -5,6 +5,7 @@ import {
   formatTakenSeatsMessage,
   formatUnnumberedPlaces,
   formatQuantityLoweredMessage,
+  formatSectorSoldOutMessage,
 } from './seatFormat'
 
 describe('formatSectorTabLabel', () => {
@@ -71,6 +72,15 @@ describe('formatQuantityLoweredMessage', () => {
     expect(formatQuantityLoweredMessage({ sectorName: 'Campo', quantity: 1 })).toEqual({
       lead: 'Queda 1 lugar en Campo:',
       hint: 'bajamos tu cantidad a 1',
+    })
+  })
+})
+
+describe('formatSectorSoldOutMessage', () => {
+  it('nombra el sector agotado y pide elegir otro', () => {
+    expect(formatSectorSoldOutMessage('Campo')).toEqual({
+      lead: 'Se agotó Campo.',
+      hint: 'Elegí otro sector.',
     })
   })
 })
