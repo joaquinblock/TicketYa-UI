@@ -1,4 +1,5 @@
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
@@ -60,5 +61,40 @@ describe('Mis entradas: CA1', () => {
     for (const unpaid of unpaidOrders) {
       expect(screen.queryByText(`ORDEN #${unpaid.id}`)).not.toBeInTheDocument()
     }
+  })
+})
+
+describe('Mis entradas: CA2', () => {
+  it('al tocar una entrada muestra su QR, código y mensaje de estado, y al volver a tocarla se colapsa', async () => {
+    const token = await devLogin(SEEDER_USER.CLIENT)
+    localStorage.setItem('ticketya.accessToken', token)
+    const allOrders = await getOrders()
+    localStorage.clear()
+
+    const firstPaidOrder = allOrders
+      .filter((order) => order.status === 'PAID')
+      .sort((a, b) => b.id - a.id)[0]
+    const ticket = firstPaidOrder.tickets[0]
+    const code = formatTicketCode(ticket.id)
+    const statusMeta = TICKET_STATUS_META[ticket.status]
+    const user = userEvent.setup()
+
+    renderMyTicketsPage()
+
+    const ticketButton = await screen.findByRole('button', { name: new RegExp(code) })
+    expect(ticketButton).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(ticketButton)
+
+    expect(ticketButton).toHaveAttribute('aria-expanded', 'true')
+    expect(await screen.findByRole('img', { name: new RegExp(code) })).toBeInTheDocument()
+    expect(screen.getByText(code)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 3, name: statusMeta.title })).toBeInTheDocument()
+    expect(screen.getByText(statusMeta.description)).toBeInTheDocument()
+
+    await user.click(ticketButton)
+
+    expect(ticketButton).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('heading', { level: 3, name: statusMeta.title })).not.toBeInTheDocument()
   })
 })
