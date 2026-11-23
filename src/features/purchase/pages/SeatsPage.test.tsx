@@ -633,6 +633,58 @@ describe('Lugares no numerados: CA4, cambiar de pestaña', () => {
   })
 })
 
+describe('Lugares no numerados: CA5, quedan menos lugares que los elegidos', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('con 3 elegidas en el evento 43, un refresco con 2 libres baja la cantidad a 2 y lo avisa', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 3)
+
+    setPlacesOnNextRefreshes(field.sectorName, 2)
+    refetchByRefocusing()
+
+    const alert = await screen.findByRole('alert', {
+      name: `Quedan 2 lugares en ${field.sectorName}:`,
+    })
+    expect(alert).toHaveTextContent(
+      `Quedan 2 lugares en ${field.sectorName}: bajamos tu cantidad a 2`,
+    )
+    expect(quantityIn(panel)).toHaveTextContent(/^2$/)
+  })
+})
+
+/** Sube la cantidad desde 1 tocando "Una más". */
+async function chooseQuantity(
+  user: ReturnType<typeof userEvent.setup>,
+  panel: HTMLElement,
+  quantity: number,
+) {
+  const increase = within(panel).getByRole('button', { name: 'Una más' })
+  for (let current = 1; current < quantity; current++) await user.click(increase)
+  expect(quantityIn(panel)).toHaveTextContent(new RegExp(`^${quantity}$`))
+}
+
+/** Desde acá, cada respuesta de la disponibilidad trae esos lugares libres en el sector. */
+function setPlacesOnNextRefreshes(sectorName: string, availablePlaces: number) {
+  const realFetch = globalThis.fetch
+  return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+    const response = await realFetch(input, init)
+    const url = input instanceof Request ? input.url : String(input)
+    if (!url.includes(AVAILABILITY_PATH)) return response
+    const availability = (await response.json()) as EventAvailability
+    for (const sector of availability.sectors) {
+      if (sector.sectorName === sectorName) sector.availablePlaces = availablePlaces
+    }
+    return Response.json(availability)
+  })
+}
+
 async function otherSectorWithPlaces(eventId: number, sectorName: string) {
   const { sectors } = await getAvailability(eventId)
   const other = sectors.find(
