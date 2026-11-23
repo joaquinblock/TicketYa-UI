@@ -32,3 +32,9 @@ describe('formatSectorKind: numerado', () => {
     expect(formatSectorKind({ numbered: true, seats })).toBe('Numerado · fila A')
   })
 })
+
+describe('formatSectorKind: no numerado', () => {
+  it('un sector sin asientos numerados dice "No numerado"', () => {
+    expect(formatSectorKind({ numbered: false, seats: null })).toBe('No numerado')
+  })
+})
