@@ -1,7 +1,8 @@
-import { screen, within } from '@testing-library/react'
+import { focusManager } from '@tanstack/react-query'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import type { SeatAvailability } from '@/shared/types/event.types'
-import { describe, expect, it } from 'vitest'
+import type { EventAvailability, SeatAvailability } from '@/shared/types/event.types'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
 import { getAvailability } from '@/shared/services/availability.service'
@@ -168,6 +169,52 @@ describe('Lugares: CA4, un asiento ocupado no se elige', () => {
     )
   })
 })
+
+describe('Lugares: CA5, el refresco quita un asiento elegido', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('el asiento pasa a ocupado y se ve el aviso con su código, sin recargar', async () => {
+    const seat = await firstFreeSeat(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    await user.click(await screen.findByRole('button', { name: seatName(seat, 'disponible') }))
+
+    takeSeatsOnNextRefreshes([seat.seatId])
+    refetchByRefocusing()
+
+    const alert = await screen.findByRole('alert', {
+      name: `El asiento ${seat.row}${seat.number} lo acaba de reservar otra persona.`,
+    })
+    expect(alert).toHaveTextContent('Lo sacamos de tu elección: elegí otro.')
+    expect(screen.getByRole('button', { name: seatName(seat, 'ocupado') })).toBeDisabled()
+  })
+})
+
+const AVAILABILITY_PATH = '/api/availability'
+
+/** Desde acá, cada respuesta de la disponibilidad trae esos asientos ocupados por otra persona. */
+function takeSeatsOnNextRefreshes(seatIds: number[]) {
+  const realFetch = globalThis.fetch
+  return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+    const response = await realFetch(input, init)
+    const url = input instanceof Request ? input.url : String(input)
+    if (!url.includes(AVAILABILITY_PATH)) return response
+    const availability = (await response.json()) as EventAvailability
+    for (const seat of availability.sectors.flatMap((sector) => sector.seats ?? [])) {
+      if (seatIds.includes(seat.seatId)) seat.available = false
+    }
+    return Response.json(availability)
+  })
+}
+
+/** La disponibilidad se vuelve a pedir al recuperar el foco, como al volver a la pestaña. */
+function refetchByRefocusing() {
+  act(() => focusManager.setFocused(false))
+  act(() => focusManager.setFocused(true))
+}
 
 function seatName(seat: SeatAvailability, status: string) {
   return `Fila ${seat.row}, asiento ${seat.number}, ${status}`
