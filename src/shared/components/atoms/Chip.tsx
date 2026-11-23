@@ -9,7 +9,7 @@ export function Chip({ isSelected, className, ...props }: ChipProps) {
       type="button"
       aria-pressed={isSelected}
       className={cn(
-        'min-h-9 cursor-pointer rounded-full px-3.5 text-label font-medium text-muted hover:text-ink',
+        'min-h-11 cursor-pointer rounded-full px-3.5 text-label font-medium text-muted hover:text-ink',
         isSelected && 'bg-ink text-surface hover:text-surface',
         className,
       )}
