@@ -613,6 +613,35 @@ describe('Lugares no numerados: CA3, el foco no se pierde en el tope', () => {
   })
 })
 
+describe('Lugares no numerados: CA4, cambiar de pestaña', () => {
+  it('con una cantidad mayor a 1, abrir otro sector y volver al Campo deja la cantidad en 1', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const other = await otherSectorWithPlaces(UNNUMBERED_EVENT.FIELD_WITH_PLACES, field.sectorName)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    await user.click(
+      within(await findQuantityPanel(field.sectorName)).getByRole('button', { name: 'Una más' }),
+    )
+
+    const tabs = screen.getByRole('group', { name: 'Sectores' })
+    await user.click(within(tabs).getByRole('button', { name: new RegExp(`^${other} `) }))
+    await user.click(
+      within(tabs).getByRole('button', { name: new RegExp(`^${field.sectorName} `) }),
+    )
+
+    expect(quantityIn(await findQuantityPanel(field.sectorName))).toHaveTextContent(/^1$/)
+  })
+})
+
+async function otherSectorWithPlaces(eventId: number, sectorName: string) {
+  const { sectors } = await getAvailability(eventId)
+  const other = sectors.find(
+    (sector) => sector.sectorName !== sectorName && sector.availablePlaces > 0,
+  )
+  if (!other) throw new Error(`El evento ${eventId} no tiene otro sector con lugares`)
+  return other.sectorName
+}
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
