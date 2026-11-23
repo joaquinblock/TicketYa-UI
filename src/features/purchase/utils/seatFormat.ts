@@ -7,6 +7,7 @@ type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
 type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
 type UnnumberedPlacesInput = Pick<EventSector, 'capacity'> &
   Pick<SectorAvailability, 'availablePlaces'>
+type QuantityLoweredInput = Pick<SectorAvailability, 'sectorName'> & { quantity: number }
 
 const seatListFormatter = new Intl.ListFormat('es', { type: 'conjunction' })
 
@@ -43,4 +44,12 @@ const placesFormatter = new Intl.NumberFormat('es-AR')
 export function formatUnnumberedPlaces({ availablePlaces, capacity }: UnnumberedPlacesInput) {
   const available = placesFormatter.format(availablePlaces)
   return `Sin numerar · ${available} lugares libres de ${placesFormatter.format(capacity)}`
+}
+
+export function formatQuantityLoweredMessage({
+  sectorName,
+  quantity,
+}: QuantityLoweredInput): AlertMessage {
+  const places = quantity === 1 ? 'Queda 1 lugar' : `Quedan ${quantity} lugares`
+  return { lead: `${places} en ${sectorName}:`, hint: `bajamos tu cantidad a ${quantity}` }
 }
