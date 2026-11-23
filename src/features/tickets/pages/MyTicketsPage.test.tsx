@@ -125,3 +125,15 @@ describe('Mis entradas: CA3', () => {
     expect(getCurrentUrl().pathname).toBe(ROUTES.home)
   })
 })
+
+describe('Mis entradas: CA4', () => {
+  it('mientras se están pidiendo las órdenes muestra el indicador de carga', () => {
+    renderMyTicketsPage()
+
+    expect(
+      screen.getByText('Cargando tus entradas').closest('[role="status"]'),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { level: 2, name: 'Todavía no tenés compras' })).not.toBeInTheDocument()
+    expect(screen.queryAllByRole('article')).toHaveLength(0)
+  })
+})
