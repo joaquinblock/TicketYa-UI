@@ -13,6 +13,8 @@ export function useEventAvailability(eventId: number | undefined) {
     },
     enabled: Boolean(eventId),
     refetchInterval: AVAILABILITY_REFETCH_INTERVAL_MS,
+    // Con 'always' vuelve a pedir al enfocar aunque el staleTime global todavía no haya vencido.
+    refetchOnWindowFocus: 'always',
   })
 
   return { availability: data, isPending, isError, refetch }
