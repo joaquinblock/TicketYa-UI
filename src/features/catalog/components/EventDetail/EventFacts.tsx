@@ -12,12 +12,16 @@ export function EventFacts({ event }: EventFactsProps) {
     <aside aria-labelledby="el-evento">
       <h2 id="el-evento">El evento</h2>
       <dl>
-        <EventFact icon={Users} term="Participan">
-          {event.participants.map((participant) => participant.name).join(', ')}
-        </EventFact>
-        <EventFact icon={CalendarDays} term="Venta desde">
-          {formatEventDateTime(event.saleStart ?? '')}
-        </EventFact>
+        {event.participants.length > 0 && (
+          <EventFact icon={Users} term="Participan">
+            {event.participants.map((participant) => participant.name).join(', ')}
+          </EventFact>
+        )}
+        {event.saleStart && (
+          <EventFact icon={CalendarDays} term="Venta desde">
+            {formatEventDateTime(event.saleStart)}
+          </EventFact>
+        )}
         <EventFact icon={MapPin} term="Ubicación">
           {`${event.venue.name} · ${event.venue.address}, ${event.venue.city}`}
         </EventFact>
