@@ -1,5 +1,6 @@
 import { EventBoard } from '@/features/catalog/components/EventBoard/EventBoard'
 import { EventSearchBox } from '@/features/catalog/components/EventSearchBox/EventSearchBox'
+import { QuickTypeFilter } from '@/features/catalog/components/QuickTypeFilter'
 
 /** Inicio combina `catalog` (cartelera) y `preferences` ("Para vos"), por eso vive en `pages/`. */
 export function HomePage() {
@@ -20,6 +21,7 @@ function HomeHero() {
       <div className="mx-auto flex w-full max-w-310 flex-col gap-5.5 px-4 py-11 md:px-7 md:pt-18 md:pb-16">
         <h1 id="hero-titulo">Nadie más tiene tu lugar.</h1>
         <EventSearchBox />
+        <QuickTypeFilter />
       </div>
     </section>
   )
