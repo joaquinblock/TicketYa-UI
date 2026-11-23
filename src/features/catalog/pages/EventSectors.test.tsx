@@ -126,3 +126,14 @@ describe('Sectores y precios: sin compra', () => {
     expect(screen.queryByRole('link', { name: PURCHASE_LINK })).not.toBeInTheDocument()
   })
 })
+
+describe('Sectores y precios: CA5', () => {
+  it('mientras pide la disponibilidad avisa "Cargando sectores", y al llegar muestra las filas', async () => {
+    renderEventPage(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+
+    const section = await screen.findByRole('region', { name: 'Sectores y precios' })
+    expect(within(section).getByText('Cargando sectores')).toBeInTheDocument()
+    expect(await within(section).findAllByRole('listitem')).not.toHaveLength(0)
+    expect(within(section).queryByText('Cargando sectores')).not.toBeInTheDocument()
+  })
+})
