@@ -35,7 +35,10 @@ export function useSeatsPageController(eventIdParam: string) {
     quantity: unnumberedSector ? sectorQuantity.stepper.quantity : 0,
   }
   const selectionSummary = summarizeSelection(chosen)
-  const reservation = useReservation(toReservationDraft({ eventId, ...chosen }))
+  const reservation = useReservation({
+    draft: toReservationDraft({ eventId, ...chosen }),
+    onSeatsTaken: data.refetchAvailability,
+  })
 
   return {
     ...data,

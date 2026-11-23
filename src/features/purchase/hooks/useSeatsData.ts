@@ -20,5 +20,16 @@ export function useSeatsData(eventId: number | undefined) {
     void availabilityQuery.refetch()
   }
 
-  return { event: eventQuery.event, sectors, isNotForSale, hasLoadError, retryLoad }
+  const refetchAvailability = () => {
+    void availabilityQuery.refetch()
+  }
+
+  return {
+    event: eventQuery.event,
+    sectors,
+    isNotForSale,
+    hasLoadError,
+    retryLoad,
+    refetchAvailability,
+  }
 }
