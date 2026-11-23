@@ -11,6 +11,7 @@ describe('toReservationError', () => {
     ['seat_unavailable', 409, 'SEATS_TAKEN'],
     ['sector_sold_out', 409, 'SEATS_TAKEN'],
     ['ticket_limit_exceeded', 409, 'LIMIT'],
+    ['invalid_queue_token', 403, 'QUEUE_REQUIRED'],
     ['unauthorized', 401, 'UNAUTHORIZED'],
     ['service_unavailable', 503, 'FAILED'],
     ['data_conflict', 409, 'FAILED'],
