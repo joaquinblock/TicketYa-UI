@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import type { EventDetail, EventSector, SectorAvailability } from '../types/catalog.types'
 import {
+  getPurchaseAction,
   isAvailabilityVisible,
   isPurchaseOpen,
   joinSectorsWithAvailability,
@@ -89,5 +90,21 @@ describe('isAvailabilityVisible e isPurchaseOpen', () => {
   ])('%s no muestra ni la disponibilidad ni el botón', (_, event) => {
     expect(isAvailabilityVisible(event, NOW)).toBe(false)
     expect(isPurchaseOpen(event, NOW)).toBe(false)
+  })
+})
+
+describe('getPurchaseAction', () => {
+  it('con alta demanda es "Entrar a la fila" y lleva a la fila del evento', () => {
+    expect(getPurchaseAction({ id: 1, highDemand: true })).toEqual({
+      label: 'Entrar a la fila',
+      to: '/eventos/1/fila',
+    })
+  })
+
+  it('sin alta demanda es "Elegir lugares" y lleva a Lugares del evento', () => {
+    expect(getPurchaseAction({ id: 2, highDemand: false })).toEqual({
+      label: 'Elegir lugares',
+      to: '/eventos/2/lugares',
+    })
   })
 })
