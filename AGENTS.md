@@ -13,6 +13,8 @@
 
 `/ticket` → PR de stories → `/tracker` → `/clear` → `/implement` → `/clear` → `/rdd` → `/retro` → PR. El detalle está en `docs/flujo-de-trabajo.md`.
 
+- **`/rdd` no se corre en este proyecto, salvo que el usuario lo pida explícitamente** (por tiempo y tokens). Si no lo pide, de `/implement` se pasa directo a `/retro`.
+
 - Proyecto de frontend: cargá la skill `workflow-ui` en cada paso. El contrato visual es `MOCKUP.md`.
 - Sin tracker en `.work/NUM-*.md` no se escribe código de producción.
 - Un test commiteado no se cambia para que pase. Si parece mal, se anota en el Log del tracker y se pregunta.
