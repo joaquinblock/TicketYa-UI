@@ -10,7 +10,7 @@ import { STATUS_BADGE } from './eventDetail.constants'
 
 type EventHeroProps = { event: EventDetail }
 
-/** El bloque de color del tipo ocupa el lugar de la foto (#33), con la misma sombra del mockup para leer el texto. */
+/** Foto del evento (con bloque de color por tipo como fallback) y la sombra del mockup para leer el texto. */
 export function EventHero({ event }: EventHeroProps) {
   return (
     <section
@@ -20,6 +20,14 @@ export function EventHero({ event }: EventHeroProps) {
         EVENT_TYPE_BLOCK_CLASS[event.type],
       )}
     >
+      {event.photoUrl && (
+        <img
+          src={event.photoUrl}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 -z-20 size-full object-cover"
+        />
+      )}
       <span
         aria-hidden
         className="absolute inset-0 -z-10 bg-linear-to-r from-ink/90 via-ink/70 to-ink/20"
