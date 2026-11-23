@@ -23,6 +23,13 @@ describe('formatPlacesLeft: últimos lugares', () => {
   })
 })
 
+describe('formatPlacesLeft y getOccupancyPercent: agotado', () => {
+  it('sin lugares libres dice "Agotado" y ocupa el 100 %', () => {
+    expect(formatPlacesLeft(0)).toBe('Agotado')
+    expect(getOccupancyPercent({ capacity: 80, availablePlaces: 0 })).toBe(100)
+  })
+})
+
 describe('formatSectorKind: numerado', () => {
   const seatsInRows = (rows: string[]) =>
     rows.map((row, index) => ({ seatId: index + 1, row, number: index + 1, available: true }))
