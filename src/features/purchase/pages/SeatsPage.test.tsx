@@ -153,6 +153,22 @@ describe('Lugares: CA2, cambiar de pestaña', () => {
   })
 })
 
+describe('Lugares: CA4, un asiento ocupado no se elige', () => {
+  it('A1 de la Platea del evento 2 está deshabilitado, y tocarlo no lo cambia', async () => {
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    const taken = await screen.findByRole('button', { name: 'Fila A, asiento 1, ocupado' })
+    expect(taken).toBeDisabled()
+
+    await user.click(taken)
+    expect(screen.getByRole('button', { name: 'Fila A, asiento 1, ocupado' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
+  })
+})
+
 function seatName(seat: SeatAvailability, status: string) {
   return `Fila ${seat.row}, asiento ${seat.number}, ${status}`
 }
