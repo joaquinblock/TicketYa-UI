@@ -6,6 +6,8 @@ type QuantityAdjustment = { quantity: number; change: QuantityChange }
 /** Un refresco puede traer menos lugares libres que la cantidad elegida. */
 export function adjustQuantityToAvailable({
   quantity,
+  availablePlaces,
 }: QuantityAdjustmentInput): QuantityAdjustment {
-  return { quantity, change: 'NONE' }
+  if (availablePlaces >= quantity) return { quantity, change: 'NONE' }
+  return { quantity: availablePlaces, change: 'LOWERED' }
 }
