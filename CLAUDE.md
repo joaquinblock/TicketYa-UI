@@ -16,6 +16,7 @@ Frontend de TicketYa. Consume la API del backend a través del api-gateway (`htt
 - Los reviewers están en `~/.claude/agents/`. No los lances directamente: `/rdd` decide cuáles hacen falta.
 - Si el contexto se llena a mitad de una tarea, actualizá el Log del tracker y sugerí `/clear`: el tracker conserva el estado.
 - El hook `agent-guard.mjs` y `.githooks/commit-msg` bloquean firmas de IA, commits en `main`, mensajes mal formados y cambios a tests commiteados mientras exista `.work/tests.lock`. También bloquea escribir un `.tsx`, un `*.types.ts`, un `*.constants.ts`, un hook o un service sin haber cargado antes su skill en la sesión. Si un hook te bloquea, leé el mensaje y corregí; no intentes esquivarlo.
+- **Se trabaja en paralelo con Antigravity (Gemini)**, que también sube cambios a `main`. Cada vez que abras un PR, hacé también un pull de `main` (`git fetch origin` y `git pull` en `main`), para tener lo que subió Gemini y ver si choca con tu rama.
 
 ## Fuente de verdad
 
