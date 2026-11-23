@@ -39,6 +39,11 @@ El detalle del evento (story 15) dice qué es y en qué estado está, pero no cu
   Cuando todavía no llegó la respuesta
   Entonces veo filas de carga en lugar de los sectores.
   Y si el backend falla o no responde, veo "No pudimos cargar los sectores" con "Reintentar", que la vuelve a pedir, mientras el resto del detalle sigue a la vista.
+- **CA6: La cartelera avisa la venta futura**
+  Dado un evento de la cartelera cuya venta todavía no empezó
+  Cuando veo su card
+  Entonces veo el badge "Próximamente", junto con "Alta demanda" si lo es.
+  Y la card muestra todos los badges que le corresponden ("Agotado" o "Próximamente", y "Alta demanda"), con uno solo destacado: el de la venta si lo hay, y si no "Alta demanda" (Von Restorff).
 
 ## Requisitos no funcionales
 
