@@ -9,7 +9,11 @@ import { saveAccessToken } from '@/shared/lib/session'
 import { devLogin, SEEDER_USER } from '@/test/gateway'
 import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
-import { PAYMENT_METHOD_LABEL, TICKET_STATUS_META } from '../constants/tickets.constants'
+import {
+  PAYMENT_METHOD_LABEL,
+  PENDING_RETURN_TICKET_META,
+  TICKET_STATUS_META,
+} from '../constants/tickets.constants'
 import { formatOrderPrice, formatTicketCode, formatTicketLocation } from '../lib/ticketFormat'
 import { getOrders } from '../services/orders.service'
 
@@ -60,7 +64,9 @@ describe('Mis entradas: CA1', () => {
           within(card).getByText(PAYMENT_METHOD_LABEL[order.paymentMethod]),
         ).toBeInTheDocument()
       }
-      expect(within(card).getByText(formatOrderPrice(order.total))).toBeInTheDocument()
+      expect(
+        within(card).getAllByText(formatOrderPrice(order.total)).length,
+      ).toBeGreaterThanOrEqual(1)
 
       for (const ticket of order.tickets) {
         const button = within(card).getByRole('button', {
@@ -68,9 +74,11 @@ describe('Mis entradas: CA1', () => {
         })
         expect(within(button).getByText(formatTicketLocation(ticket))).toBeInTheDocument()
         expect(within(button).getByText(formatOrderPrice(ticket.price))).toBeInTheDocument()
-        expect(
-          within(button).getByText(TICKET_STATUS_META[ticket.status].label),
-        ).toBeInTheDocument()
+        const expectedStatusLabel =
+          ticket.status === 'ISSUED' && ticket.hasPendingReturnRequest
+            ? PENDING_RETURN_TICKET_META.label
+            : TICKET_STATUS_META[ticket.status].label
+        expect(within(button).getByText(expectedStatusLabel)).toBeInTheDocument()
       }
     })
 
