@@ -531,6 +531,17 @@ describe('Lugares no numerados: CA2, sumar y restar', () => {
   })
 })
 
+describe('Lugares no numerados: CA2, accesibilidad', () => {
+  it('la cantidad se anuncia al cambiar y el grupo se llama "Cantidad de entradas"', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    expect(quantityGroupIn(panel)).toBeInTheDocument()
+    expect(quantityIn(panel)).toHaveAttribute('aria-live', 'polite')
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
