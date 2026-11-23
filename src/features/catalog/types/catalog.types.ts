@@ -12,7 +12,7 @@ export type EventTypeLabel = { plural: string; singular: string }
 /** Evento como lo devuelve `GET /api/events`. */
 export type EventSummary = Pick<
   EventDetail,
-  'id' | 'name' | 'type' | 'dateTime' | 'highDemand' | 'saleStart'
+  'id' | 'name' | 'type' | 'dateTime' | 'highDemand' | 'saleStart' | 'photoUrl'
 > & {
   status: BoardEventStatus
   venue: Pick<Venue, 'name' | 'city'>

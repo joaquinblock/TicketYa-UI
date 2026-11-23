@@ -27,16 +27,24 @@ export function EventCard({ event }: EventCardProps) {
   )
 }
 
-/** Bloque de color por tipo, hasta que el evento tenga imagen (#33). */
+/** Foto del evento (con bloque de color por tipo como fallback si falta). */
 function EventCardCover({ event }: EventCardProps) {
   return (
     <div
       className={cn(
-        'relative aspect-video',
+        'relative aspect-video overflow-hidden',
         EVENT_TYPE_BLOCK_CLASS[event.type],
         event.status === 'SOLD_OUT' && 'grayscale',
       )}
     >
+      {event.photoUrl && (
+        <img
+          src={event.photoUrl}
+          alt={event.name}
+          className="absolute inset-0 size-full object-cover"
+          loading="lazy"
+        />
+      )}
       <EventDateBlock dateTime={event.dateTime} />
       <EventStatusFlags event={event} />
     </div>

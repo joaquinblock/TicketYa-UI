@@ -1,6 +1,6 @@
 import { Route } from 'react-router-dom'
 import { ROUTE_PATTERNS } from '@/shared/lib/routes'
-import { PaymentPage } from '../pages/PaymentPage'
+import { PaymentPage } from '../pages/PaymentPage/PaymentPage'
 import { SeatsPage } from '../pages/SeatsPage/SeatsPage'
 
 export const purchaseRoute = (
