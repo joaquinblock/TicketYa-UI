@@ -39,20 +39,26 @@ describe('Mis entradas: CA1', () => {
 
     renderMyTicketsPage()
 
-    expect(await screen.findByRole('heading', { level: 1, name: /Mis entradas/ })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /Mis entradas/ }),
+    ).toBeInTheDocument()
 
     const articles = await screen.findAllByRole('article')
     expect(articles).toHaveLength(paidOrders.length)
 
     paidOrders.forEach((order, index) => {
       const card = articles[index]
-      expect(within(card).getByRole('heading', { level: 2, name: order.event.name })).toBeInTheDocument()
+      expect(
+        within(card).getByRole('heading', { level: 2, name: order.event.name }),
+      ).toBeInTheDocument()
       expect(
         within(card).getByText(`${order.event.venueName} · ${order.event.venueCity}`),
       ).toBeInTheDocument()
       expect(within(card).getByText(`ORDEN #${order.id}`)).toBeInTheDocument()
       if (order.paymentMethod) {
-        expect(within(card).getByText(PAYMENT_METHOD_LABEL[order.paymentMethod])).toBeInTheDocument()
+        expect(
+          within(card).getByText(PAYMENT_METHOD_LABEL[order.paymentMethod]),
+        ).toBeInTheDocument()
       }
       expect(within(card).getByText(formatOrderPrice(order.total))).toBeInTheDocument()
 
@@ -105,7 +111,9 @@ describe('Mis entradas: CA2', () => {
     await user.click(ticketButton)
 
     expect(ticketButton).toHaveAttribute('aria-expanded', 'false')
-    expect(screen.queryByRole('heading', { level: 3, name: statusMeta.title })).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('heading', { level: 3, name: statusMeta.title }),
+    ).not.toBeInTheDocument()
   })
 })
 
@@ -132,10 +140,10 @@ describe('Mis entradas: CA4', () => {
   it('mientras se están pidiendo las órdenes muestra el indicador de carga', () => {
     renderMyTicketsPage()
 
+    expect(screen.getByText('Cargando tus entradas').closest('[role="status"]')).toBeInTheDocument()
     expect(
-      screen.getByText('Cargando tus entradas').closest('[role="status"]'),
-    ).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { level: 2, name: 'Todavía no tenés compras' })).not.toBeInTheDocument()
+      screen.queryByRole('heading', { level: 2, name: 'Todavía no tenés compras' }),
+    ).not.toBeInTheDocument()
     expect(screen.queryAllByRole('article')).toHaveLength(0)
   })
 
