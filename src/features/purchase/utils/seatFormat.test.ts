@@ -3,6 +3,7 @@ import {
   formatSeatAccessibleName,
   formatSectorTabLabel,
   formatTakenSeatsMessage,
+  formatUnnumberedPlaces,
 } from './seatFormat'
 
 describe('formatSectorTabLabel', () => {
@@ -46,5 +47,13 @@ describe('formatSeatAccessibleName', () => {
     ['SELECTED', 'Fila A, asiento 3, elegido'],
   ] as const)('un asiento %s se llama "%s"', (status, name) => {
     expect(formatSeatAccessibleName({ row: 'A', number: 3 }, status)).toBe(name)
+  })
+})
+
+describe('formatUnnumberedPlaces', () => {
+  it('muestra los libres y la capacidad con separador de miles', () => {
+    expect(formatUnnumberedPlaces({ availablePlaces: 1240, capacity: 5000 })).toBe(
+      'Sin numerar · 1.240 lugares libres de 5.000',
+    )
   })
 })
