@@ -12,7 +12,7 @@ para **comprar mis entradas sin crear una cuenta ni cargar mis datos a mano, y s
 
 ## Contexto
 
-Hoy no hay login. En Lugares, reservar sin sesión muestra el link "Iniciar sesión (falta login)" (#21, CA5). Pago, Fila virtual y Mis entradas entran solas en desarrollo con el cliente del seeder (`dev-login`). Esta story agrega el modal "Ingresá a TicketYa" del mockup y lo usa cada pantalla que pide sesión. Consume `POST /api/auth/google` y `POST /api/auth/dev-login` (US-AUTH-03, cerrada) y `GET /api/users/me` (US-AUTH-06 `joaquinblock/TicketYa#192`, **abierta: bloquea esta story**).
+Hoy no hay login. En Lugares, reservar sin sesión muestra el link "Iniciar sesión (falta login)" (#21, CA5). Pago, Fila virtual, Mis entradas y Preferencias entran solas en desarrollo con el cliente del seeder (`dev-login`). Esta story agrega el modal "Ingresá a TicketYa" del mockup y lo usa cada pantalla que pide sesión. Consume `POST /api/auth/google` y `POST /api/auth/dev-login` (US-AUTH-03, cerrada) y `GET /api/users/me` (US-AUTH-06 `joaquinblock/TicketYa#192`, **abierta: bloquea esta story**).
 
 ## Criterios de aceptación
 
@@ -40,8 +40,8 @@ Hoy no hay login. En Lugares, reservar sin sesión muestra el link "Iniciar sesi
   Y si cierro el modal, sigo en Lugares con la selección y con "Reservar y pagar" habilitado.
 - **CA5: Pantallas que piden sesión**
   Dado que no tengo sesión
-  Cuando entro a Mis entradas o a la Fila virtual
-  Entonces se abre el modal, y detrás la pantalla dice "Iniciá sesión para ver tus entradas." (o "…para hacer la fila.") con el botón "Ingresar",
+  Cuando entro a Mis entradas, a la Fila virtual o a Preferencias
+  Entonces se abre el modal, y detrás la pantalla dice "Iniciá sesión para ver tus entradas." (o "…para hacer la fila.", "…para ver tus preferencias.") con el botón "Ingresar",
   Y si entro, la pantalla se carga sin recargar la página.
 - **CA6: Cerrar sesión**
   Dado que tengo sesión
@@ -64,14 +64,14 @@ Hoy no hay login. En Lugares, reservar sin sesión muestra el link "Iniciar sesi
 - El cuestionario de preferencias cuando `newUser` es `true`: va con Perfil.
 - La renovación del token. El JWT dura 30 minutos y el backend no tiene refresh.
 - Las pantallas de organizador y personal de acceso. Entran con el mismo botón, pero sus pantallas no existen todavía.
-- Preferencias y Notificaciones: cuando se hagan, usan el mismo mecanismo de CA5 para pedir sesión.
+- Notificaciones: cuando se haga, usa el mismo mecanismo de CA5 para pedir sesión.
 - El popup de Google en sí. Es un script de Google y se verifica a mano con un client id real.
 
 ## Notas técnicas
 
-- Feature `auth`. El modal se puede abrir desde cualquier feature (header, `purchase`, `queue`, `tickets`).
+- Feature `auth`. El modal se puede abrir desde cualquier feature (header, `purchase`, `queue`, `tickets`, `preferences`).
 - Google Identity Services, con `TICKETYA_GOOGLE_CLIENT_ID` en el `.env` (el mismo `GOOGLE_CLIENT_ID` del backend, que no es secreto). Sin la variable, el botón de Google no se muestra y en desarrollo queda el usuario de prueba.
-- `dev-login` solo existe con `import.meta.env.DEV`. Reemplaza a los tres `ensureDevClientSession` de `purchase`, `queue` y `tickets`, que se borran.
+- `dev-login` solo existe con `import.meta.env.DEV`. Reemplaza a los cuatro `ensureDevClientSession` de `purchase`, `queue`, `tickets` y `preferences`, que se borran.
 - Tests contra el gateway real: el login correcto se prueba con `dev-login`, y CA3 con un ID token falso que el backend rechaza con 401.
 - CA4 reemplaza el link de #21 CA5 ("Iniciar sesión (falta login)"). Ese test está commiteado: el cambio se acuerda en el tracker.
 - Mockup: `Main` y `MainMobile`, modal "Ingresá a TicketYa" y header con sesión ("Ana García").
