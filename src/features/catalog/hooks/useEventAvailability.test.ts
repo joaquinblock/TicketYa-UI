@@ -61,3 +61,20 @@ describe('useEventAvailability: al volver a la pestaña', () => {
     await waitFor(() => expect(updatedAt()).toBeGreaterThan(firstUpdate))
   })
 })
+
+describe('useEventAvailability: sin venta visible', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('sin id de evento no pide la disponibilidad', async () => {
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+
+    const { result } = renderAvailabilityHook(undefined)
+    await act(() => new Promise((resolve) => setTimeout(resolve, 100)))
+
+    expect(result.current.availability).toBeUndefined()
+    expect(result.current.isError).toBe(false)
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+})
