@@ -22,6 +22,7 @@ export function useReservation({ draft, onSeatsTaken }: UseReservationVariables)
   const idempotencyKey = useIdempotencyKey(draft)
   const mutation = useMutation({
     mutationFn: createReservation,
+    meta: { handlesErrorInline: true },
     onSuccess: (order) => navigate(ROUTES.orderPayment(order.eventId, order.id)),
     onError: (error) => {
       if (toReservationError(error) === 'SEATS_TAKEN') onSeatsTaken()

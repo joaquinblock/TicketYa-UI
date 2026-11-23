@@ -14,9 +14,18 @@ function isConnectionOrServerError(error: unknown) {
   return error instanceof ApiError && (error.status === 0 || error.status >= 500)
 }
 
+declare module '@tanstack/react-query' {
+  interface Register {
+    mutationMeta: {
+      /** La pantalla muestra el error al lado de la acción: el toast lo repetiría (ADR 0005). */
+      handlesErrorInline?: boolean
+    }
+  }
+}
+
 /**
  * Las queries muestran su error en pantalla y solo avisan con toast si falla la conexión o el
- * servidor. Las mutations siempre avisan con toast.
+ * servidor. Las mutations avisan con toast, salvo las que muestran el error en pantalla.
  */
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -25,7 +34,9 @@ export const queryClient = new QueryClient({
     },
   }),
   mutationCache: new MutationCache({
-    onError: (error) => toast.error(getErrorMessage(error)),
+    onError: (error, _variables, _onMutateResult, mutation) => {
+      if (!mutation.meta?.handlesErrorInline) toast.error(getErrorMessage(error))
+    },
   }),
   defaultOptions: {
     queries: {
