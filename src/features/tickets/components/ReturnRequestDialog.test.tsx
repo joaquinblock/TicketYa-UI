@@ -23,13 +23,13 @@ describe('ReturnRequestDialog', () => {
       />,
     )
 
-    expect(
-      screen.getByRole('dialog', { name: '¿Pedir la devolución?' }),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: '¿Pedir la devolución?' })).toBeInTheDocument()
     expect(
       screen.getByText('Los Serranos en vivo · Platea · Fila A, asiento 1'),
     ).toBeInTheDocument()
-    expect(screen.getByText(/te reintegramos \$70\.000 al medio de pago original/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/te reintegramos \$70\.000 al medio de pago original/),
+    ).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: 'No, volver' }))
     expect(onCancel).toHaveBeenCalledTimes(1)

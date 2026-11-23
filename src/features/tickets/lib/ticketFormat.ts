@@ -62,12 +62,10 @@ export function isWithinReturnDeadline(dateTime: string, now: Date = new Date())
 
 const RETURN_ERROR_MESSAGES: Record<string, string> = {
   refund_not_allowed: 'Esta entrada ya no admite devolución.',
-  return_request_already_pending:
-    'Ya hay una solicitud de devolución pendiente para esta entrada.',
+  return_request_already_pending: 'Ya hay una solicitud de devolución pendiente para esta entrada.',
 }
 
-const GENERIC_RETURN_ERROR_MESSAGE =
-  'No pudimos enviar el pedido de devolución. Intentá de nuevo.'
+const GENERIC_RETURN_ERROR_MESSAGE = 'No pudimos enviar el pedido de devolución. Intentá de nuevo.'
 
 /** Traduce un error de la API de devoluciones a un mensaje legible para el cliente. */
 export function getReturnRequestErrorMessage(error: unknown): string {

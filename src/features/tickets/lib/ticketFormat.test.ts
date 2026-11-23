@@ -1,9 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import {
-  formatTicketCode,
-  formatTicketLocation,
-  isWithinReturnDeadline,
-} from './ticketFormat'
+import { formatTicketCode, formatTicketLocation, isWithinReturnDeadline } from './ticketFormat'
 
 describe('ticketFormat', () => {
   it('formatea una entrada numerada con sector, fila y asiento', () => {

@@ -121,7 +121,9 @@ describe('TicketRow: devolución de entradas', () => {
 
       render(<TicketRow ticket={ticket} canRequestReturn />)
 
-      await user.click(screen.getByRole('button', { name: new RegExp(formatTicketCode(ticket.id)) }))
+      await user.click(
+        screen.getByRole('button', { name: new RegExp(formatTicketCode(ticket.id)) }),
+      )
 
       expect(screen.queryByRole('button', { name: /pedir la devolución/i })).not.toBeInTheDocument()
     },

@@ -12,11 +12,7 @@ type TicketRowProps = {
   onRequestReturn?: (ticket: Ticket) => void
 }
 
-export function TicketRow({
-  ticket,
-  canRequestReturn = true,
-  onRequestReturn,
-}: TicketRowProps) {
+export function TicketRow({ ticket, canRequestReturn = true, onRequestReturn }: TicketRowProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const code = formatTicketCode(ticket.id)
   const isPendingReturn = ticket.status === 'ISSUED' && Boolean(ticket.hasPendingReturnRequest)
