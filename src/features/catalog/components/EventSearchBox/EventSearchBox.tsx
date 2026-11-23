@@ -24,7 +24,7 @@ export function EventSearchBox() {
         onSubmit={searchBox.submitSearch}
         className="flex gap-2 rounded-card bg-surface p-2 shadow-2xl"
       >
-        <label className="flex min-h-13 flex-1 items-center gap-2.5 px-3 text-subtle">
+        <label className="flex min-h-13 flex-1 items-center gap-2.5 rounded-control px-3 text-subtle has-focus-visible:outline-3 has-focus-visible:outline-offset-3 has-focus-visible:outline-link">
           <Search aria-hidden className="size-5" />
           <span className="sr-only">Buscar eventos</span>
           <input
