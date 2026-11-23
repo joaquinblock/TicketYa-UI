@@ -21,3 +21,6 @@ export const EVENT_NOT_FOUND_ERROR = 'event_not_found'
 
 /** La disponibilidad se vuelve a pedir cada 30 s: alcanza sin WebSocket ni SSE. */
 export const AVAILABILITY_REFETCH_INTERVAL_MS = 30_000
+
+/** Código del `ErrorDto` de la disponibilidad cuando el evento no tiene precios: no está a la venta. */
+export const NOT_FOR_SALE_ERROR = 'resource_not_found'

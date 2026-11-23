@@ -6,6 +6,7 @@ import { SeatMap } from '../../components/SeatMap'
 import { SeatMapSkeleton } from '../../components/SeatMapSkeleton'
 import { SeatsHeader } from '../../components/SeatsHeader'
 import { SeatsLoadError } from '../../components/SeatsLoadError'
+import { SeatsNotForSale } from '../../components/SeatsNotForSale'
 import { SectorTabs } from '../../components/SectorTabs'
 import { TakenSeatsAlert } from '../../components/TakenSeatsAlert'
 import { useSeatsPageController } from './useSeatsPageController'
@@ -15,6 +16,7 @@ export function SeatsPage() {
   const {
     event,
     sectors,
+    isNotForSale,
     hasLoadError,
     retryLoad,
     openSector,
@@ -25,7 +27,8 @@ export function SeatsPage() {
   } = useSeatsPageController(eventId)
 
   let content: ReactNode
-  if (hasLoadError) content = <SeatsLoadError onRetry={retryLoad} />
+  if (isNotForSale) content = <SeatsNotForSale eventId={eventId} />
+  else if (hasLoadError) content = <SeatsLoadError onRetry={retryLoad} />
   else if (sectors) {
     content = (
       <>

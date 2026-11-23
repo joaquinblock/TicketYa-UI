@@ -22,9 +22,12 @@ export function useSeatsPageController(eventIdParam: string) {
     clear()
   }
 
+  // Sin precios, reintentar no lo arregla: manda aunque el evento también falle.
+  const isNotForSale = availabilityQuery.isNotForSale
   // Si falla un refresco con los datos en pantalla, quedan los últimos: el error es solo sin datos.
   const hasLoadError =
-    (eventQuery.isError && !eventQuery.event) || (availabilityQuery.isError && !sectors)
+    !isNotForSale &&
+    ((eventQuery.isError && !eventQuery.event) || (availabilityQuery.isError && !sectors))
   const retryLoad = () => {
     void eventQuery.refetch()
     void availabilityQuery.refetch()
@@ -33,6 +36,7 @@ export function useSeatsPageController(eventIdParam: string) {
   return {
     event: eventQuery.event,
     sectors,
+    isNotForSale,
     hasLoadError,
     retryLoad,
     openSector,
