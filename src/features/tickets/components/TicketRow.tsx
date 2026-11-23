@@ -1,23 +1,30 @@
 import { ChevronRight, Ticket as TicketIcon } from 'lucide-react'
+import { useState } from 'react'
 import { Badge } from '@/shared/components/atoms/Badge'
 import { TICKET_STATUS_META } from '../constants/tickets.constants'
 import { formatOrderPrice, formatTicketCode, formatTicketLocation } from '../lib/ticketFormat'
 import type { Ticket } from '../types/tickets.types'
+import { TicketQrCode } from './TicketQrCode'
 
 type TicketRowProps = {
   ticket: Ticket
 }
 
 export function TicketRow({ ticket }: TicketRowProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
   const code = formatTicketCode(ticket.id)
   const statusMeta = TICKET_STATUS_META[ticket.status]
+  const isActive = ticket.status === 'ISSUED'
 
   return (
     <div className="border-t border-line first:border-t-0">
       <button
         type="button"
-        aria-expanded={false}
-        className="flex min-h-18 w-full cursor-pointer items-center gap-3.5 bg-surface px-4 py-3 text-left text-ink transition-colors hover:bg-surface-hover md:px-5.5"
+        aria-expanded={isExpanded}
+        onClick={() => setIsExpanded((prev) => !prev)}
+        className={`flex min-h-18 w-full cursor-pointer items-center gap-3.5 px-4 py-3 text-left text-ink transition-colors md:px-5.5 ${
+          isExpanded ? 'bg-warning/30' : 'bg-surface hover:bg-surface-hover'
+        }`}
       >
         <span
           aria-hidden="true"
@@ -35,8 +42,24 @@ export function TicketRow({ ticket }: TicketRowProps) {
         </span>
 
         <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
-        <ChevronRight aria-hidden="true" className="size-4.5 shrink-0 text-subtle" />
+        <ChevronRight
+          aria-hidden="true"
+          className={`size-4.5 shrink-0 transition-transform ${
+            isExpanded ? 'rotate-90 text-ink' : 'text-subtle'
+          }`}
+        />
       </button>
+
+      {isExpanded && (
+        <div className="flex flex-wrap items-center gap-6 border-t border-dashed border-line-strong bg-warning/30 px-4 py-5.5 md:px-5.5">
+          <TicketQrCode qrValue={ticket.qrCode} code={code} isActive={isActive} />
+          <div className="flex min-w-60 flex-1 flex-col items-start gap-2.5">
+            <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
+            <h3 className="text-xl font-bold text-ink">{statusMeta.title}</h3>
+            <p className="text-sm leading-relaxed text-muted">{statusMeta.description}</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
