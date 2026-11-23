@@ -1,7 +1,7 @@
 import type { SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import { SEAT_STATUS_LABEL, SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
-import type { SeatStatus } from '../types/purchase.types'
+import type { AlertMessage, SeatStatus } from '../types/purchase.types'
 
 type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
 type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
@@ -12,8 +12,7 @@ export function formatSectorTabLabel({ price, availablePlaces }: SectorTabInput)
   return availablePlaces === 0 ? SOLD_OUT_TAB_LABEL : formatPrice(price)
 }
 
-/** El aviso va en dos partes: la primera oración se destaca. */
-export function formatTakenSeatsMessage(seats: SeatLabelInput[]) {
+export function formatTakenSeatsMessage(seats: SeatLabelInput[]): AlertMessage {
   const codes = seatListFormatter.format(seats.map(formatSeatCode))
   if (seats.length === 1) {
     return {

@@ -8,7 +8,8 @@ import { SeatsHeader } from '../../components/SeatsHeader'
 import { SeatsLoadError } from '../../components/SeatsLoadError'
 import { SeatsNotForSale } from '../../components/SeatsNotForSale'
 import { SectorTabs } from '../../components/SectorTabs'
-import { TakenSeatsAlert } from '../../components/TakenSeatsAlert'
+import { SelectionChangedAlert } from '../../components/SelectionChangedAlert'
+import { formatTakenSeatsMessage } from '../../utils/seatFormat'
 import { useSeatsPageController } from './useSeatsPageController'
 
 export function SeatsPage() {
@@ -40,7 +41,9 @@ export function SeatsPage() {
         {openSector?.numbered && (
           <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
         )}
-        {takenSeats.length > 0 && <TakenSeatsAlert seats={takenSeats} />}
+        {takenSeats.length > 0 && (
+          <SelectionChangedAlert message={formatTakenSeatsMessage(takenSeats)} />
+        )}
       </SeatsPanel>
     )
   } else {
