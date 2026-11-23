@@ -17,7 +17,7 @@ export function getEventNotice(event: NoticeInput, now: Date): EventNotice | und
 }
 
 /** `saleStart` viene en hora local sin zona: `new Date` lo lee como hora local, igual que `now`. */
-function hasSaleNotStarted(saleStart: string, now: Date) {
+export function hasSaleNotStarted(saleStart: string, now: Date) {
   return new Date(saleStart) > now
 }
 
