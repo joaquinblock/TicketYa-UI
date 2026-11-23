@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react'
+import { within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
@@ -45,4 +46,24 @@ describe('Detalle del evento: CA1', () => {
     expect(screen.getByText(formatEventDateTime(event.dateTime))).toBeInTheDocument()
     expect(screen.getByText(`${event.venue.name} · ${event.venue.city}`)).toBeInTheDocument()
   })
+
+  it('"El evento" muestra los participantes, la apertura de la venta y la dirección', async () => {
+    const event = await getEvent(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+    renderEventPage(event.id)
+
+    const facts = await findEventFacts()
+    expect(within(facts).getByText('Participan').nextSibling).toHaveTextContent(
+      event.participants.map((participant) => participant.name).join(', '),
+    )
+    expect(within(facts).getByText('Venta desde').nextSibling).toHaveTextContent(
+      formatEventDateTime(event.saleStart ?? ''),
+    )
+    expect(within(facts).getByText('Ubicación').nextSibling).toHaveTextContent(
+      `${event.venue.name} · ${event.venue.address}, ${event.venue.city}`,
+    )
+  })
 })
+
+function findEventFacts() {
+  return screen.findByRole('complementary', { name: 'El evento' })
+}
