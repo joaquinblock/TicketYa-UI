@@ -24,6 +24,7 @@ export type UnnumberedSector = Pick<SectorAvailability, 'sectorName' | 'availabl
 export type QuantityStepper = {
   quantity: number
   canDecrease: boolean
+  canIncrease: boolean
   increase: () => void
   decrease: () => void
 }

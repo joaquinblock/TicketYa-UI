@@ -32,7 +32,12 @@ function QuantityStepper({ stepper }: { stepper: QuantityStepperState }) {
         −
       </button>
       <span aria-live="polite">{stepper.quantity}</span>
-      <button type="button" aria-label="Una más" onClick={stepper.increase}>
+      <button
+        type="button"
+        aria-label="Una más"
+        disabled={!stepper.canIncrease}
+        onClick={stepper.increase}
+      >
         +
       </button>
     </div>
