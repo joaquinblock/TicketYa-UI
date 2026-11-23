@@ -1,6 +1,7 @@
 import {
   LAST_PLACES_THRESHOLD,
   NUMBERED_SECTOR_LABEL,
+  UNNUMBERED_SECTOR_LABEL,
 } from '../constants/sectorAvailability.constants'
 import type { SeatAvailability, SectorAvailability } from '../types/catalog.types'
 
@@ -15,6 +16,7 @@ export function formatPlacesLeft(availablePlaces: number) {
 }
 
 export function formatSectorKind(sector: SectorKindInput) {
+  if (!sector.numbered) return UNNUMBERED_SECTOR_LABEL
   const rows = sortedRowsOf(sector.seats ?? [])
   if (rows.length === 0) return NUMBERED_SECTOR_LABEL
   if (rows.length === 1) return `${NUMBERED_SECTOR_LABEL} · fila ${rows[0]}`
