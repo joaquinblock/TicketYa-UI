@@ -34,6 +34,7 @@ const UNNUMBERED_EVENT = {
   SOLD_OUT_ON_REFRESH: 14,
   RESERVED: 31,
   WITHOUT_SESSION: 32,
+  NETWORK_FAILURE: 33,
 } as const
 
 function renderSeatsPage(eventId: number) {
@@ -331,6 +332,33 @@ describe('Lugares: CA5, sin sesión', () => {
   })
 })
 
+describe('Lugares: CA6, falla la red', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await cancelPendingOrders(UNNUMBERED_EVENT.NETWORK_FAILURE)
+  })
+
+  it('si el pedido falla por la red, veo el aviso con "Reintentar", y al reintentar llego a Pago con la misma clave', async () => {
+    const eventId = UNNUMBERED_EVENT.NETWORK_FAILURE
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+    const orderBodies = failFirstOrderRequestByNetwork()
+
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+    expect(await within(summary).findByRole('alert')).toHaveTextContent(
+      'No pudimos reservar tus lugares.',
+    )
+    await user.click(within(summary).getByRole('button', { name: 'Reintentar' }))
+
+    await waitFor(() => expect(getCurrentUrl().pathname).toBe(ROUTES.payment(eventId)))
+    const [failed, retried] = orderBodies.map((body) => body.idempotencyKey)
+    expect(orderBodies).toHaveLength(2)
+    expect(retried).toBe(failed)
+  })
+})
+
 /**
  * Ancla de "Datos de prueba" (`ticket-service.md`): el 43 tiene Campo, Platea baja, Platea alta
  * agotada y Palco VIP. Se usa para cambiar de pestaña, sin reservar.
@@ -449,6 +477,24 @@ function holdOrderRequests() {
     .mockImplementation((input, init) =>
       isOrderRequest(input, init) ? new Promise<Response>(() => {}) : realFetch(input, init),
     )
+}
+
+type OrderRequestBody = { idempotencyKey: string }
+
+/**
+ * El primer `POST /api/orders` falla por la red, sin llegar al backend; los siguientes pasan.
+ * Devuelve el body de cada pedido, para comparar las claves.
+ */
+function failFirstOrderRequestByNetwork() {
+  const realFetch = globalThis.fetch
+  const bodies: OrderRequestBody[] = []
+  vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+    if (!isOrderRequest(input, init)) return realFetch(input, init)
+    bodies.push(JSON.parse(String(init?.body)) as OrderRequestBody)
+    if (bodies.length === 1) return Promise.reject(new TypeError('Failed to fetch'))
+    return realFetch(input, init)
+  })
+  return bodies
 }
 
 /** Deja como estaban los lugares: cancela las reservas en curso del cliente en esos eventos. */
