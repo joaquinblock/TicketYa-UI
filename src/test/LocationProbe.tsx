@@ -6,7 +6,7 @@ const LOCATION_TEST_ID = 'location'
 /** Muestra la URL actual del `MemoryRouter`, para que un test vea adónde navegó. */
 export function LocationProbe() {
   const { pathname, search } = useLocation()
-  return <output data-testid={LOCATION_TEST_ID}>{`${pathname}${search}`}</output>
+  return <div data-testid={LOCATION_TEST_ID}>{`${pathname}${search}`}</div>
 }
 
 export function getCurrentUrl() {
