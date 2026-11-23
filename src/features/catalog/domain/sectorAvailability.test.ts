@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import type { EventSector, SectorAvailability } from '../types/catalog.types'
-import { joinSectorsWithAvailability } from './sectorAvailability'
+import type { EventDetail, EventSector, SectorAvailability } from '../types/catalog.types'
+import {
+  isAvailabilityVisible,
+  isPurchaseOpen,
+  joinSectorsWithAvailability,
+} from './sectorAvailability'
 
 const detailSector = (sectorId: number, name: string): EventSector => ({
   sectorId,
@@ -52,5 +56,38 @@ describe('joinSectorsWithAvailability: unión por nombre', () => {
     )
 
     expect(joined[1]).toEqual({ ...detailSector(2, 'Palco'), availability: undefined })
+  })
+})
+
+type SaleState = Pick<EventDetail, 'status' | 'saleStart'>
+
+/** Hora local, sin zona, como las fechas que manda el backend. */
+const NOW = new Date('2026-11-22T12:00:00')
+const PAST_SALE_START = '2026-11-20T10:00:00'
+const FUTURE_SALE_START = '2026-12-01T10:00:00'
+
+describe('isAvailabilityVisible e isPurchaseOpen', () => {
+  it.each<[string, SaleState]>([
+    ['sin fecha de apertura', { status: 'PUBLISHED', saleStart: null }],
+    ['con la apertura ya pasada', { status: 'PUBLISHED', saleStart: PAST_SALE_START }],
+  ])('a la venta %s muestra la disponibilidad y el botón', (_, event) => {
+    expect(isAvailabilityVisible(event, NOW)).toBe(true)
+    expect(isPurchaseOpen(event, NOW)).toBe(true)
+  })
+
+  it('agotado muestra la disponibilidad, sin botón', () => {
+    const event: SaleState = { status: 'SOLD_OUT', saleStart: PAST_SALE_START }
+    expect(isAvailabilityVisible(event, NOW)).toBe(true)
+    expect(isPurchaseOpen(event, NOW)).toBe(false)
+  })
+
+  it.each<[string, SaleState]>([
+    ['con la venta futura', { status: 'PUBLISHED', saleStart: FUTURE_SALE_START }],
+    ['suspendido', { status: 'SUSPENDED', saleStart: PAST_SALE_START }],
+    ['cancelado', { status: 'CANCELLED', saleStart: PAST_SALE_START }],
+    ['finalizado', { status: 'FINISHED', saleStart: PAST_SALE_START }],
+  ])('%s no muestra ni la disponibilidad ni el botón', (_, event) => {
+    expect(isAvailabilityVisible(event, NOW)).toBe(false)
+    expect(isPurchaseOpen(event, NOW)).toBe(false)
   })
 })
