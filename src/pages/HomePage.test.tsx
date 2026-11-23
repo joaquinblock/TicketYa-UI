@@ -378,3 +378,19 @@ describe('Cartelera: página fuera de rango', () => {
     expect(getCurrentUrl().searchParams.get('page')).toBe(String(totalPages))
   })
 })
+
+describe('Hero: desmarcar un acceso rápido', () => {
+  it('al tocar de nuevo el tipo marcado se desmarca y la URL queda sin tipo', async () => {
+    const user = userEvent.setup()
+    renderHome('/?type=CONCERT')
+    const quickAccess = screen.getByRole('group', { name: 'Accesos rápidos por tipo' })
+
+    await user.click(within(quickAccess).getByRole('button', { name: 'Recitales' }))
+
+    expect(within(quickAccess).getByRole('button', { name: 'Recitales' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    )
+    expect(getCurrentUrl().searchParams.get('type')).toBeNull()
+  })
+})
