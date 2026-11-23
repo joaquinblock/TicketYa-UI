@@ -102,6 +102,23 @@ describe('Detalle del evento: CA1', () => {
   })
 })
 
+describe('Detalle del evento: CA2', () => {
+  it('con la venta todavía cerrada avisa cuándo abre, y no avisa la alta demanda', async () => {
+    const event = await getEvent(SEEDER_EVENT.SALE_NOT_STARTED)
+    expect(event.highDemand).toBe(true)
+    renderEventPage(event.id)
+
+    const notice = await findEventNotice()
+    expect(notice).toHaveTextContent('La venta todavía no empezó')
+    expect(notice).toHaveTextContent(`Abre el ${formatEventDateTime(event.saleStart ?? '')}.`)
+    expect(notice).not.toHaveTextContent('fila virtual')
+  })
+})
+
+function findEventNotice() {
+  return screen.findByRole('region', { name: 'Aviso' })
+}
+
 function findEventHero(eventName: string) {
   return screen.findByRole('region', { name: eventName })
 }
