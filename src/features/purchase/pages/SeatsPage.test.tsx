@@ -254,6 +254,18 @@ describe('Lugares: CA5, el aviso se va', () => {
   })
 })
 
+describe('Lugares: CA6, cargando', () => {
+  it('mientras la disponibilidad no respondió, muestra el mapa en carga y ningún asiento', async () => {
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    expect(screen.getByRole('status', { name: 'Cargando lugares' })).toBeInTheDocument()
+    expect(screen.queryAllByRole('button', { name: SEAT_NAME })).toHaveLength(0)
+
+    expect(await screen.findAllByRole('button', { name: SEAT_NAME })).not.toHaveLength(0)
+    expect(screen.queryByRole('status', { name: 'Cargando lugares' })).not.toBeInTheDocument()
+  })
+})
+
 async function freeSeats(eventId: number, count: number) {
   const sector = await firstSectorWithPlaces(eventId)
   const seats = (sector.seats ?? []).filter((candidate) => candidate.available).slice(0, count)
