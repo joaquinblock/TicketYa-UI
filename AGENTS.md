@@ -25,16 +25,15 @@
 
 Claude (Claude Code) y Gemini (Antigravity) trabajan a la vez en tickets distintos. Cada uno tiene su propia carpeta, para no cambiarle la rama ni mezclarle el `git status` al otro:
 
-| Agente | Carpeta                         | Ramas                               |
-| ------ | ------------------------------- | ----------------------------------- |
-| Claude | `C:\Projects\TicketYa-UI`       | `main` y las ramas de sus tickets   |
-| Gemini | `C:\Projects\TicketYa-UI-<NUM>` | Una rama por ticket, en un worktree |
+| Agente | Carpeta                          | Qué es                                    |
+| ------ | -------------------------------- | ----------------------------------------- |
+| Claude | `C:\Projects\TicketYa-UI`        | La carpeta principal, la única con `main` |
+| Gemini | `C:\Projects\TicketYa-UI-gemini` | Un worktree fijo, que no se borra         |
 
-- **Gemini abre un worktree por ticket**, desde `main` actualizado: `git worktree add ..\TicketYa-UI-<NUM> -b <tipo>/<NUM>-<descripcion> main`. Abre Antigravity con ese worktree como workspace.
-- **Cada carpeta tiene su propio `.env`, `node_modules` y `.work/`**: en un worktree nuevo, copiá el `.env` y corré `pnpm install`.
-- **`main` solo se abre en `C:\Projects\TicketYa-UI`**. Git no deja tener la misma rama abierta en dos carpetas.
-- **Nunca se trabaja en la carpeta del otro** ni se toma un ticket que ya tiene rama o worktree. `git worktree list` muestra quién está en qué.
-- Cuando se mergea el PR: `git worktree remove ..\TicketYa-UI-<NUM>` y `git pull` en `main`.
+- **Gemini usa siempre el mismo worktree.** El `.env`, `node_modules` y el workspace de Antigravity se arman una sola vez. Se crea con `git worktree add ..\TicketYa-UI-gemini origin/main` (copiá el `.env` y corré `pnpm install`).
+- **Cada ticket empieza desde `origin/main`, sin abrir `main`:** `git fetch origin` y `git switch --no-track -c <tipo>/<NUM>-<descripcion> origin/main`. Git no deja tener `main` abierta en dos carpetas, y así no hace falta. `--no-track` evita que la rama siga a `origin/main`: el primer push es `git push -u origin <rama>`.
+- **Nunca se trabaja en la carpeta del otro** ni se toma un ticket que ya tiene rama. `git worktree list` muestra en qué rama está cada uno.
+- Cuando se mergea un PR, Claude hace `git pull` en `main`. Gemini arranca el ticket siguiente desde `origin/main` como arriba.
 
 ## Proyecto
 
