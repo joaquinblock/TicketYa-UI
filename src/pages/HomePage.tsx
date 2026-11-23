@@ -23,10 +23,7 @@ function HomeHero() {
           <span aria-hidden className="h-0.5 w-5.5 bg-accent" />
           Recitales · festivales · teatro · partidos · conferencias
         </p>
-        <h1
-          id="hero-titulo"
-          className="max-w-190 text-[clamp(44px,6.4vw,84px)] leading-[.95] tracking-[-0.035em]"
-        >
+        <h1 id="hero-titulo" className="max-w-190 text-display">
           Nadie más tiene <span className="text-accent">tu lugar.</span>
         </h1>
         <p className="max-w-140 text-lg leading-relaxed text-surface/90">

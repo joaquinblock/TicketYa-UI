@@ -33,6 +33,9 @@
   --text-label: 13px;
   --text-control: 15px;
   --text-brand: 22px;
+  --text-display: clamp(44px, 6.4vw, 84px);
+  --text-display--line-height: 0.95;
+  --text-display--letter-spacing: -0.035em;
 
   --radius-control: 10px;
   --radius-card: 14px;
