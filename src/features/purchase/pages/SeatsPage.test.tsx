@@ -585,6 +585,16 @@ describe('Lugares no numerados: CA3, límite por persona', () => {
   })
 })
 
+describe('Lugares no numerados: CA3, un solo lugar libre', () => {
+  it('en el Campo del evento 45, "Una más" está deshabilitado desde el principio y la cantidad es 1', async () => {
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_ONE_PLACE_LEFT)
+    const panel = await findQuantityPanel('Campo')
+
+    expect(within(panel).getByRole('button', { name: 'Una más' })).toBeDisabled()
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
