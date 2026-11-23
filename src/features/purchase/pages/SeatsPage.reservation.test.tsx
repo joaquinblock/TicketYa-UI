@@ -35,6 +35,7 @@ const UNNUMBERED_EVENT = {
   RESERVED: 31,
   WITHOUT_SESSION: 32,
   NETWORK_FAILURE: 33,
+  SERVICE_UNAVAILABLE: 34,
 } as const
 
 function renderSeatsPage(eventId: number) {
@@ -359,6 +360,27 @@ describe('Lugares: CA6, falla la red', () => {
   })
 })
 
+describe('Lugares: CA6, falla el servidor', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('si el pedido responde 503, veo "No pudimos reservar tus lugares." con "Reintentar"', async () => {
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.SERVICE_UNAVAILABLE)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+    answerOrderRequestsWithServiceUnavailable()
+
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+
+    expect(await within(summary).findByRole('alert')).toHaveTextContent(
+      'No pudimos reservar tus lugares.',
+    )
+    expect(within(summary).getByRole('button', { name: 'Reintentar' })).toBeEnabled()
+  })
+})
+
 /**
  * Ancla de "Datos de prueba" (`ticket-service.md`): el 43 tiene Campo, Platea baja, Platea alta
  * agotada y Palco VIP. Se usa para cambiar de pestaña, sin reservar.
@@ -495,6 +517,24 @@ function failFirstOrderRequestByNetwork() {
     return realFetch(input, init)
   })
   return bodies
+}
+
+/** Desde acá, el `POST /api/orders` responde 503 `service_unavailable`, sin llegar al backend. */
+function answerOrderRequestsWithServiceUnavailable() {
+  const realFetch = globalThis.fetch
+  vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+    if (!isOrderRequest(input, init)) return realFetch(input, init)
+    return Promise.resolve(
+      Response.json(
+        {
+          error: 'service_unavailable',
+          message: 'Un servicio interno no está disponible',
+          status: 503,
+        },
+        { status: 503 },
+      ),
+    )
+  })
 }
 
 /** Deja como estaban los lugares: cancela las reservas en curso del cliente en esos eventos. */
