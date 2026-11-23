@@ -1,8 +1,11 @@
+import { LAST_PLACES_THRESHOLD } from '../constants/sectorAvailability.constants'
+
 const PERCENT = 100
 
 type Occupancy = { capacity: number; availablePlaces: number }
 
 export function formatPlacesLeft(availablePlaces: number) {
+  if (availablePlaces < LAST_PLACES_THRESHOLD) return `Últimos ${availablePlaces} lugares`
   return `${availablePlaces.toLocaleString('es-AR')} disponibles`
 }
 
