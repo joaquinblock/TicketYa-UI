@@ -8,4 +8,11 @@ describe('adjustQuantityToAvailable', () => {
       change: 'NONE',
     })
   })
+
+  it('si quedan menos libres que la cantidad, la baja a los libres y avisa que bajó', () => {
+    expect(adjustQuantityToAvailable({ quantity: 3, availablePlaces: 2 })).toEqual({
+      quantity: 2,
+      change: 'LOWERED',
+    })
+  })
 })
