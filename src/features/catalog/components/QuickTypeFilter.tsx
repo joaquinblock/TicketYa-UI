@@ -15,7 +15,7 @@ export function QuickTypeFilter() {
           <Chip
             key={type}
             isSelected={isSelected}
-            onClick={() => updateFilters({ type })}
+            onClick={() => updateFilters({ type: isSelected ? undefined : type })}
             className={cn(
               'border border-surface/35 bg-ink/35 text-surface hover:bg-ink/60 hover:text-surface',
               isSelected && 'border-accent bg-accent text-ink hover:bg-accent hover:text-ink',
