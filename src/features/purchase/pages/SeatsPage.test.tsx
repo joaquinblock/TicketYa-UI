@@ -1,5 +1,5 @@
 import { focusManager } from '@tanstack/react-query'
-import { act, screen, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { EventAvailability, SeatAvailability } from '@/shared/types/event.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
@@ -309,6 +309,41 @@ describe('Lugares: CA6, sin venta', () => {
     expect(getCurrentUrl().pathname).toBe(ROUTES.event(SEEDER_EVENT.WITHOUT_PRICES))
   })
 })
+
+describe('Lugares: borde, un refresco que falla', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('con un asiento elegido, si el refresco de la disponibilidad falla, el mapa y la selección siguen', async () => {
+    const seat = await firstFreeSeat(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    await user.click(await screen.findByRole('button', { name: seatName(seat, 'disponible') }))
+
+    const availabilityDown = failAvailabilityRequests()
+    refetchByRefocusing()
+    await waitFor(() => expect(availabilityDown).toHaveBeenCalled())
+
+    expect(
+      await screen.findByRole('button', { name: seatName(seat, 'elegido') }),
+    ).toBeInTheDocument()
+    expect(
+      screen.queryByRole('alert', { name: 'No pudimos cargar los lugares' }),
+    ).not.toBeInTheDocument()
+  })
+})
+
+/** Corta solo la disponibilidad, como si se cayera el ticket-service: el evento sigue cargando. */
+function failAvailabilityRequests() {
+  const realFetch = globalThis.fetch
+  return vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+    const url = input instanceof Request ? input.url : String(input)
+    if (url.includes(AVAILABILITY_PATH)) return Promise.reject(new TypeError('Failed to fetch'))
+    return realFetch(input, init)
+  })
+}
 
 /** Un puerto bloqueado para fetch: la llamada falla de verdad, sin mock. */
 function pointApiClientToClosedPort() {
