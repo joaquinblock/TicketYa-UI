@@ -1,5 +1,5 @@
 import { focusManager } from '@tanstack/react-query'
-import { act, screen, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
@@ -10,7 +10,8 @@ import type { EventAvailability, SeatAvailability } from '@/shared/types/event.t
 import { formatPrice } from '@/shared/utils/eventFormat'
 import { saveAccessToken } from '@/shared/lib/session'
 import { devLogin, SEEDER_USER } from '@/test/gateway'
-import { LocationProbe } from '@/test/LocationProbe'
+import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
+import type { Order, OrderTicket } from '../types/payment.types'
 import { renderWithProviders } from '@/test/render'
 
 /**
@@ -22,6 +23,7 @@ const NUMBERED_EVENT = {
   SUMMARY: 17,
   SEAT_LIMIT: 18,
   RESERVING: 25,
+  RESERVED: 26,
 } as const
 
 const UNNUMBERED_EVENT = {
@@ -129,6 +131,31 @@ describe('Lugares: CA2, reservando', () => {
     await user.click(screen.getByRole('button', { name: 'Reservar y pagar' }))
 
     expect(await screen.findByRole('button', { name: 'Reservando…' })).toBeDisabled()
+  })
+})
+
+describe('Lugares: CA2, reservar y seguir al pago', () => {
+  afterEach(async () => {
+    await cancelPendingOrders(NUMBERED_EVENT.RESERVED)
+  })
+
+  it('cuando la reserva se crea, va a Pago con su orderId, y la orden queda PENDING con los asientos elegidos', async () => {
+    const eventId = NUMBERED_EVENT.RESERVED
+    const { seats } = await freeSeats(eventId, 2)
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    for (const seat of seats) await user.click(await findFreeSeatButton(seat))
+
+    await user.click(screen.getByRole('button', { name: 'Reservar y pagar' }))
+
+    await waitFor(() => expect(getCurrentUrl().pathname).toBe(ROUTES.payment(eventId)))
+    const orderId = Number(getCurrentUrl().searchParams.get('orderId'))
+    const order = (await clientOrders()).find((candidate) => candidate.id === orderId)
+    expect(order?.status).toBe('PENDING')
+    expect(order?.tickets.map((ticket) => ticket.seatId).sort()).toEqual(
+      seats.map((seat) => seat.seatId).sort(),
+    )
   })
 })
 
@@ -269,6 +296,17 @@ async function cancelPendingOrders(...eventIds: number[]) {
 }
 
 const GATEWAY_URL = import.meta.env.TICKETYA_GATEWAY_URL
+
+type ClientOrder = Pick<Order, 'id' | 'eventId' | 'status'> & {
+  tickets: Pick<OrderTicket, 'seatId' | 'eventSectorId'>[]
+}
+
+/** Las órdenes del cliente del seeder, pedidas por fuera de la página. */
+async function clientOrders() {
+  const headers = { Authorization: `Bearer ${await devLogin(SEEDER_USER.CLIENT)}` }
+  const response = await fetch(`${GATEWAY_URL}${ORDERS_PATH}`, { headers })
+  return (await response.json()) as ClientOrder[]
+}
 
 /** La disponibilidad se vuelve a pedir al recuperar el foco, como al volver a la pestaña. */
 function refetchByRefocusing() {
