@@ -5,22 +5,13 @@ const TICK_INTERVAL_MS = 1000
 
 /** Cuenta regresiva en segundos hasta `expiresAt` mientras `active` sea true. */
 export function useCountdown(expiresAt: string | undefined, active: boolean) {
-  const [secondsLeft, setSecondsLeft] = useState(() =>
-    expiresAt ? getRemainingSeconds(expiresAt) : 0,
-  )
+  const [nowMs, setNowMs] = useState(() => Date.now())
 
   useEffect(() => {
-    if (!expiresAt) {
-      setSecondsLeft(0)
-      return
-    }
-    const update = () => setSecondsLeft(getRemainingSeconds(expiresAt))
-    update()
-    if (!active) return
-
-    const timer = window.setInterval(update, TICK_INTERVAL_MS)
+    if (!expiresAt || !active) return
+    const timer = window.setInterval(() => setNowMs(Date.now()), TICK_INTERVAL_MS)
     return () => window.clearInterval(timer)
   }, [expiresAt, active])
 
-  return secondsLeft
+  return expiresAt ? getRemainingSeconds(expiresAt, nowMs) : 0
 }
