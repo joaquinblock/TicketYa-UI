@@ -1,7 +1,7 @@
 import { ChevronRight, Ticket as TicketIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Badge } from '@/shared/components/atoms/Badge'
-import { TICKET_STATUS_META } from '../constants/tickets.constants'
+import { PENDING_RETURN_TICKET_META, TICKET_STATUS_META } from '../constants/tickets.constants'
 import { formatOrderPrice, formatTicketCode, formatTicketLocation } from '../lib/ticketFormat'
 import type { Ticket } from '../types/tickets.types'
 import { TicketQrCode } from './TicketQrCode'
@@ -13,8 +13,11 @@ type TicketRowProps = {
 export function TicketRow({ ticket }: TicketRowProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const code = formatTicketCode(ticket.id)
-  const statusMeta = TICKET_STATUS_META[ticket.status]
-  const isActive = ticket.status === 'ISSUED'
+  const isPendingReturn = ticket.status === 'ISSUED' && Boolean(ticket.hasPendingReturnRequest)
+  const statusMeta = isPendingReturn
+    ? PENDING_RETURN_TICKET_META
+    : TICKET_STATUS_META[ticket.status]
+  const isActive = ticket.status === 'ISSUED' && !isPendingReturn
 
   return (
     <div className="border-t border-line first:border-t-0">

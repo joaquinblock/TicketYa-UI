@@ -74,3 +74,11 @@ export const TICKET_STATUS_META = {
     description: 'Esta entrada todavía está pendiente de emisión.',
   },
 } as const satisfies Record<TicketStatus, TicketStatusMeta>
+
+export const PENDING_RETURN_TICKET_META: TicketStatusMeta = {
+  label: 'Devolución pendiente',
+  tone: 'warning',
+  title: 'Estamos revisando tu devolución',
+  description:
+    'Un administrador está revisando tu pedido. Mientras tanto, este QR no sirve para entrar.',
+}
