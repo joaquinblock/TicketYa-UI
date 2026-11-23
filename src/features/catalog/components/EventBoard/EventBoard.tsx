@@ -3,7 +3,11 @@ import { Button } from '@/shared/components/atoms/Button'
 import { Select } from '@/shared/components/atoms/Select'
 import { Pagination } from '@/shared/components/molecules/Pagination'
 import { EVENT_SORT_LABEL, EVENT_SORTS, EVENTS_PAGE_SIZE } from '../../constants/catalog.constants'
-import { useEventFilters, useSanitizedFiltersUrl } from '../../hooks/useEventFilters'
+import {
+  useEventFilters,
+  useLastPageWhenOutOfRange,
+  useSanitizedFiltersUrl,
+} from '../../hooks/useEventFilters'
 import { useEventSearch } from '../../hooks/useEventSearch'
 import type { EventSort, EventSummary } from '../../types/catalog.types'
 import { EventCard } from '../EventCard/EventCard'
@@ -30,6 +34,7 @@ export function EventBoard() {
 function BoardResults() {
   const { filters, updateFilters } = useEventFilters()
   const { data, isPending, isError, refetch } = useEventSearch(filters)
+  useLastPageWhenOutOfRange(data?.totalPages)
 
   if (isPending) return <LoadingGrid />
   if (isError) return <LoadError onRetry={() => refetch()} />

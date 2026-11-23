@@ -38,3 +38,16 @@ export function useSanitizedFiltersUrl() {
     if (sanitizedSearch !== currentSearch) setSearchParams(sanitizedSearch, { replace: true })
   }, [currentSearch, sanitizedSearch, setSearchParams])
 }
+
+/** Una página mayor que la última pasa a la última, con `replace`: la URL refleja lo que se muestra. */
+export function useLastPageWhenOutOfRange(totalPages = 0) {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filters = useMemo(() => parseEventFilters(searchParams), [searchParams])
+  const isOutOfRange = totalPages > 0 && filters.page > totalPages
+
+  useEffect(() => {
+    if (isOutOfRange) {
+      setSearchParams(toSearchParams({ ...filters, page: totalPages }), { replace: true })
+    }
+  }, [isOutOfRange, filters, totalPages, setSearchParams])
+}
