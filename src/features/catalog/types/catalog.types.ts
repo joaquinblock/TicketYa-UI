@@ -44,6 +44,13 @@ export type EventSector = {
   price: number
 }
 
+export type EventNoticeKind =
+  'HIGH_DEMAND' | 'SALE_NOT_STARTED' | 'SOLD_OUT' | 'SUSPENDED' | 'CANCELLED' | 'FINISHED'
+/** El de venta no empezada lleva la fecha de apertura: su texto se arma, no es fijo. */
+export type FixedNoticeKind = Exclude<EventNoticeKind, 'SALE_NOT_STARTED'>
+export type EventNoticeText = { title: string; message: string }
+export type EventNotice = EventNoticeText & { kind: EventNoticeKind }
+
 /** Evento como lo devuelve `GET /api/events/{id}`. */
 export type EventDetail = Pick<EventSummary, 'id' | 'name' | 'type' | 'dateTime' | 'highDemand'> & {
   description: string | null
