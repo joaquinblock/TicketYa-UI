@@ -15,16 +15,17 @@ export function useSeatsPageController(eventIdParam: string) {
   const { openSector, openSectorById } = useOpenSector(data.sectors ?? [])
   const { selection, takenSeats, toggle, clear } = useSeatSelection(openSector?.seats ?? NO_SEATS)
   const unnumberedSector = toUnnumberedSector(data.event, openSector)
-  const quantityStepper = useSectorQuantity({
+  const sectorQuantity = useSectorQuantity({
     availablePlaces: unnumberedSector?.availablePlaces ?? 0,
     maxTicketsPerCustomer: unnumberedSector?.maxTicketsPerCustomer ?? null,
   })
 
-  /** La selección es de un solo sector: al cambiar de pestaña se vacía. */
+  /** La selección y la cantidad son de un solo sector: al cambiar de pestaña vuelven a empezar. */
   const openSectorAndClearSelection = (eventSectorId: number) => {
     if (eventSectorId === openSector?.eventSectorId) return
     openSectorById(eventSectorId)
     clear()
+    sectorQuantity.reset()
   }
 
   return {
@@ -35,6 +36,6 @@ export function useSeatsPageController(eventIdParam: string) {
     takenSeats,
     toggleSeat: toggle,
     unnumberedSector,
-    quantityStepper,
+    quantityStepper: sectorQuantity.stepper,
   }
 }
