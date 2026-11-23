@@ -57,3 +57,7 @@ export function formatQuantityLoweredMessage({
 export function formatSectorSoldOutMessage(sectorName: string): AlertMessage {
   return { lead: `Se agotó ${sectorName}.`, hint: 'Elegí otro sector.' }
 }
+
+export function formatTicketLimit(maxTicketsPerCustomer: number) {
+  return `Hasta ${maxTicketsPerCustomer} por persona`
+}

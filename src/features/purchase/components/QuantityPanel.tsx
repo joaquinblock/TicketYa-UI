@@ -2,7 +2,7 @@ import type {
   QuantityStepper as QuantityStepperState,
   UnnumberedSector,
 } from '../types/purchase.types'
-import { formatUnnumberedPlaces } from '../utils/seatFormat'
+import { formatTicketLimit, formatUnnumberedPlaces } from '../utils/seatFormat'
 import { Stage } from './Stage'
 
 type QuantityPanelProps = { sector: UnnumberedSector; stepper: QuantityStepperState }
@@ -16,6 +16,9 @@ export function QuantityPanel({ sector, stepper }: QuantityPanelProps) {
       </div>
       <QuantityStepper stepper={stepper} />
       <span>{formatUnnumberedPlaces(sector)}</span>
+      {sector.maxTicketsPerCustomer !== null && (
+        <span>{formatTicketLimit(sector.maxTicketsPerCustomer)}</span>
+      )}
     </section>
   )
 }
