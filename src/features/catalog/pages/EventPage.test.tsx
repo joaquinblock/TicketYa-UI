@@ -84,6 +84,22 @@ describe('Detalle del evento: CA1', () => {
       within(await findEventHero(event.name)).getByText('Alta demanda · fila virtual'),
     ).toBeInTheDocument()
   })
+
+  it('sin participantes no muestra "Participan"', async () => {
+    const event = await getEvent(SEEDER_EVENT.BOARD_WITHOUT_PARTICIPANTS)
+    expect(event.participants).toEqual([])
+    renderEventPage(event.id)
+
+    expect(within(await findEventFacts()).queryByText('Participan')).not.toBeInTheDocument()
+  })
+
+  it('sin apertura de la venta no muestra "Venta desde"', async () => {
+    const event = await getEvent(SEEDER_EVENT.ON_SALE_WITHOUT_SALE_START)
+    expect(event.saleStart).toBeNull()
+    renderEventPage(event.id)
+
+    expect(within(await findEventFacts()).queryByText('Venta desde')).not.toBeInTheDocument()
+  })
 })
 
 function findEventHero(eventName: string) {
