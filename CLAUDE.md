@@ -50,12 +50,18 @@ Seguí siempre la skill `atomic-design`: features con Atomic Design en lo compar
 
 Inicio combina `catalog` y `preferences`, así que vive en `src/pages/`.
 
+- **Partir un componente** (inline, subcomponente en el mismo archivo o archivo propio): skill `react-components`, sección "Inline, mismo archivo o archivo propio". Se decide antes de escribir el JSX.
+
 - **Cliente HTTP:** los services de cada feature usan `apiClient.get/post/put/patch/delete` de `src/shared/lib/http/apiClient.ts`.
 - **Ruteo:** React Router con `BrowserRouter`, `<Routes>` en `src/app/AppRouter.tsx` y un `routes/<feature>.route.tsx` por feature. Los paths viven todos en `src/shared/lib/routes.ts`, porque el header, el footer y la compra enlazan entre features.
 
 ## Tests
 
-**Sin MSW.** Los tests que tocan la red van contra el backend real a través del gateway, con el perfil `dev` del auth-service. La fuente de verdad son los datos que devuelven los seeders del backend. Esto reemplaza lo que dice `workflow-ui` sobre MSW.
+**Sin MSW.** Los tests que tocan la red van contra el backend real a través del gateway, con el perfil `dev` del auth-service. Esto reemplaza lo que dice `workflow-ui` sobre MSW.
+
+- **Los tests de red verifican reglas, no fotos de la base**, porque los datos cambian (otro seeder, un organizador que publica un evento). Por ejemplo, "todas las cards son recitales" en vez de "estos 3 recitales", o "el contador coincide con el total que el backend devuelve para esos filtros" en vez de "dice 03".
+- **Del seeder solo se fijan las anclas** que están documentadas en _Datos de prueba_ del backend (`event-service.md` y sus pares): que "Jazz en el puerto" está agotado, que hay un recital en Tandil. Antes de escribir una, se consulta el backend y se mira la respuesta completa.
+- Un estado vacío se provoca con algo que no puede coincidir con ningún dato (un texto absurdo), no con una combinación de filtros que hoy da vacío.
 
 ## Issues
 
