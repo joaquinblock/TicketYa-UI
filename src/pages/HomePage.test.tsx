@@ -350,3 +350,20 @@ describe('Cartelera en mobile: más filtros plegables', () => {
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
 })
+
+describe('Hero: accesos rápidos por tipo', () => {
+  it('al tocar "Recitales" queda marcado, todas las cards son recitales y la URL tiene type=CONCERT', async () => {
+    const user = userEvent.setup()
+    renderHome()
+    const quickAccess = screen.getByRole('group', { name: 'Accesos rápidos por tipo' })
+
+    await user.click(within(quickAccess).getByRole('button', { name: 'Recitales' }))
+
+    expect(within(quickAccess).getByRole('button', { name: 'Recitales' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+    await expectEveryCardToShow('Recital')
+    expect(getCurrentUrl().searchParams.get('type')).toBe('CONCERT')
+  })
+})
