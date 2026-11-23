@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event'
 import type { EventAvailability, SeatAvailability } from '@/shared/types/event.types'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
+import { setupApiClient } from '@/app/setupApiClient'
+import { configureApiClient } from '@/shared/lib/http/apiClient'
 import { ROUTES } from '@/shared/lib/routes'
 import { getAvailability } from '@/shared/services/availability.service'
 import { getEvent } from '@/shared/services/events.service'
@@ -265,6 +267,44 @@ describe('Lugares: CA6, cargando', () => {
     expect(screen.queryByRole('status', { name: 'Cargando lugares' })).not.toBeInTheDocument()
   })
 })
+
+describe('Lugares: CA6, error', () => {
+  afterEach(() => {
+    setupApiClient()
+  })
+
+  it('con el gateway caído avisa el error, y "Reintentar" con el gateway de vuelta muestra el mapa', async () => {
+    const sector = await firstSectorWithPlaces(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    pointApiClientToClosedPort()
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    const error = await screen.findByRole(
+      'alert',
+      { name: 'No pudimos cargar los lugares' },
+      NETWORK_FAILURE_TIMEOUT,
+    )
+
+    setupApiClient()
+    await user.click(within(error).getByRole('button', { name: 'Reintentar' }))
+
+    expect(
+      await screen.findByRole('region', { name: `Mapa de ${sector.sectorName}` }),
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
+/** Un puerto bloqueado para fetch: la llamada falla de verdad, sin mock. */
+function pointApiClientToClosedPort() {
+  configureApiClient({
+    baseUrl: 'http://localhost:1',
+    getAccessToken: () => undefined,
+    onUnauthorized: () => {},
+  })
+}
+
+const NETWORK_FAILURE_TIMEOUT = { timeout: 10_000 }
 
 async function freeSeats(eventId: number, count: number) {
   const sector = await firstSectorWithPlaces(eventId)
