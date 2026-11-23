@@ -9,5 +9,6 @@ export function adjustQuantityToAvailable({
   availablePlaces,
 }: QuantityAdjustmentInput): QuantityAdjustment {
   if (availablePlaces >= quantity) return { quantity, change: 'NONE' }
+  if (availablePlaces === 0) return { quantity: 0, change: 'SOLD_OUT' }
   return { quantity: availablePlaces, change: 'LOWERED' }
 }
