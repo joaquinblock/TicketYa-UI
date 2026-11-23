@@ -3,6 +3,8 @@ import { parseEventId } from '@/shared/utils/eventId'
 import { useOpenSector } from '../../hooks/useOpenSector'
 import { useSeatSelection } from '../../hooks/useSeatSelection'
 import { useSeatsData } from '../../hooks/useSeatsData'
+import { useSectorQuantity } from '../../hooks/useSectorQuantity'
+import { toUnnumberedSector } from '../../domain/unnumberedSector'
 
 /** Una referencia fija: con un `[]` nuevo en cada render, la selección creería que llegaron asientos. */
 const NO_SEATS: SeatAvailability[] = []
@@ -12,12 +14,15 @@ export function useSeatsPageController(eventIdParam: string) {
   const data = useSeatsData(parseEventId(eventIdParam))
   const { openSector, openSectorById } = useOpenSector(data.sectors ?? [])
   const { selection, takenSeats, toggle, clear } = useSeatSelection(openSector?.seats ?? NO_SEATS)
+  const unnumberedSector = toUnnumberedSector(data.event, openSector)
+  const sectorQuantity = useSectorQuantity(unnumberedSector)
 
-  /** La selección es de un solo sector: al cambiar de pestaña se vacía. */
+  /** La selección y la cantidad son de un solo sector: al cambiar de pestaña vuelven a empezar. */
   const openSectorAndClearSelection = (eventSectorId: number) => {
     if (eventSectorId === openSector?.eventSectorId) return
     openSectorById(eventSectorId)
     clear()
+    sectorQuantity.reset()
   }
 
   return {
@@ -27,5 +32,8 @@ export function useSeatsPageController(eventIdParam: string) {
     selection,
     takenSeats,
     toggleSeat: toggle,
+    unnumberedSector,
+    quantityStepper: sectorQuantity.stepper,
+    quantityChange: sectorQuantity.change,
   }
 }

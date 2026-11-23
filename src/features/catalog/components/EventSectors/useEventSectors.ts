@@ -2,10 +2,10 @@ import {
   getPurchaseAction,
   isAvailabilityVisible,
   isPurchaseOpen,
-  joinSectorsWithAvailability,
 } from '../../domain/sectorAvailability'
 import { useEventAvailability } from '@/shared/hooks/useEventAvailability'
 import type { EventDetail } from '@/shared/types/event.types'
+import { joinSectorsWithAvailability } from '@/shared/utils/sectorAvailability'
 
 /**
  * Los sectores del detalle con su disponibilidad, que solo se pide si se puede mostrar, y la acción

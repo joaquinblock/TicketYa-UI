@@ -12,7 +12,7 @@ import { getEvent } from '@/shared/services/events.service'
 import { formatEventDateTime } from '@/shared/utils/eventFormat'
 import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
-import { formatSectorTabLabel } from '../utils/seatFormat'
+import { formatSectorTabLabel, formatUnnumberedPlaces } from '../utils/seatFormat'
 
 /**
  * Anclas de "Datos de prueba" (`ticket-service.md`): en el evento 2 la Platea tiene A1 y A2
@@ -470,4 +470,339 @@ async function firstSectorWithPlaces(eventId: number) {
   const sector = sectors.find((candidate) => candidate.availablePlaces > 0)
   if (!sector) throw new Error(`El evento ${eventId} no tiene sectores con lugares`)
   return sector
+}
+
+/**
+ * En los dos el Campo es el primer sector con lugares, así que la página abre con él. Ancla de
+ * "Datos de prueba" (`ticket-service.md`): en el 45 queda 1 lugar en Campo. Del 43 los números
+ * se toman de la respuesta.
+ */
+const UNNUMBERED_EVENT = {
+  FIELD_WITH_PLACES: 43,
+  FIELD_ONE_PLACE_LEFT: 45,
+} as const
+
+describe('Lugares no numerados: CA1, panel de cantidad', () => {
+  it('en el evento 43, con el Campo abierto, muestra el escenario, el sector, la cantidad en 1 y los lugares libres de la capacidad', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+
+    const panel = await findQuantityPanel(field.sectorName)
+    expect(within(panel).getByText('Escenario')).toBeInTheDocument()
+    expect(
+      within(panel).getByRole('img', { name: `${field.sectorName} frente al escenario` }),
+    ).toBeInTheDocument()
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+    expect(
+      within(panel).getByText(
+        formatUnnumberedPlaces({
+          availablePlaces: field.availablePlaces,
+          capacity: field.capacity,
+        }),
+      ),
+    ).toBeInTheDocument()
+  })
+})
+
+describe('Lugares no numerados: CA1, sin mapa', () => {
+  it('con el Campo abierto no se ven el mapa ni la leyenda de asientos', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+
+    await findQuantityPanel(field.sectorName)
+    expect(screen.queryByRole('region', { name: /^Mapa de / })).not.toBeInTheDocument()
+    expect(screen.queryByText('Ocupado')).not.toBeInTheDocument()
+    expect(screen.queryAllByRole('button', { name: SEAT_NAME })).toHaveLength(0)
+  })
+})
+
+describe('Lugares no numerados: CA2, sumar y restar', () => {
+  it('en el evento 43, "Una más" sube la cantidad de a una y "Una menos" la baja de a una', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    await user.click(within(panel).getByRole('button', { name: 'Una más' }))
+    expect(quantityIn(panel)).toHaveTextContent(/^2$/)
+
+    await user.click(within(panel).getByRole('button', { name: 'Una menos' }))
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+  })
+})
+
+describe('Lugares no numerados: CA2, accesibilidad', () => {
+  it('la cantidad se anuncia al cambiar y el grupo se llama "Cantidad de entradas"', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    expect(quantityGroupIn(panel)).toBeInTheDocument()
+    expect(quantityIn(panel)).toHaveAttribute('aria-live', 'polite')
+  })
+})
+
+describe('Lugares no numerados: CA3, piso', () => {
+  it('con la cantidad en 1, "Una menos" está deshabilitado', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+    expect(within(panel).getByRole('button', { name: 'Una menos' })).toBeDisabled()
+  })
+})
+
+describe('Lugares no numerados: CA3, tope', () => {
+  it('en el evento 43, "Una más" se deshabilita al llegar al mínimo entre el límite por persona y los libres', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const limit = Math.min(
+      field.availablePlaces,
+      field.maxTicketsPerCustomer ?? field.availablePlaces,
+    )
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    const increase = within(panel).getByRole('button', { name: 'Una más' })
+
+    for (let quantity = 1; quantity < limit; quantity++) await user.click(increase)
+
+    expect(increase).toBeDisabled()
+    await user.click(increase)
+    expect(quantityIn(panel)).toHaveTextContent(new RegExp(`^${limit}$`))
+  })
+})
+
+describe('Lugares no numerados: CA3, límite por persona', () => {
+  it('en el evento 43 muestra "Hasta N por persona" con el máximo del evento', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    expect(
+      within(panel).getByText(`Hasta ${field.maxTicketsPerCustomer} por persona`),
+    ).toBeInTheDocument()
+  })
+})
+
+describe('Lugares no numerados: CA3, un solo lugar libre', () => {
+  it('en el Campo del evento 45, "Una más" está deshabilitado desde el principio y la cantidad es 1', async () => {
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_ONE_PLACE_LEFT)
+    const panel = await findQuantityPanel('Campo')
+
+    expect(within(panel).getByRole('button', { name: 'Una más' })).toBeDisabled()
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+  })
+})
+
+describe('Lugares no numerados: CA3, el foco no se pierde en el tope', () => {
+  it('al llegar al tope con el teclado, el foco pasa a "Una menos"', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const limit = Math.min(
+      field.availablePlaces,
+      field.maxTicketsPerCustomer ?? field.availablePlaces,
+    )
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    within(panel).getByRole('button', { name: 'Una más' }).focus()
+    for (let quantity = 1; quantity < limit; quantity++) await user.keyboard('{Enter}')
+
+    expect(within(panel).getByRole('button', { name: 'Una menos' })).toHaveFocus()
+  })
+})
+
+describe('Lugares no numerados: CA4, cambiar de pestaña', () => {
+  it('con una cantidad mayor a 1, abrir otro sector y volver al Campo deja la cantidad en 1', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const other = await otherSectorWithPlaces(UNNUMBERED_EVENT.FIELD_WITH_PLACES, field.sectorName)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    await user.click(
+      within(await findQuantityPanel(field.sectorName)).getByRole('button', { name: 'Una más' }),
+    )
+
+    const tabs = screen.getByRole('group', { name: 'Sectores' })
+    await user.click(within(tabs).getByRole('button', { name: new RegExp(`^${other} `) }))
+    await user.click(
+      within(tabs).getByRole('button', { name: new RegExp(`^${field.sectorName} `) }),
+    )
+
+    expect(quantityIn(await findQuantityPanel(field.sectorName))).toHaveTextContent(/^1$/)
+  })
+})
+
+describe('Lugares no numerados: CA5, quedan menos lugares que los elegidos', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('con 3 elegidas en el evento 43, un refresco con 2 libres baja la cantidad a 2 y lo avisa', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 3)
+
+    setPlacesOnNextRefreshes(field.sectorName, 2)
+    refetchByRefocusing()
+
+    const alert = await screen.findByRole('alert', {
+      name: `Quedan 2 lugares en ${field.sectorName}:`,
+    })
+    expect(alert).toHaveTextContent(
+      `Quedan 2 lugares en ${field.sectorName}: bajamos tu cantidad a 2`,
+    )
+    expect(quantityIn(panel)).toHaveTextContent(/^2$/)
+  })
+})
+
+describe('Lugares no numerados: CA5, quedan menos lugares pero alcanzan', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('con 2 elegidas, un refresco con 3 libres no cambia la cantidad ni avisa', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 2)
+
+    setPlacesOnNextRefreshes(field.sectorName, 3)
+    refetchByRefocusing()
+
+    expect(
+      await within(panel).findByText(
+        formatUnnumberedPlaces({ availablePlaces: 3, capacity: field.capacity }),
+      ),
+    ).toBeInTheDocument()
+    expect(quantityIn(panel)).toHaveTextContent(/^2$/)
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
+describe('Lugares no numerados: CA5, el aviso se va', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  async function showQuantityLoweredAlert() {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const other = await otherSectorWithPlaces(UNNUMBERED_EVENT.FIELD_WITH_PLACES, field.sectorName)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 3)
+    setPlacesOnNextRefreshes(field.sectorName, 2)
+    refetchByRefocusing()
+    await screen.findByRole('alert', { name: /^Quedan 2 lugares/ })
+    return { user, panel, other }
+  }
+
+  it('desaparece al tocar "Una menos"', async () => {
+    const { user, panel } = await showQuantityLoweredAlert()
+
+    await user.click(within(panel).getByRole('button', { name: 'Una menos' }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('desaparece al cambiar de sector', async () => {
+    const { user, other } = await showQuantityLoweredAlert()
+
+    const tabs = screen.getByRole('group', { name: 'Sectores' })
+    await user.click(within(tabs).getByRole('button', { name: new RegExp(`^${other} `) }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
+describe('Lugares no numerados: CA5, el sector se agota con el panel abierto', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('un refresco con 0 libres deja la cantidad en 0, los dos botones deshabilitados y avisa que se agotó', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 2)
+
+    setPlacesOnNextRefreshes(field.sectorName, 0)
+    refetchByRefocusing()
+
+    const alert = await screen.findByRole('alert', { name: `Se agotó ${field.sectorName}.` })
+    expect(alert).toHaveTextContent(`Se agotó ${field.sectorName}. Elegí otro sector.`)
+    expect(quantityIn(panel)).toHaveTextContent(/^0$/)
+    expect(within(panel).getByRole('button', { name: 'Una menos' })).toBeDisabled()
+    expect(within(panel).getByRole('button', { name: 'Una más' })).toBeDisabled()
+  })
+})
+
+/** Sube la cantidad desde 1 tocando "Una más". */
+async function chooseQuantity(
+  user: ReturnType<typeof userEvent.setup>,
+  panel: HTMLElement,
+  quantity: number,
+) {
+  const increase = within(panel).getByRole('button', { name: 'Una más' })
+  for (let current = 1; current < quantity; current++) await user.click(increase)
+  expect(quantityIn(panel)).toHaveTextContent(new RegExp(`^${quantity}$`))
+}
+
+/** Desde acá, cada respuesta de la disponibilidad trae esos lugares libres en el sector. */
+function setPlacesOnNextRefreshes(sectorName: string, availablePlaces: number) {
+  const realFetch = globalThis.fetch
+  return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+    const response = await realFetch(input, init)
+    const url = input instanceof Request ? input.url : String(input)
+    if (!url.includes(AVAILABILITY_PATH)) return response
+    const availability = (await response.json()) as EventAvailability
+    for (const sector of availability.sectors) {
+      if (sector.sectorName === sectorName) sector.availablePlaces = availablePlaces
+    }
+    return Response.json(availability)
+  })
+}
+
+async function otherSectorWithPlaces(eventId: number, sectorName: string) {
+  const { sectors } = await getAvailability(eventId)
+  const other = sectors.find(
+    (sector) => sector.sectorName !== sectorName && sector.availablePlaces > 0,
+  )
+  if (!other) throw new Error(`El evento ${eventId} no tiene otro sector con lugares`)
+  return other.sectorName
+}
+
+/** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
+async function unnumberedSectorOf(eventId: number) {
+  const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
+  const availability = sectors.find((sector) => !sector.numbered)
+  const detail = event.sectors.find((sector) => sector.name === availability?.sectorName)
+  if (!availability || !detail) throw new Error(`El evento ${eventId} no tiene sector no numerado`)
+  return {
+    ...availability,
+    capacity: detail.capacity,
+    maxTicketsPerCustomer: event.maxTicketsPerCustomer,
+  }
+}
+
+function findQuantityPanel(sectorName: string) {
+  return screen.findByRole('region', { name: `Cantidad en ${sectorName}` })
+}
+
+function quantityGroupIn(panel: HTMLElement) {
+  return within(panel).getByRole('group', { name: 'Cantidad de entradas' })
+}
+
+/** El número entre "Una menos" y "Una más". */
+function quantityIn(panel: HTMLElement) {
+  return within(quantityGroupIn(panel)).getByText(/^\d+$/)
 }

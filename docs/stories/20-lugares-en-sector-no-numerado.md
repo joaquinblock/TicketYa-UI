@@ -28,7 +28,7 @@ En Lugares (story 19), el sector no numerado aparece solo como pestaña: al abri
 - **CA3: Topes**
   Dado el panel de cantidad
   Entonces "Una menos" está deshabilitado en 1, "Una más" está deshabilitado al llegar al mínimo entre el límite por persona y los lugares libres, y veo "Hasta N por persona".
-  Por ejemplo, en Campo del *Festival de la Costanera*, que tiene un solo lugar libre, "Una más" está deshabilitado desde el principio.
+  Por ejemplo, en Campo del _Festival de la Costanera_, que tiene un solo lugar libre, "Una más" está deshabilitado desde el principio.
 - **CA4: Cambiar de pestaña**
   Dado que elegí una cantidad mayor a 1
   Cuando abro otro sector y vuelvo al no numerado
