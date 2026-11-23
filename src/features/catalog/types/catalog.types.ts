@@ -4,6 +4,8 @@ export type EventType = (typeof EVENT_TYPES)[number]
 export type EventSort = (typeof EVENT_SORTS)[number]
 /** Los estados de un evento visible: el borrador no se muestra. */
 export type EventStatus = 'PUBLISHED' | 'SOLD_OUT' | 'SUSPENDED' | 'CANCELLED' | 'FINISHED'
+/** Los estados en que no se venden entradas: cada uno lleva su badge en el detalle. */
+export type OffSaleStatus = Exclude<EventStatus, 'PUBLISHED'>
 /** La cartelera solo muestra eventos publicados o agotados. */
 export type BoardEventStatus = Extract<EventStatus, 'PUBLISHED' | 'SOLD_OUT'>
 

@@ -2,7 +2,8 @@ import { CalendarDays, MapPin } from 'lucide-react'
 import { Badge } from '@/shared/components/atoms/Badge'
 import { EVENT_TYPE_LABEL, HIGH_DEMAND_LABEL } from '../../constants/catalog.constants'
 import { formatEventDateTime } from '../../lib/eventFormat'
-import type { EventDetail } from '../../types/catalog.types'
+import type { EventDetail, OffSaleStatus } from '../../types/catalog.types'
+import { STATUS_BADGE } from './eventDetail.constants'
 
 type EventHeroProps = { event: EventDetail }
 
@@ -35,6 +36,16 @@ function EventBadges({ event }: EventHeroProps) {
           <Badge>{HIGH_DEMAND_LABEL}</Badge>
         </li>
       )}
+      {event.status !== 'PUBLISHED' && (
+        <li>
+          <StatusBadgeItem status={event.status} />
+        </li>
+      )}
     </ul>
   )
+}
+
+function StatusBadgeItem({ status }: { status: OffSaleStatus }) {
+  const { label, tone } = STATUS_BADGE[status]
+  return <Badge tone={tone}>{label}</Badge>
 }
