@@ -3,7 +3,10 @@ import { act, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
+import { ApiError } from '@/shared/lib/http/ApiError'
+import { getQueueTurn, saveQueueTurn } from '@/shared/lib/queueToken'
 import { ROUTES } from '@/shared/lib/routes'
+import * as reservationsService from '../services/reservations.service'
 import { getAvailability } from '@/shared/services/availability.service'
 import { getEvent } from '@/shared/services/events.service'
 import type { EventAvailability, SeatAvailability } from '@/shared/types/event.types'
@@ -624,6 +627,40 @@ async function cancelPendingOrders(...eventIds: number[]) {
     await fetch(`${GATEWAY_URL}${ORDERS_PATH}/${order.id}/cancel`, { method: 'POST', headers })
   }
 }
+
+describe('Lugares: fila virtual, turno vencido o faltante', () => {
+  afterEach(() => {
+    sessionStorage.clear()
+    vi.restoreAllMocks()
+  })
+
+  it('ante 403 invalid_queue_token limpia el turno guardado, avisa y ofrece ir a la fila virtual', async () => {
+    const eventId = UNNUMBERED_EVENT.ALERT_CLEARS
+    saveQueueTurn(eventId, {
+      queueToken: 'jwt-vencido',
+      enabledUntil: new Date(Date.now() + 60_000).toISOString(),
+    })
+    vi.spyOn(reservationsService, 'createReservation').mockRejectedValueOnce(
+      new ApiError({ error: 'invalid_queue_token', message: 'Turno inválido', status: 403 }),
+    )
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    await user.click(await screen.findByRole('button', { name: 'Una más' }))
+
+    await user.click(screen.getByRole('button', { name: 'Reservar y pagar' }))
+
+    expect(
+      await screen.findByText(
+        'Necesitás un turno vigente en la fila virtual para reservar este evento.',
+      ),
+    ).toBeInTheDocument()
+    expect(getQueueTurn(eventId)).toBeNull()
+    expect(screen.getByRole('link', { name: 'Ir a la fila virtual' })).toHaveAttribute(
+      'href',
+      ROUTES.queue(eventId),
+    )
+  })
+})
 
 const GATEWAY_URL = import.meta.env.TICKETYA_GATEWAY_URL
 
