@@ -24,6 +24,7 @@ const NUMBERED_EVENT = {
   SEAT_LIMIT: 18,
   RESERVING: 25,
   RESERVED: 26,
+  DOUBLE_CLICK: 27,
 } as const
 
 const UNNUMBERED_EVENT = {
@@ -182,6 +183,29 @@ describe('Lugares: CA2, reservar en un sector no numerado', () => {
       sector.eventSectorId,
       sector.eventSectorId,
     ])
+  })
+})
+
+describe('Lugares: CA2 borde, dos clics seguidos', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await cancelPendingOrders(NUMBERED_EVENT.DOUBLE_CLICK)
+  })
+
+  it('dos clics seguidos en "Reservar y pagar" mandan un solo POST /api/orders', async () => {
+    const eventId = NUMBERED_EVENT.DOUBLE_CLICK
+    const { seats } = await freeSeats(eventId, 1)
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    await user.click(await findFreeSeatButton(seats[0]))
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+
+    await user.dblClick(screen.getByRole('button', { name: 'Reservar y pagar' }))
+
+    await waitFor(() => expect(getCurrentUrl().pathname).toBe(ROUTES.payment(eventId)))
+    const orderRequests = fetchSpy.mock.calls.filter(([input, init]) => isOrderRequest(input, init))
+    expect(orderRequests).toHaveLength(1)
   })
 })
 
