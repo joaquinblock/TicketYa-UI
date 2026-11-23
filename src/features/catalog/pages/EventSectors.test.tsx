@@ -1,8 +1,9 @@
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
-import { LocationProbe } from '@/test/LocationProbe'
+import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
 import { formatPrice } from '../lib/eventFormat'
 import { getAvailability } from '../services/availability.service'
@@ -15,6 +16,7 @@ import { formatPlacesLeft } from '../utils/sectorFormat'
  */
 const SEEDER_EVENT = {
   HIGH_DEMAND_ON_SALE: 1,
+  ON_SALE_WITHOUT_HIGH_DEMAND: 2,
 } as const
 
 function renderEventPage(eventId: number) {
@@ -51,5 +53,16 @@ describe('Sectores y precios: CA1', () => {
       expect(row.getByText(formatPrice(sector.price))).toBeInTheDocument()
       expect(row.getByText(formatPlacesLeft(placesLeft ?? -1))).toBeInTheDocument()
     })
+  })
+})
+
+describe('Sectores y precios: CA2', () => {
+  it('con alta demanda, "Entrar a la fila" lleva a la fila virtual del evento', async () => {
+    const user = userEvent.setup()
+    renderEventPage(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+
+    await user.click(await screen.findByRole('link', { name: /Entrar a la fila/ }))
+
+    expect(getCurrentUrl().pathname).toBe(ROUTES.queue(SEEDER_EVENT.HIGH_DEMAND_ON_SALE))
   })
 })
