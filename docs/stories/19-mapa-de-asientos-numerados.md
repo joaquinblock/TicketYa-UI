@@ -1,7 +1,7 @@
 # 19: Mapa de asientos numerados
 
 **Tipo:** Story
-**Estado:** aprobado
+**Estado:** terminado
 **Funcionalidad:** Asientos (épica #10 Cliente, página #18)
 
 ## Historia

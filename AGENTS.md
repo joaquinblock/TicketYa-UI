@@ -39,6 +39,8 @@ Claude (Claude Code) y Gemini (Antigravity) trabajan a la vez en tickets distint
 
 - Fuente de verdad sobre qué construir: el backend en `C:\Projects\TicketYa` (consigna en su `README.md`, US en `docs/user-stories.md`).
 - Si algo se puede resolver en el backend (un dato del seeder, un campo que falta en la respuesta), se arregla ahí antes de parchear el front.
+- Un cambio en el seeder del backend se prueba también con `pnpm run test` del front antes de abrir su PR: hay tests de red que dependen de esos datos.
+- Correr los tests del backend (`./mvnw test`) deja sin tablas la base del servicio levantado: usan la misma base, con `create-drop`. Los tests de red del front dan entonces 500 `internal_error`. Después de correrlos, reiniciá ese servicio (`./mvnw -pl <servicio> spring-boot:run` en el backend), que recrea la base y vuelve a correr el seeder.
 - Estructura de carpetas: skill `atomic-design`. Features del proyecto en `CLAUDE.md`.
 - Los tests de red van contra el gateway real (`TICKETYA_GATEWAY_URL` en `.env`), con el auth-service en perfil `dev`. Sin MSW.
 - Configuración en `.env` con prefijo `TICKETYA_`. Copiá `.env.example` la primera vez.
