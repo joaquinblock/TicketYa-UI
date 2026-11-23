@@ -22,4 +22,14 @@ describe('getEventNotice: a la venta', () => {
       expect(getEventNotice(onSale({ saleStart }), NOW)).toBeUndefined()
     },
   )
+
+  it('de alta demanda y con la venta abierta avisa que se entra a la fila por tandas', () => {
+    expect(
+      getEventNotice(onSale({ highDemand: true, saleStart: PAST_SALE_START }), NOW),
+    ).toMatchObject({
+      title: 'Alta demanda · fila virtual',
+      message:
+        'La venta ya abrió. Entrá a la fila para asegurar tu lugar: te habilitamos por tandas y tenés 10 minutos para reservar.',
+    })
+  })
 })
