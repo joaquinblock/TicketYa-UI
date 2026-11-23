@@ -1,5 +1,5 @@
 import { cn } from '@/shared/lib/cn'
-import type { EventDetail } from '../../types/catalog.types'
+import type { EventDetail } from '@/shared/types/event.types'
 import { NOTICE_TONE_CLASS } from './eventDetail.constants'
 import { useEventNotice } from './useEventNotice'
 

@@ -1,9 +1,9 @@
 import { CalendarDays, ExternalLink, MapPin, Users, type LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { Button } from '@/shared/components/atoms/Button'
-import { formatEventDateTime } from '../../lib/eventFormat'
+import { formatEventDateTime } from '@/shared/utils/eventFormat'
 import { getVenueMapUrl } from '../../lib/venueMap'
-import type { EventDetail } from '../../types/catalog.types'
+import type { EventDetail } from '@/shared/types/event.types'
 
 type EventFactsProps = { event: EventDetail }
 

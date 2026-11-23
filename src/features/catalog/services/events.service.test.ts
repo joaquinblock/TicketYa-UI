@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { EVENTS_PAGE_SIZE } from '../constants/catalog.constants'
 import type { EventSummary } from '../types/catalog.types'
 import { searchEvents } from './events.service'
-import { getEvent } from './events.service'
+import { getEvent } from '@/shared/services/events.service'
 import { ApiError } from '@/shared/lib/http/ApiError'
 
 /** Las reglas valen con cualquier dato del seeder; solo el agotado es un ancla de "Datos de prueba". */

@@ -1,8 +1,8 @@
 import { z } from 'zod'
+import { EVENT_TYPES } from '@/shared/constants/event.constants'
 import {
   DEFAULT_EVENT_SORT,
   EVENT_SORTS,
-  EVENT_TYPES,
   FIRST_PAGE,
   MAX_QUERY_LENGTH,
 } from '../constants/catalog.constants'

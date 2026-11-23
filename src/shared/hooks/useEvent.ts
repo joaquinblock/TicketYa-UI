@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { ApiError } from '@/shared/lib/http/ApiError'
-import { EVENT_NOT_FOUND_ERROR } from '../constants/catalog.constants'
-import { catalogKeys } from '../lib/catalog.queryKeys'
+import { EVENT_NOT_FOUND_ERROR } from '../constants/event.constants'
+import { eventKeys } from '../lib/event.queryKeys'
 import { getEvent } from '../services/events.service'
 
 /**
@@ -10,7 +10,7 @@ import { getEvent } from '../services/events.service'
  */
 export function useEvent(id: number | undefined) {
   const { data, error, isPending, refetch } = useQuery({
-    queryKey: catalogKeys.event(id),
+    queryKey: eventKeys.detail(id),
     queryFn: () => {
       if (!id) throw new Error('useEvent: falta el id del evento')
       return getEvent(id)

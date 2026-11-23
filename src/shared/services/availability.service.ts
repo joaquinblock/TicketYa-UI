@@ -1,5 +1,5 @@
 import { apiClient } from '@/shared/lib/http/apiClient'
-import type { EventAvailability } from '../types/catalog.types'
+import type { EventAvailability } from '../types/event.types'
 
 const AVAILABILITY_ENDPOINT = '/api/availability'
 

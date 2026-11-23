@@ -1,4 +1,4 @@
-import { MONTH_ABBREVIATIONS } from '../constants/catalog.constants'
+import { MONTH_ABBREVIATIONS } from '../constants/event.constants'
 
 const priceFormatter = new Intl.NumberFormat('es-AR', {
   style: 'currency',

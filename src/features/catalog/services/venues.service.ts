@@ -1,5 +1,5 @@
 import { apiClient } from '@/shared/lib/http/apiClient'
-import type { Venue } from '../types/catalog.types'
+import type { Venue } from '@/shared/types/event.types'
 
 const VENUES_ENDPOINT = '/api/venues'
 

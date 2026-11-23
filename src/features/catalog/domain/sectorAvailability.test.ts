@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { EventDetail, EventSector, SectorAvailability } from '../types/catalog.types'
+import type { EventDetail, EventSector, SectorAvailability } from '@/shared/types/event.types'
 import {
   getPurchaseAction,
   isAvailabilityVisible,

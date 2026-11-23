@@ -6,8 +6,8 @@ import { EventDetail } from '../components/EventDetail/EventDetail'
 import { EventDetailSkeleton } from '../components/EventDetail/EventDetailSkeleton'
 import { EventLoadError } from '../components/EventDetail/EventLoadError'
 import { EventNotFound } from '../components/EventDetail/EventNotFound'
-import { useEvent } from '../hooks/useEvent'
-import { parseEventId } from '../lib/eventId'
+import { useEvent } from '@/shared/hooks/useEvent'
+import { parseEventId } from '@/shared/utils/eventId'
 
 /** Sin evento no hay compra: "no encontrado" va sin los pasos; los demás estados, dentro de ellos. */
 export function EventPage() {

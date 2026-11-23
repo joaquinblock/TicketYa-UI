@@ -5,9 +5,9 @@ import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
 import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
-import { formatPrice } from '../lib/eventFormat'
-import { getAvailability } from '../services/availability.service'
-import { getEvent } from '../services/events.service'
+import { formatPrice } from '@/shared/utils/eventFormat'
+import { getAvailability } from '@/shared/services/availability.service'
+import { getEvent } from '@/shared/services/events.service'
 import { formatPlacesLeft } from '../utils/sectorFormat'
 
 /**

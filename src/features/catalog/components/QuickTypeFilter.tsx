@@ -1,6 +1,7 @@
 import { Chip } from '@/shared/components/atoms/Chip'
 import { cn } from '@/shared/lib/cn'
-import { EVENT_TYPE_LABEL, EVENT_TYPES } from '../constants/catalog.constants'
+import { EVENT_TYPES } from '@/shared/constants/event.constants'
+import { EVENT_TYPE_LABEL } from '../constants/catalog.constants'
 import { useEventFilters } from '../hooks/useEventFilters'
 
 /** Accesos rápidos del hero: escriben el mismo filtro de tipo que los chips de la cartelera. */
