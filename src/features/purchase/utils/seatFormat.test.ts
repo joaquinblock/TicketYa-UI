@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { formatSectorTabLabel, formatTakenSeatsMessage } from './seatFormat'
+import {
+  formatSeatAccessibleName,
+  formatSectorTabLabel,
+  formatTakenSeatsMessage,
+} from './seatFormat'
 
 describe('formatSectorTabLabel', () => {
   it('con lugares muestra el precio con formato', () => {
@@ -32,5 +36,15 @@ describe('formatTakenSeatsMessage', () => {
     expect(formatTakenSeatsMessage([seatF(7), seatF(8), seatF(9)]).lead).toBe(
       'Los asientos F7, F8 y F9 los acaba de reservar otra persona.',
     )
+  })
+})
+
+describe('formatSeatAccessibleName', () => {
+  it.each([
+    ['AVAILABLE', 'Fila A, asiento 3, disponible'],
+    ['TAKEN', 'Fila A, asiento 3, ocupado'],
+    ['SELECTED', 'Fila A, asiento 3, elegido'],
+  ] as const)('un asiento %s se llama "%s"', (status, name) => {
+    expect(formatSeatAccessibleName({ row: 'A', number: 3 }, status)).toBe(name)
   })
 })
