@@ -2,7 +2,7 @@ import type { SeatAvailability, SectorAvailability } from '@/shared/types/event.
 import { seatStatusOf } from '../domain/seatSelection'
 import type { SeatId } from '../types/purchase.types'
 import { formatSeatAccessibleName } from '../utils/seatFormat'
-import { groupSeatsByRow, type SeatRow } from '../utils/seatRows'
+import { groupSeatsByRow, type SeatRow } from '../utils/seatRowGroups'
 import { SeatLegend } from './SeatLegend'
 
 type SeatMapProps = {
