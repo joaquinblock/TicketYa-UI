@@ -1,6 +1,7 @@
 import {
   LAST_PLACES_THRESHOLD,
   NUMBERED_SECTOR_LABEL,
+  RETURN_NOTICE_HOURS,
   UNNUMBERED_SECTOR_LABEL,
 } from '../constants/sectorAvailability.constants'
 import type { SeatAvailability, SectorAvailability } from '../types/catalog.types'
@@ -31,4 +32,11 @@ function sortedRowsOf(seats: SeatAvailability[]) {
 /** La barra muestra lo ocupado, no lo libre: se llena a medida que se vende. */
 export function getOccupancyPercent({ capacity, availablePlaces }: Occupancy) {
   return Math.round(((capacity - availablePlaces) / capacity) * PERCENT)
+}
+
+/** Sin máximo por persona, el texto avisa solo las devoluciones. */
+export function formatPurchaseTerms(maxTicketsPerCustomer: number | null) {
+  const returns = `Devoluciones hasta ${RETURN_NOTICE_HOURS} horas antes del evento`
+  if (maxTicketsPerCustomer === null) return returns
+  return `Hasta ${maxTicketsPerCustomer} entradas por persona · ${returns}`
 }
