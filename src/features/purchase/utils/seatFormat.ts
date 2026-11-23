@@ -1,6 +1,7 @@
 import type { SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
-import { SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
+import { SEAT_STATUS_LABEL, SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
+import type { SeatStatus } from '../types/purchase.types'
 
 type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
 type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
@@ -29,4 +30,9 @@ export function formatTakenSeatsMessage(seats: SeatLabelInput[]) {
 /** `F7`: la fila y el número, como en la entrada. */
 export function formatSeatCode({ row, number }: SeatLabelInput) {
   return `${row}${number}`
+}
+
+/** `Fila A, asiento 3, disponible`: el estado también va en el nombre, no solo en el color. */
+export function formatSeatAccessibleName({ row, number }: SeatLabelInput, status: SeatStatus) {
+  return `Fila ${row}, asiento ${number}, ${SEAT_STATUS_LABEL[status].toLowerCase()}`
 }
