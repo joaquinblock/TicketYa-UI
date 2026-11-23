@@ -96,4 +96,34 @@ describe('TicketRow: devolución de entradas', () => {
     await user.click(returnButton)
     expect(onRequestReturn).toHaveBeenCalledWith(ticket)
   })
+
+  it('cuando el plazo está vencido muestra el botón Pedir la devolución deshabilitado', async () => {
+    const ticket: Ticket = {
+      ...makeTicket('ISSUED'),
+      qrCode: 'qr-123',
+      hasPendingReturnRequest: false,
+    }
+    const user = userEvent.setup()
+
+    render(<TicketRow ticket={ticket} canRequestReturn={false} />)
+
+    await user.click(screen.getByRole('button', { name: new RegExp(formatTicketCode(ticket.id)) }))
+
+    const returnButton = await screen.findByRole('button', { name: 'Pedir la devolución' })
+    expect(returnButton).toBeDisabled()
+  })
+
+  it.each(['USED', 'REFUNDED'] as const)(
+    'no muestra el botón de devolución en entradas %s',
+    async (status) => {
+      const ticket = makeTicket(status)
+      const user = userEvent.setup()
+
+      render(<TicketRow ticket={ticket} canRequestReturn />)
+
+      await user.click(screen.getByRole('button', { name: new RegExp(formatTicketCode(ticket.id)) }))
+
+      expect(screen.queryByRole('button', { name: /pedir la devolución/i })).not.toBeInTheDocument()
+    },
+  )
 })
