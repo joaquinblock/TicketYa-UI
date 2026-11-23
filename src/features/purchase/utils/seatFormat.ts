@@ -1,13 +1,25 @@
-import type { EventSector, SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
+import type {
+  EventDetail,
+  EventSector,
+  SeatAvailability,
+  SectorAvailability,
+} from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import { SEAT_STATUS_LABEL, SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
-import type { AlertMessage, QuantityChange, SeatStatus } from '../types/purchase.types'
+import type {
+  AlertMessage,
+  QuantityChange,
+  SeatStatus,
+  SelectionSummary,
+} from '../types/purchase.types'
 
 type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
 type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
 type UnnumberedPlacesInput = Pick<EventSector, 'capacity'> &
   Pick<SectorAvailability, 'availablePlaces'>
 type QuantityLoweredInput = Pick<SectorAvailability, 'sectorName'> & { quantity: number }
+type SelectionCountInput = Pick<SelectionSummary, 'count'> &
+  Pick<EventDetail, 'maxTicketsPerCustomer'>
 
 const seatListFormatter = new Intl.ListFormat('es', { type: 'conjunction' })
 
@@ -56,6 +68,11 @@ export function formatQuantityLoweredMessage({
 
 export function formatSectorSoldOutMessage(sectorName: string): AlertMessage {
   return { lead: `Se agotó ${sectorName}.`, hint: 'Elegí otro sector.' }
+}
+
+/** `2/4`: los elegidos sobre el límite por persona. Sin límite, solo los elegidos. */
+export function formatSelectionCount({ count, maxTicketsPerCustomer }: SelectionCountInput) {
+  return maxTicketsPerCustomer === null ? `${count}` : `${count}/${maxTicketsPerCustomer}`
 }
 
 export function formatTicketLimit(maxTicketsPerCustomer: number) {
