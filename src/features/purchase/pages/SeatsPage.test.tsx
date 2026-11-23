@@ -722,6 +722,30 @@ describe('Lugares no numerados: CA5, el aviso se va', () => {
   })
 })
 
+describe('Lugares no numerados: CA5, el sector se agota con el panel abierto', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('un refresco con 0 libres deja la cantidad en 0, los dos botones deshabilitados y avisa que se agotó', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 2)
+
+    setPlacesOnNextRefreshes(field.sectorName, 0)
+    refetchByRefocusing()
+
+    const alert = await screen.findByRole('alert', { name: `Se agotó ${field.sectorName}.` })
+    expect(alert).toHaveTextContent(`Se agotó ${field.sectorName}. Elegí otro sector.`)
+    expect(quantityIn(panel)).toHaveTextContent(/^0$/)
+    expect(within(panel).getByRole('button', { name: 'Una menos' })).toBeDisabled()
+    expect(within(panel).getByRole('button', { name: 'Una más' })).toBeDisabled()
+  })
+})
+
 /** Sube la cantidad desde 1 tocando "Una más". */
 async function chooseQuantity(
   user: ReturnType<typeof userEvent.setup>,
