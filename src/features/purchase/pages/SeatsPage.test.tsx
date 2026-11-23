@@ -209,6 +209,29 @@ describe('Lugares: CA5, el refresco quita un asiento elegido', () => {
   })
 })
 
+describe('Lugares: CA5, el foco no se pierde', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('si el refresco ocupa el asiento que tenía el foco, el foco pasa al aviso', async () => {
+    const seat = await firstFreeSeat(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const seatButton = await screen.findByRole('button', { name: seatName(seat, 'disponible') })
+    seatButton.focus()
+    await user.keyboard('{Enter}')
+
+    takeSeatsOnNextRefreshes([seat.seatId])
+    refetchByRefocusing()
+
+    expect(
+      await screen.findByRole('alert', { name: /lo acaba de reservar otra persona/ }),
+    ).toHaveFocus()
+  })
+})
+
 describe('Lugares: CA5, dos asientos a la vez', () => {
   afterEach(() => {
     vi.restoreAllMocks()
