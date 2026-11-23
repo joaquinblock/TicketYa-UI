@@ -394,3 +394,28 @@ describe('Hero: desmarcar un acceso rápido', () => {
     expect(getCurrentUrl().searchParams.get('type')).toBeNull()
   })
 })
+
+describe('Buscador: cerrar y buscar con el botón', () => {
+  it('con Escape se cierran las sugerencias', async () => {
+    renderHome()
+
+    const user = await typeInSearchBox('serr')
+    await findSuggestionLinks()
+    await user.keyboard('{Escape}')
+
+    expect(screen.queryByRole('list', { name: 'Sugerencias' })).not.toBeInTheDocument()
+  })
+
+  it('con "Buscar" la cartelera muestra lo que la API da por relevancia y la URL tiene el texto', async () => {
+    const { content } = await fetchFromApi({ q: 'serr', sort: 'RELEVANCE' })
+    renderHome()
+    await findEventCards()
+
+    const user = await typeInSearchBox('serr')
+    await user.click(screen.getByRole('button', { name: 'Buscar' }))
+
+    await expectEventNames(content)
+    expect(screen.getByRole('combobox', { name: 'Ordenar por' })).toHaveDisplayValue('Relevancia')
+    expect(getCurrentUrl().searchParams.get('q')).toBe('serr')
+  })
+})
