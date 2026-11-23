@@ -20,7 +20,7 @@ export function EventSectors({ event }: EventSectorsProps) {
   else if (isError) content = <SectorsLoadError onRetry={retry} />
   else
     content = (
-      <ul>
+      <ul className="border-t border-line">
         {sectors.map((sector) => (
           <SectorRow key={sector.sectorId} sector={sector} />
         ))}
@@ -28,9 +28,15 @@ export function EventSectors({ event }: EventSectorsProps) {
     )
 
   return (
-    <section aria-labelledby="sectores">
-      <p>Encontrá tu lugar</p>
-      <h2 id="sectores">Sectores y precios</h2>
+    <section aria-labelledby="sectores" className="flex flex-col gap-4">
+      <div className="flex flex-col gap-1.5">
+        <p className="text-micro font-bold tracking-widest text-subtle uppercase">
+          Encontrá tu lugar
+        </p>
+        <h2 id="sectores" className="text-3xl">
+          Sectores y precios
+        </h2>
+      </div>
       {content}
       {purchaseAction && (
         <PurchaseButton action={purchaseAction} maxTickets={event.maxTicketsPerCustomer} />
@@ -45,13 +51,13 @@ type PurchaseButtonProps = { action: PurchaseAction; maxTickets: number | null }
 function PurchaseButton({ action, maxTickets }: PurchaseButtonProps) {
   return (
     <>
-      <Button asChild>
+      <Button asChild size="lg" className="w-full">
         <Link to={action.to}>
           {action.label}
           <ArrowUpRight aria-hidden className="size-4.5" />
         </Link>
       </Button>
-      <p>{formatPurchaseTerms(maxTickets)}</p>
+      <p className="text-label text-subtle">{formatPurchaseTerms(maxTickets)}</p>
     </>
   )
 }
