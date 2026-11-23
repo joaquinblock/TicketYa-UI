@@ -8,6 +8,8 @@ import { getAvailability } from '@/shared/services/availability.service'
 import { getEvent } from '@/shared/services/events.service'
 import type { EventAvailability, SeatAvailability } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
+import { saveAccessToken } from '@/shared/lib/session'
+import { devLogin, SEEDER_USER } from '@/test/gateway'
 import { LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
 
@@ -19,6 +21,7 @@ import { renderWithProviders } from '@/test/render'
 const NUMBERED_EVENT = {
   SUMMARY: 17,
   SEAT_LIMIT: 18,
+  RESERVING: 25,
 } as const
 
 const UNNUMBERED_EVENT = {
@@ -105,6 +108,27 @@ describe('Lugares: tope de asientos por persona', () => {
     const [firstChosen] = chosen
     await user.click(screen.getByRole('button', { name: seatName(firstChosen, 'elegido') }))
     expect(extraButton).toBeEnabled()
+  })
+})
+
+describe('Lugares: CA2, reservando', () => {
+  afterEach(async () => {
+    vi.restoreAllMocks()
+    await cancelPendingOrders(NUMBERED_EVENT.RESERVING)
+  })
+
+  it('al tocar "Reservar y pagar", el botón dice "Reservando…" y está deshabilitado mientras espera', async () => {
+    const eventId = NUMBERED_EVENT.RESERVING
+    const { seats } = await freeSeats(eventId, 1)
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    await user.click(await findFreeSeatButton(seats[0]))
+    holdOrderRequests()
+
+    await user.click(screen.getByRole('button', { name: 'Reservar y pagar' }))
+
+    expect(await screen.findByRole('button', { name: 'Reservando…' })).toBeDisabled()
   })
 })
 
@@ -210,6 +234,41 @@ function setPlacesOnNextRefreshes(sectorName: string, availablePlaces: number) {
     return Response.json(availability)
   })
 }
+
+const ORDERS_PATH = '/api/orders'
+
+function isOrderRequest(input: Parameters<typeof fetch>[0], init?: RequestInit) {
+  const url = input instanceof Request ? input.url : String(input)
+  return new URL(url).pathname === ORDERS_PATH && init?.method === 'POST'
+}
+
+/** Desde acá, el `POST /api/orders` queda esperando para siempre: la reserva nunca termina. */
+function holdOrderRequests() {
+  const realFetch = globalThis.fetch
+  return vi
+    .spyOn(globalThis, 'fetch')
+    .mockImplementation((input, init) =>
+      isOrderRequest(input, init) ? new Promise<Response>(() => {}) : realFetch(input, init),
+    )
+}
+
+/** Deja como estaban los lugares: cancela las reservas en curso del cliente en esos eventos. */
+async function cancelPendingOrders(...eventIds: number[]) {
+  const headers = { Authorization: `Bearer ${await devLogin(SEEDER_USER.CLIENT)}` }
+  const orders = (await (await fetch(`${GATEWAY_URL}${ORDERS_PATH}`, { headers })).json()) as {
+    id: number
+    eventId: number
+    status: string
+  }[]
+  const pending = orders.filter(
+    (order) => order.status === 'PENDING' && eventIds.includes(order.eventId),
+  )
+  for (const order of pending) {
+    await fetch(`${GATEWAY_URL}${ORDERS_PATH}/${order.id}/cancel`, { method: 'POST', headers })
+  }
+}
+
+const GATEWAY_URL = import.meta.env.TICKETYA_GATEWAY_URL
 
 /** La disponibilidad se vuelve a pedir al recuperar el foco, como al volver a la pestaña. */
 function refetchByRefocusing() {
