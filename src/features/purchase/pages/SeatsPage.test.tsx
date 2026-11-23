@@ -193,6 +193,40 @@ describe('Lugares: CA5, el refresco quita un asiento elegido', () => {
   })
 })
 
+describe('Lugares: CA5, dos asientos a la vez', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('si el mismo refresco ocupa dos asientos elegidos, un solo aviso nombra a los dos', async () => {
+    const [first, second] = await freeSeats(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS, 2)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    await user.click(await screen.findByRole('button', { name: seatName(first, 'disponible') }))
+    await user.click(screen.getByRole('button', { name: seatName(second, 'disponible') }))
+
+    takeSeatsOnNextRefreshes([first.seatId, second.seatId])
+    refetchByRefocusing()
+
+    const codes = `${first.row}${first.number} y ${second.row}${second.number}`
+    expect(
+      await screen.findByRole('alert', {
+        name: `Los asientos ${codes} los acaba de reservar otra persona.`,
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getAllByRole('alert')).toHaveLength(1)
+  })
+})
+
+async function freeSeats(eventId: number, count: number) {
+  const sector = await firstSectorWithPlaces(eventId)
+  const seats = (sector.seats ?? []).filter((candidate) => candidate.available).slice(0, count)
+  if (seats.length < count)
+    throw new Error(`El sector ${sector.sectorName} no tiene ${count} libres`)
+  return seats
+}
+
 const AVAILABILITY_PATH = '/api/availability'
 
 /** Desde acá, cada respuesta de la disponibilidad trae esos asientos ocupados por otra persona. */
