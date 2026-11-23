@@ -32,7 +32,6 @@ export function EventSearchBox() {
             autoComplete="off"
             placeholder="Artista, equipo, obra o disertante"
             aria-controls={SUGGESTIONS_ID}
-            aria-expanded={searchBox.areSuggestionsOpen}
             value={searchBox.text}
             onChange={(event) => searchBox.setText(event.target.value)}
             onFocus={searchBox.openSuggestions}
