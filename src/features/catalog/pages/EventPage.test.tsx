@@ -6,6 +6,8 @@ import { ROUTES } from '@/shared/lib/routes'
 import { LocationProbe } from '@/test/LocationProbe'
 import { getCurrentUrl } from '@/test/LocationProbe'
 import userEvent from '@testing-library/user-event'
+import { setupApiClient } from '@/app/setupApiClient'
+import { configureApiClient } from '@/shared/lib/http/apiClient'
 import { renderWithProviders } from '@/test/render'
 import { EVENT_TYPE_LABEL } from '../constants/catalog.constants'
 import { formatEventDateTime } from '../lib/eventFormat'
@@ -189,7 +191,38 @@ describe('Detalle del evento: CA4', () => {
     expect(screen.getByText('Cargando evento')).toHaveAttribute('role', 'status')
     expect(screen.queryByRole('heading', { level: 1 })).not.toBeInTheDocument()
   })
+
+  it('con el gateway caído avisa el error, y "Reintentar" con el gateway de vuelta muestra el evento', async () => {
+    const event = await getEvent(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+    pointApiClientToClosedPort()
+    const user = userEvent.setup()
+    renderEventPage(event.id)
+
+    expect(
+      await screen.findByRole(
+        'heading',
+        { name: 'No pudimos cargar el evento' },
+        NETWORK_FAILURE_TIMEOUT,
+      ),
+    ).toBeInTheDocument()
+
+    setupApiClient()
+    await user.click(screen.getByRole('button', { name: 'Reintentar' }))
+
+    expect(await screen.findByRole('heading', { level: 1, name: event.name })).toBeInTheDocument()
+  })
 })
+
+/** Un puerto bloqueado para fetch: la llamada falla de verdad, sin mock. */
+function pointApiClientToClosedPort() {
+  configureApiClient({
+    baseUrl: 'http://localhost:1',
+    getAccessToken: () => undefined,
+    onUnauthorized: () => {},
+  })
+}
+
+const NETWORK_FAILURE_TIMEOUT = { timeout: 10_000 }
 
 function findEventNotice() {
   return screen.findByRole('region', { name: 'Aviso' })
