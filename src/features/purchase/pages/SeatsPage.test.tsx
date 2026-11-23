@@ -553,6 +553,26 @@ describe('Lugares no numerados: CA3, piso', () => {
   })
 })
 
+describe('Lugares no numerados: CA3, tope', () => {
+  it('en el evento 43, "Una más" se deshabilita al llegar al mínimo entre el límite por persona y los libres', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const limit = Math.min(
+      field.availablePlaces,
+      field.maxTicketsPerCustomer ?? field.availablePlaces,
+    )
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    const increase = within(panel).getByRole('button', { name: 'Una más' })
+
+    for (let quantity = 1; quantity < limit; quantity++) await user.click(increase)
+
+    expect(increase).toBeDisabled()
+    await user.click(increase)
+    expect(quantityIn(panel)).toHaveTextContent(new RegExp(`^${limit}$`))
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
