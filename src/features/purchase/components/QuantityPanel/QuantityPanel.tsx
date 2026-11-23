@@ -1,9 +1,10 @@
 import type {
   QuantityStepper as QuantityStepperState,
   UnnumberedSector,
-} from '../types/purchase.types'
-import { formatTicketLimit, formatUnnumberedPlaces } from '../utils/seatFormat'
-import { Stage } from './Stage'
+} from '../../types/purchase.types'
+import { formatTicketLimit, formatUnnumberedPlaces } from '../../utils/seatFormat'
+import { Stage } from '../Stage'
+import { useStepperFocus } from './useStepperFocus'
 
 type QuantityPanelProps = { sector: UnnumberedSector; stepper: QuantityStepperState }
 
@@ -24,9 +25,12 @@ export function QuantityPanel({ sector, stepper }: QuantityPanelProps) {
 }
 
 function QuantityStepper({ stepper }: { stepper: QuantityStepperState }) {
+  const { decreaseRef, increaseRef } = useStepperFocus(stepper)
+
   return (
     <div role="group" aria-label="Cantidad de entradas">
       <button
+        ref={decreaseRef}
         type="button"
         aria-label="Una menos"
         disabled={!stepper.canDecrease}
@@ -36,6 +40,7 @@ function QuantityStepper({ stepper }: { stepper: QuantityStepperState }) {
       </button>
       <span aria-live="polite">{stepper.quantity}</span>
       <button
+        ref={increaseRef}
         type="button"
         aria-label="Una más"
         disabled={!stepper.canIncrease}
