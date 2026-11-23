@@ -75,6 +75,10 @@ export type SectorWithAvailability = EventSector & { availability?: SectorAvaila
 
 export type PurchaseAction = { label: string; to: string }
 
+/** Badges de la card: el de la venta (agotado o próximamente) y el de alta demanda. */
+export type EventFlagKind = 'SOLD_OUT' | 'SALE_NOT_STARTED' | 'HIGH_DEMAND'
+export type EventFlag = { kind: EventFlagKind; isHighlighted: boolean }
+
 export type EventNoticeKind =
   'HIGH_DEMAND' | 'SALE_NOT_STARTED' | 'SOLD_OUT' | 'SUSPENDED' | 'CANCELLED' | 'FINISHED'
 /** El de venta no empezada lleva la fecha de apertura: su texto se arma, no es fijo. */
