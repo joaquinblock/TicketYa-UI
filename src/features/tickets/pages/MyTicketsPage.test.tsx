@@ -3,14 +3,22 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
+import { saveAccessToken } from '@/shared/lib/session'
 import { devLogin, SEEDER_USER } from '@/test/gateway'
+import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
 import { PAYMENT_METHOD_LABEL, TICKET_STATUS_META } from '../constants/tickets.constants'
 import { formatOrderPrice, formatTicketCode, formatTicketLocation } from '../lib/ticketFormat'
 import { getOrders } from '../services/orders.service'
 
 function renderMyTicketsPage() {
-  return renderWithProviders(<AppRouter />, { route: ROUTES.myTickets })
+  return renderWithProviders(
+    <>
+      <AppRouter />
+      <LocationProbe />
+    </>,
+    { route: ROUTES.myTickets },
+  )
 }
 
 describe('Mis entradas: CA1', () => {
@@ -96,5 +104,24 @@ describe('Mis entradas: CA2', () => {
 
     expect(ticketButton).toHaveAttribute('aria-expanded', 'false')
     expect(screen.queryByRole('heading', { level: 3, name: statusMeta.title })).not.toBeInTheDocument()
+  })
+})
+
+describe('Mis entradas: CA3', () => {
+  it('cuando no tiene compras pagadas muestra el estado vacío con un link para explorar eventos', async () => {
+    const token = await devLogin(SEEDER_USER.ORGANIZER)
+    saveAccessToken(token)
+    const user = userEvent.setup()
+
+    renderMyTicketsPage()
+
+    expect(
+      await screen.findByRole('heading', { level: 2, name: 'Todavía no tenés compras' }),
+    ).toBeInTheDocument()
+    const exploreLink = screen.getByRole('link', { name: 'Explorar eventos' })
+    expect(exploreLink).toHaveAttribute('href', ROUTES.home)
+
+    await user.click(exploreLink)
+    expect(getCurrentUrl().pathname).toBe(ROUTES.home)
   })
 })
