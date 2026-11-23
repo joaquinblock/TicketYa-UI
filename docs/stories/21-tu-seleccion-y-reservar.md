@@ -1,7 +1,7 @@
 # 21: Ver mi selección y reservar los lugares
 
 **Tipo:** Story
-**Estado:** borrador
+**Estado:** aprobado
 **Funcionalidad:** Asientos (épica #10 Cliente, página #18)
 
 ## Historia
