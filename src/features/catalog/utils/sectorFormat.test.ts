@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatPlacesLeft, getOccupancyPercent } from './sectorFormat'
+import { formatPlacesLeft, formatSectorKind, getOccupancyPercent } from './sectorFormat'
 
 describe('formatPlacesLeft y getOccupancyPercent', () => {
   it('con 1240 de 5000 libres dice "1.240 disponibles" y ocupa el 75 %', () => {
@@ -15,5 +15,20 @@ describe('formatPlacesLeft: últimos lugares', () => {
     [1, 'Últimos 1 lugares'],
   ])('con %i libres dice "%s"', (availablePlaces, label) => {
     expect(formatPlacesLeft(availablePlaces)).toBe(label)
+  })
+})
+
+describe('formatSectorKind: numerado', () => {
+  const seatsInRows = (rows: string[]) =>
+    rows.map((row, index) => ({ seatId: index + 1, row, number: index + 1, available: true }))
+
+  it('con asientos desordenados en las filas A a D dice "Numerado · filas A a D"', () => {
+    const seats = seatsInRows(['C', 'A', 'D', 'B', 'A'])
+    expect(formatSectorKind({ numbered: true, seats })).toBe('Numerado · filas A a D')
+  })
+
+  it('con una sola fila dice "Numerado · fila A"', () => {
+    const seats = seatsInRows(['A', 'A', 'A'])
+    expect(formatSectorKind({ numbered: true, seats })).toBe('Numerado · fila A')
   })
 })
