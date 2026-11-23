@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { createElement, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -41,6 +41,23 @@ describe('useEventAvailability: refresco cada 30 s', () => {
     expect(updatedAt()).toBe(firstUpdate)
 
     await act(() => vi.advanceTimersByTimeAsync(1_000))
+    await waitFor(() => expect(updatedAt()).toBeGreaterThan(firstUpdate))
+  })
+})
+
+describe('useEventAvailability: al volver a la pestaña', () => {
+  afterEach(() => {
+    focusManager.setFocused(undefined)
+  })
+
+  it('la vuelve a pedir antes de los 30 s, aunque el cache no haya vencido', async () => {
+    const { result, updatedAt } = renderAvailabilityHook(ON_SALE_EVENT_ID)
+    await waitFor(() => expect(result.current.availability?.eventId).toBe(ON_SALE_EVENT_ID))
+    const firstUpdate = updatedAt()
+
+    act(() => focusManager.setFocused(false))
+    act(() => focusManager.setFocused(true))
+
     await waitFor(() => expect(updatedAt()).toBeGreaterThan(firstUpdate))
   })
 })
