@@ -23,6 +23,12 @@ export type UnnumberedSector = Pick<
   Pick<EventSector, 'capacity'> &
   Pick<EventDetail, 'maxTicketsPerCustomer'>
 
+/** Una línea de "Tu selección": un asiento, o la cantidad de un sector no numerado. */
+export type SelectionLine = { key: number; label: string; price: number }
+
+/** `count` son los lugares elegidos, para el contador "N/M". */
+export type SelectionSummary = { lines: SelectionLine[]; total: number; count: number }
+
 /** El estado del "−" / cantidad / "+" y sus acciones. */
 export type QuantityStepper = {
   quantity: number
