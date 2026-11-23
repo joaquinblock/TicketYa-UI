@@ -137,6 +137,22 @@ describe('Lugares: CA3, elegir y soltar', () => {
   })
 })
 
+describe('Lugares: CA2, cambiar de pestaña', () => {
+  it('muestra el mapa del otro sector, y al volver el asiento elegido está disponible', async () => {
+    const seat = await firstFreeSeat(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    await user.click(await screen.findByRole('button', { name: seatName(seat, 'disponible') }))
+    const tabs = screen.getByRole('group', { name: 'Sectores' })
+    await user.click(within(tabs).getByRole('button', { name: /^Pullman / }))
+    expect(screen.getByRole('region', { name: 'Mapa de Pullman' })).toBeInTheDocument()
+
+    await user.click(within(tabs).getByRole('button', { name: /^Platea / }))
+    expect(screen.getByRole('button', { name: seatName(seat, 'disponible') })).toBeInTheDocument()
+  })
+})
+
 function seatName(seat: SeatAvailability, status: string) {
   return `Fila ${seat.row}, asiento ${seat.number}, ${status}`
 }
