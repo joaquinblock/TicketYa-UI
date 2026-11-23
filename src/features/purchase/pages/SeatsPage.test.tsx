@@ -685,6 +685,43 @@ describe('Lugares no numerados: CA5, quedan menos lugares pero alcanzan', () => 
   })
 })
 
+describe('Lugares no numerados: CA5, el aviso se va', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  async function showQuantityLoweredAlert() {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const other = await otherSectorWithPlaces(UNNUMBERED_EVENT.FIELD_WITH_PLACES, field.sectorName)
+    const user = userEvent.setup()
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+    await chooseQuantity(user, panel, 3)
+    setPlacesOnNextRefreshes(field.sectorName, 2)
+    refetchByRefocusing()
+    await screen.findByRole('alert', { name: /^Quedan 2 lugares/ })
+    return { user, panel, other }
+  }
+
+  it('desaparece al tocar "Una menos"', async () => {
+    const { user, panel } = await showQuantityLoweredAlert()
+
+    await user.click(within(panel).getByRole('button', { name: 'Una menos' }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('desaparece al cambiar de sector', async () => {
+    const { user, other } = await showQuantityLoweredAlert()
+
+    const tabs = screen.getByRole('group', { name: 'Sectores' })
+    await user.click(within(tabs).getByRole('button', { name: new RegExp(`^${other} `) }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
 /** Sube la cantidad desde 1 tocando "Una más". */
 async function chooseQuantity(
   user: ReturnType<typeof userEvent.setup>,
