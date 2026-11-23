@@ -86,6 +86,39 @@ describe('Lugares: CA1, sin nada elegido', () => {
   })
 })
 
+/**
+ * Ancla de "Datos de prueba" (`ticket-service.md`): el 43 tiene Campo, Platea baja, Platea alta
+ * agotada y Palco VIP. Se usa para cambiar de pestaña, sin reservar.
+ */
+const MULTI_SECTOR_EVENT = 43
+
+describe('Lugares: CA1 borde, cambiar de pestaña', () => {
+  it('con asientos elegidos, al abrir otro sector "Tu selección" queda vacío y el botón deshabilitado', async () => {
+    const { sectors } = await getAvailability(MULTI_SECTOR_EVENT)
+    const [platea, palco] = sectors.filter(
+      (sector) => sector.numbered && sector.availablePlaces > 0,
+    )
+    const seat = platea.seats?.find((candidate) => candidate.available)
+    if (!seat || !palco) throw new Error('El evento 43 no tiene dos sectores numerados con lugares')
+    const user = userEvent.setup()
+    renderSeatsPage(MULTI_SECTOR_EVENT)
+    const tabs = await screen.findByRole('group', { name: 'Sectores' })
+    await user.click(
+      within(tabs).getByRole('button', { name: new RegExp(`^${platea.sectorName} `) }),
+    )
+    await user.click(await findFreeSeatButton(seat))
+    const summary = screen.getByRole('complementary', { name: 'Tu selección' })
+    expect(within(summary).getAllByRole('listitem')).toHaveLength(1)
+
+    await user.click(
+      within(tabs).getByRole('button', { name: new RegExp(`^${palco.sectorName} `) }),
+    )
+
+    expect(within(summary).queryAllByRole('listitem')).toHaveLength(0)
+    expect(within(summary).getByRole('button', { name: 'Reservar y pagar' })).toBeDisabled()
+  })
+})
+
 describe('Lugares: CA1 borde, el sector no numerado se agota', () => {
   afterEach(() => {
     vi.restoreAllMocks()
