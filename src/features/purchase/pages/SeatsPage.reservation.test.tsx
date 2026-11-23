@@ -37,6 +37,7 @@ const UNNUMBERED_EVENT = {
   NETWORK_FAILURE: 33,
   SERVICE_UNAVAILABLE: 34,
   NEW_KEY_AFTER_CHANGE: 35,
+  ALERT_CLEARS: 36,
 } as const
 
 function renderSeatsPage(eventId: number) {
@@ -408,6 +409,34 @@ describe('Lugares: CA6 borde, cambio la selección después de una falla', () =>
   })
 })
 
+describe('Lugares: borde, el aviso se va al cambiar la selección', () => {
+  afterEach(async () => {
+    await cancelPendingOrders(UNNUMBERED_EVENT.ALERT_CLEARS)
+  })
+
+  it('con el aviso del límite a la vista, cambiar la cantidad lo saca', async () => {
+    const eventId = UNNUMBERED_EVENT.ALERT_CLEARS
+    const { maxTicketsPerCustomer } = await getEvent(eventId)
+    if (maxTicketsPerCustomer === null) throw new Error(`El evento ${eventId} no tiene límite`)
+    const sector = await unnumberedSectorOf(eventId)
+    await reserveQuantityAsClient({
+      eventId,
+      eventSectorId: sector.eventSectorId,
+      quantity: maxTicketsPerCustomer - 1,
+    })
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+    await user.click(screen.getByRole('button', { name: 'Una más' }))
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+    await within(summary).findByRole('alert')
+
+    await user.click(screen.getByRole('button', { name: 'Una menos' }))
+
+    expect(within(summary).queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
 /**
  * Ancla de "Datos de prueba" (`ticket-service.md`): el 43 tiene Campo, Platea baja, Platea alta
  * agotada y Palco VIP. Se usa para cambiar de pestaña, sin reservar.
@@ -562,6 +591,22 @@ function answerOrderRequestsWithServiceUnavailable() {
       ),
     )
   })
+}
+
+/** Como `reserveAsClient`, pero una cantidad de un sector no numerado. */
+async function reserveQuantityAsClient(request: {
+  eventId: number
+  eventSectorId: number
+  quantity: number
+}) {
+  const token = await devLogin(SEEDER_USER.CLIENT)
+  saveAccessToken(token)
+  const response = await fetch(`${GATEWAY_URL}${ORDERS_PATH}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ ...request, idempotencyKey: crypto.randomUUID() }),
+  })
+  if (!response.ok) throw new Error(`El cliente no pudo reservar: ${response.status}`)
 }
 
 /** Deja como estaban los lugares: cancela las reservas en curso del cliente en esos eventos. */
