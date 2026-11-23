@@ -4,16 +4,18 @@ import { PURCHASE_STEP } from '@/shared/components/templates/PurchaseLayout/purc
 import { SeatMap } from '../../components/SeatMap'
 import { SeatsHeader } from '../../components/SeatsHeader'
 import { SectorTabs } from '../../components/SectorTabs'
+import { TakenSeatsAlert } from '../../components/TakenSeatsAlert'
 import { useSeatsPageController } from './useSeatsPageController'
 
 export function SeatsPage() {
   const { eventId = '' } = useParams()
-  const { event, sectors, openSector, openSectorById, selection, toggleSeat } =
+  const { event, sectors, openSector, openSectorById, selection, takenSeats, toggleSeat } =
     useSeatsPageController(eventId)
 
   return (
     <PurchaseLayout step={PURCHASE_STEP.SEATS} eventId={eventId}>
       <SeatsHeader event={event} />
+      {takenSeats.length > 0 && <TakenSeatsAlert seats={takenSeats} />}
       {sectors && (
         <SectorTabs
           sectors={sectors}
