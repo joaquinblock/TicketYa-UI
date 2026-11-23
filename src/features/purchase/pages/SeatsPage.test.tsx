@@ -7,6 +7,7 @@ import { getEvent } from '@/shared/services/events.service'
 import { formatEventDateTime } from '@/shared/utils/eventFormat'
 import { LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
+import { formatSectorTabLabel } from '../utils/seatFormat'
 
 /**
  * Anclas de "Datos de prueba" (`ticket-service.md`): en el evento 2 la Platea tiene A1 y A2
@@ -82,6 +83,28 @@ describe('Lugares: CA1, estado de cada asiento', () => {
     }
   })
 })
+
+describe('Lugares: CA2, pestañas', () => {
+  it('hay una pestaña por sector con su nombre y su etiqueta, y queda abierto el primero con lugares', async () => {
+    const { sectors } = await getAvailability(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const firstWithPlaces = await firstSectorWithPlaces(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+
+    const tabs = await findSectorTabs()
+    expect(within(tabs).getAllByRole('button')).toHaveLength(sectors.length)
+    for (const sector of sectors) {
+      const tab = within(tabs).getByRole('button', {
+        name: `${sector.sectorName} ${formatSectorTabLabel(sector)}`,
+      })
+      const isOpen = sector.eventSectorId === firstWithPlaces.eventSectorId
+      expect(tab).toHaveAttribute('aria-pressed', String(isOpen))
+    }
+  })
+})
+
+function findSectorTabs() {
+  return screen.findByRole('group', { name: 'Sectores' })
+}
 
 const SEAT_NAME = /^Fila \w+, asiento \d+, /
 
