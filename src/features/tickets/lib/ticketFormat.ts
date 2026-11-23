@@ -1,3 +1,4 @@
+import { ApiError } from '@/shared/lib/http/ApiError'
 import { MONTH_ABBREVIATIONS, WEEKDAY_NAMES } from '../constants/tickets.constants'
 import type { Ticket } from '../types/tickets.types'
 
@@ -57,4 +58,21 @@ export function isWithinReturnDeadline(dateTime: string, now: Date = new Date())
   const [hour = 0, minute = 0, second = 0] = time.split(':').map(Number)
   const eventStart = new Date(year, month - 1, day, hour, minute, second)
   return eventStart.getTime() - now.getTime() >= RETURN_DEADLINE_HOURS * MS_PER_HOUR
+}
+
+const RETURN_ERROR_MESSAGES: Record<string, string> = {
+  refund_not_allowed: 'Esta entrada ya no admite devolución.',
+  return_request_already_pending:
+    'Ya hay una solicitud de devolución pendiente para esta entrada.',
+}
+
+const GENERIC_RETURN_ERROR_MESSAGE =
+  'No pudimos enviar el pedido de devolución. Intentá de nuevo.'
+
+/** Traduce un error de la API de devoluciones a un mensaje legible para el cliente. */
+export function getReturnRequestErrorMessage(error: unknown): string {
+  if (error instanceof ApiError && error.code in RETURN_ERROR_MESSAGES) {
+    return RETURN_ERROR_MESSAGES[error.code]
+  }
+  return GENERIC_RETURN_ERROR_MESSAGE
 }
