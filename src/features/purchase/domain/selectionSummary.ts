@@ -1,5 +1,6 @@
 import type { SectorAvailability } from '@/shared/types/event.types'
 import type { SeatId, SelectionLine, SelectionSummary } from '../types/purchase.types'
+import { groupSeatsByRow } from '../utils/seatRowGroups'
 
 type SelectionSummaryInput = {
   sector: SectorAvailability | undefined
@@ -9,8 +10,8 @@ type SelectionSummaryInput = {
 
 /** Lo que "Tu selección" muestra: una línea por asiento elegido, el total y cuántos son. */
 export function summarizeSelection({ sector, selection }: SelectionSummaryInput): SelectionSummary {
-  const seats = sector?.seats ?? []
-  const lines: SelectionLine[] = seats
+  const seatsInMapOrder = groupSeatsByRow(sector?.seats ?? []).flatMap((row) => row.seats)
+  const lines: SelectionLine[] = seatsInMapOrder
     .filter((seat) => selection.includes(seat.seatId))
     .map((seat) => ({
       key: seat.seatId,
