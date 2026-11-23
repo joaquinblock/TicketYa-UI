@@ -26,6 +26,7 @@ const NUMBERED_EVENT = {
   RESERVED: 26,
   DOUBLE_CLICK: 27,
   SEAT_TAKEN: 29,
+  LIMIT_REACHED: 39,
 } as const
 
 const UNNUMBERED_EVENT = {
@@ -274,6 +275,36 @@ describe('Lugares: CA3, alguien me ganó el último lugar', () => {
   })
 })
 
+describe('Lugares: CA4, supero el límite por persona', () => {
+  afterEach(async () => {
+    await cancelPendingOrders(NUMBERED_EVENT.LIMIT_REACHED)
+  })
+
+  it('si ya tengo el límite reservado, sigo en Lugares con mi selección y veo cuántas entradas puedo tener', async () => {
+    const eventId = NUMBERED_EVENT.LIMIT_REACHED
+    const { maxTicketsPerCustomer } = await getEvent(eventId)
+    if (maxTicketsPerCustomer === null) throw new Error(`El evento ${eventId} no tiene límite`)
+    const { seats } = await freeSeats(eventId, maxTicketsPerCustomer + 1)
+    const extra = seats[maxTicketsPerCustomer]
+    await reserveAsClient({
+      eventId,
+      seatIds: seats.slice(0, maxTicketsPerCustomer).map((seat) => seat.seatId),
+    })
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    await user.click(await findFreeSeatButton(extra))
+
+    await user.click(screen.getByRole('button', { name: 'Reservar y pagar' }))
+
+    const summary = screen.getByRole('complementary', { name: 'Tu selección' })
+    expect(await within(summary).findByRole('alert')).toHaveTextContent(
+      `Podés tener hasta ${maxTicketsPerCustomer} entradas para este evento, contando las que ya compraste.`,
+    )
+    expect(getCurrentUrl().pathname).toBe(ROUTES.seats(eventId))
+    expect(within(summary).getAllByRole('listitem')).toHaveLength(1)
+  })
+})
+
 /**
  * Ancla de "Datos de prueba" (`ticket-service.md`): el 43 tiene Campo, Platea baja, Platea alta
  * agotada y Palco VIP. Se usa para cambiar de pestaña, sin reservar.
@@ -447,6 +478,21 @@ async function cancelOtherPersonOrders() {
       headers: { Authorization: `Bearer ${token}` },
     })
   }
+}
+
+/**
+ * El cliente del seeder reserva por la API, como desde otra pestaña, y deja su token en sesión
+ * para la página. La orden la cancela `cancelPendingOrders`.
+ */
+async function reserveAsClient(request: { eventId: number; seatIds: number[] }) {
+  const token = await devLogin(SEEDER_USER.CLIENT)
+  saveAccessToken(token)
+  const response = await fetch(`${GATEWAY_URL}${ORDERS_PATH}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ ...request, idempotencyKey: crypto.randomUUID() }),
+  })
+  if (!response.ok) throw new Error(`El cliente no pudo reservar: ${response.status}`)
 }
 
 /** Las órdenes del cliente del seeder, pedidas por fuera de la página. */
