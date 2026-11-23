@@ -42,3 +42,23 @@ describe('summarizeSelection, orden de las líneas', () => {
     expect(lines.map((line) => line.key)).toEqual([10, 11, 21])
   })
 })
+
+describe('summarizeSelection, sector no numerado', () => {
+  const CAMPO_PRICE = 30000
+  const campo: SectorAvailability = {
+    eventSectorId: 2,
+    sectorName: 'Campo',
+    price: CAMPO_PRICE,
+    numbered: false,
+    availablePlaces: 1240,
+    seats: null,
+  }
+
+  it('con cantidad 2, una sola línea "2 × Campo" con el precio por la cantidad', () => {
+    expect(summarizeSelection({ sector: campo, selection: [], quantity: 2 })).toEqual({
+      lines: [{ key: 2, label: '2 × Campo', price: 2 * CAMPO_PRICE }],
+      total: 2 * CAMPO_PRICE,
+      count: 2,
+    })
+  })
+})
