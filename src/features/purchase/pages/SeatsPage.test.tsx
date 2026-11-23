@@ -12,7 +12,7 @@ import { getEvent } from '@/shared/services/events.service'
 import { formatEventDateTime } from '@/shared/utils/eventFormat'
 import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
-import { formatSectorTabLabel } from '../utils/seatFormat'
+import { formatSectorTabLabel, formatUnnumberedPlaces } from '../utils/seatFormat'
 
 /**
  * Anclas de "Datos de prueba" (`ticket-service.md`): en el evento 2 la Platea tiene A1 y A2
@@ -470,4 +470,62 @@ async function firstSectorWithPlaces(eventId: number) {
   const sector = sectors.find((candidate) => candidate.availablePlaces > 0)
   if (!sector) throw new Error(`El evento ${eventId} no tiene sectores con lugares`)
   return sector
+}
+
+/**
+ * En los dos el Campo es el primer sector con lugares, así que la página abre con él. Ancla de
+ * "Datos de prueba" (`ticket-service.md`): en el 45 queda 1 lugar en Campo. Del 43 los números
+ * se toman de la respuesta.
+ */
+const UNNUMBERED_EVENT = {
+  FIELD_WITH_PLACES: 43,
+  FIELD_ONE_PLACE_LEFT: 45,
+} as const
+
+describe('Lugares no numerados: CA1, panel de cantidad', () => {
+  it('en el evento 43, con el Campo abierto, muestra el escenario, el sector, la cantidad en 1 y los lugares libres de la capacidad', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+
+    const panel = await findQuantityPanel(field.sectorName)
+    expect(within(panel).getByText('Escenario')).toBeInTheDocument()
+    expect(
+      within(panel).getByRole('img', { name: `${field.sectorName} frente al escenario` }),
+    ).toBeInTheDocument()
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+    expect(
+      within(panel).getByText(
+        formatUnnumberedPlaces({
+          availablePlaces: field.availablePlaces,
+          capacity: field.capacity,
+        }),
+      ),
+    ).toBeInTheDocument()
+  })
+})
+
+/** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
+async function unnumberedSectorOf(eventId: number) {
+  const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
+  const availability = sectors.find((sector) => !sector.numbered)
+  const detail = event.sectors.find((sector) => sector.name === availability?.sectorName)
+  if (!availability || !detail) throw new Error(`El evento ${eventId} no tiene sector no numerado`)
+  return {
+    ...availability,
+    capacity: detail.capacity,
+    maxTicketsPerCustomer: event.maxTicketsPerCustomer,
+  }
+}
+
+function findQuantityPanel(sectorName: string) {
+  return screen.findByRole('region', { name: `Cantidad en ${sectorName}` })
+}
+
+function quantityGroupIn(panel: HTMLElement) {
+  return within(panel).getByRole('group', { name: 'Cantidad de entradas' })
+}
+
+/** El número entre "Una menos" y "Una más". */
+function quantityIn(panel: HTMLElement) {
+  return within(quantityGroupIn(panel)).getByText(/^\d+$/)
 }
