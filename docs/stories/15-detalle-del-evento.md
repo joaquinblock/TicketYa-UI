@@ -1,7 +1,7 @@
 # 15: Detalle del evento y participantes
 
 **Tipo:** Story
-**Estado:** aprobado
+**Estado:** terminado
 **Funcionalidad:** Evento (épica #10 Cliente, página #14)
 
 ## Historia
