@@ -74,6 +74,16 @@ describe('Lugares: CA1, ver mi selección en un sector no numerado', () => {
   })
 })
 
+describe('Lugares: CA1, sin nada elegido', () => {
+  it('sin asientos elegidos, "Reservar y pagar" está deshabilitado', async () => {
+    renderSeatsPage(NUMBERED_EVENT.SUMMARY)
+
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+    expect(within(summary).queryAllByRole('listitem')).toHaveLength(0)
+    expect(within(summary).getByRole('button', { name: 'Reservar y pagar' })).toBeDisabled()
+  })
+})
+
 /** Los primeros libres en el orden del mapa: fila y número. */
 async function freeSeats(eventId: number, count: number) {
   const { sectors } = await getAvailability(eventId)
