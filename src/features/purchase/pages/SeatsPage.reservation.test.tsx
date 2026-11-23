@@ -1,11 +1,12 @@
-import { screen, within } from '@testing-library/react'
+import { focusManager } from '@tanstack/react-query'
+import { act, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
 import { getAvailability } from '@/shared/services/availability.service'
 import { getEvent } from '@/shared/services/events.service'
-import type { SeatAvailability } from '@/shared/types/event.types'
+import type { EventAvailability, SeatAvailability } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import { LocationProbe } from '@/test/LocationProbe'
 import { renderWithProviders } from '@/test/render'
@@ -21,6 +22,7 @@ const NUMBERED_EVENT = {
 
 const UNNUMBERED_EVENT = {
   SUMMARY: 13,
+  SOLD_OUT_ON_REFRESH: 14,
 } as const
 
 function renderSeatsPage(eventId: number) {
@@ -84,6 +86,29 @@ describe('Lugares: CA1, sin nada elegido', () => {
   })
 })
 
+describe('Lugares: CA1 borde, el sector no numerado se agota', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  it('si un refresco agota el sector y la cantidad queda en 0, "Reservar y pagar" se deshabilita', async () => {
+    const eventId = UNNUMBERED_EVENT.SOLD_OUT_ON_REFRESH
+    const sector = await unnumberedSectorOf(eventId)
+    renderSeatsPage(eventId)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+    const reserve = within(summary).getByRole('button', { name: 'Reservar y pagar' })
+    expect(reserve).toBeEnabled()
+
+    setPlacesOnNextRefreshes(sector.sectorName, 0)
+    refetchByRefocusing()
+
+    await screen.findByRole('alert', { name: `Se agotó ${sector.sectorName}.` })
+    expect(within(summary).queryAllByRole('listitem')).toHaveLength(0)
+    expect(reserve).toBeDisabled()
+  })
+})
+
 /** Los primeros libres en el orden del mapa: fila y número. */
 async function freeSeats(eventId: number, count: number) {
   const { sectors } = await getAvailability(eventId)
@@ -108,4 +133,27 @@ function findFreeSeatButton(seat: SeatAvailability) {
   return screen.findByRole('button', {
     name: `Fila ${seat.row}, asiento ${seat.number}, disponible`,
   })
+}
+
+const AVAILABILITY_PATH = '/api/availability'
+
+/** Desde acá, cada respuesta de la disponibilidad trae esos lugares libres en el sector. */
+function setPlacesOnNextRefreshes(sectorName: string, availablePlaces: number) {
+  const realFetch = globalThis.fetch
+  return vi.spyOn(globalThis, 'fetch').mockImplementation(async (input, init) => {
+    const response = await realFetch(input, init)
+    const url = input instanceof Request ? input.url : String(input)
+    if (!url.includes(AVAILABILITY_PATH)) return response
+    const availability = (await response.json()) as EventAvailability
+    for (const sector of availability.sectors) {
+      if (sector.sectorName === sectorName) sector.availablePlaces = availablePlaces
+    }
+    return Response.json(availability)
+  })
+}
+
+/** La disponibilidad se vuelve a pedir al recuperar el foco, como al volver a la pestaña. */
+function refetchByRefocusing() {
+  act(() => focusManager.setFocused(false))
+  act(() => focusManager.setFocused(true))
 }
