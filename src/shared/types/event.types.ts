@@ -42,6 +42,7 @@ export type EventDetail = {
   maxTicketsPerCustomer: number | null
   sectors: EventSector[]
   participants: Participant[]
+  photoUrl: string | null
 }
 
 export type SeatAvailability = {
