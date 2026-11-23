@@ -6,16 +6,18 @@ import type { EventDetail, PurchaseAction } from '../../types/catalog.types'
 import { formatPurchaseTerms } from '../../utils/sectorFormat'
 import { EventSectorsSkeleton } from './EventSectorsSkeleton'
 import { SectorRow } from './SectorRow'
+import { SectorsLoadError } from './SectorsLoadError'
 import { useEventSectors } from './useEventSectors'
 
 type EventSectorsProps = { event: EventDetail }
 
 /** "Sectores y precios": cada sector con su precio y, si se puede comprar, cuántos lugares quedan. */
 export function EventSectors({ event }: EventSectorsProps) {
-  const { sectors, isLoading, purchaseAction } = useEventSectors(event)
+  const { sectors, isLoading, isError, retry, purchaseAction } = useEventSectors(event)
 
   let content: ReactNode
   if (isLoading) content = <EventSectorsSkeleton rowCount={sectors.length} />
+  else if (isError) content = <SectorsLoadError onRetry={retry} />
   else
     content = (
       <ul>

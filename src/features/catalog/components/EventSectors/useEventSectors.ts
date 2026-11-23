@@ -14,9 +14,18 @@ import type { EventDetail } from '../../types/catalog.types'
 export function useEventSectors(event: EventDetail) {
   const now = new Date()
   const showsAvailability = isAvailabilityVisible(event, now)
-  const { availability, isPending } = useEventAvailability(showsAvailability ? event.id : undefined)
+  const { availability, isPending, isError, refetch } = useEventAvailability(
+    showsAvailability ? event.id : undefined,
+  )
   const sectors = joinSectorsWithAvailability(event.sectors, availability?.sectors ?? [])
   const purchaseAction = isPurchaseOpen(event, now) ? getPurchaseAction(event) : undefined
 
-  return { sectors, isLoading: showsAvailability && isPending, purchaseAction }
+  return {
+    sectors,
+    isLoading: showsAvailability && isPending,
+    // Si falla un refresco de los 30 s, quedan los últimos lugares que llegaron en vez del error.
+    isError: isError && !availability,
+    retry: () => void refetch(),
+    purchaseAction,
+  }
 }
