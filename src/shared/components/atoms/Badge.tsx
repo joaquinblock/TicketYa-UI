@@ -11,6 +11,9 @@ const badgeVariants = cva(
         success: 'bg-success text-success-ink',
         error: 'bg-error text-error-ink',
         warning: 'bg-warning text-warning-ink',
+        accent: 'bg-accent text-ink',
+        /** Secundario: toma el color del texto de alrededor, para que no compita con otro badge. */
+        outline: 'border border-current bg-transparent font-semibold opacity-80',
       },
     },
     defaultVariants: { tone: 'neutral' },
