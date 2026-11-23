@@ -17,10 +17,17 @@ export function formatPrice(amount: number) {
  */
 export function getEventDateParts(dateTime: string) {
   const [date, time] = dateTime.split('T')
-  const [, month, day] = date.split('-')
+  const [year, month, day] = date.split('-')
   return {
+    year,
     day,
     month: MONTH_ABBREVIATIONS[Number(month) - 1],
     time: time.slice(0, 5),
   }
+}
+
+/** `13 dic 2026 · 21:00 hs`: el mismo formato corto para la fecha del evento y la apertura de la venta. */
+export function formatEventDateTime(dateTime: string) {
+  const { day, month, year, time } = getEventDateParts(dateTime)
+  return `${Number(day)} ${month.toLowerCase()} ${year} · ${time} hs`
 }
