@@ -50,3 +50,23 @@ describe('getEventNotice: a la venta', () => {
     ).toMatchObject({ kind: 'SALE_NOT_STARTED', title: 'La venta todavía no empezó' })
   })
 })
+
+describe('getEventNotice: fuera de venta', () => {
+  it.each([
+    ['SOLD_OUT', 'Entradas agotadas'],
+    ['SUSPENDED', 'Evento suspendido'],
+    ['CANCELLED', 'Evento cancelado'],
+    ['FINISHED', 'Este evento ya pasó'],
+  ] as const)('%s avisa "%s"', (status, title) => {
+    expect(getEventNotice(onSale({ status }), NOW)).toMatchObject({ kind: status, title })
+  })
+
+  it.each(['SOLD_OUT', 'SUSPENDED'] as const)(
+    '%s de alta demanda avisa el estado, no la alta demanda',
+    (status) => {
+      expect(getEventNotice(onSale({ status, highDemand: true }), NOW)).toMatchObject({
+        kind: status,
+      })
+    },
+  )
+})
