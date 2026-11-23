@@ -8,5 +8,6 @@ export function useSeatSelection() {
   return {
     selection,
     toggle: (seatId: SeatId) => setSelection((current) => toggleSeat(current, seatId)),
+    clear: () => setSelection([]),
   }
 }

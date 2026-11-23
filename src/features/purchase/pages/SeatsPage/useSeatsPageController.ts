@@ -10,7 +10,20 @@ export function useSeatsPageController(eventIdParam: string) {
   const { availability } = useEventAvailability(eventId)
   const sectors = availability?.sectors
   const { openSector, openSectorById } = useOpenSector(sectors ?? [])
-  const { selection, toggle } = useSeatSelection()
+  const { selection, toggle, clear } = useSeatSelection()
 
-  return { event, sectors, openSector, openSectorById, selection, toggleSeat: toggle }
+  /** La selección es de un solo sector: al cambiar de pestaña se vacía. */
+  const openSectorAndClearSelection = (eventSectorId: number) => {
+    openSectorById(eventSectorId)
+    clear()
+  }
+
+  return {
+    event,
+    sectors,
+    openSector,
+    openSectorById: openSectorAndClearSelection,
+    selection,
+    toggleSeat: toggle,
+  }
 }
