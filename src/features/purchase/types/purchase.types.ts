@@ -29,6 +29,12 @@ export type SelectionLine = { key: number; label: string; price: number }
 /** `count` son los lugares elegidos, para el contador "N/M". */
 export type SelectionSummary = { lines: SelectionLine[]; total: number; count: number }
 
+/**
+ * Por qué no se creó la reserva. `SEATS_TAKEN` no tiene texto propio: se vuelve a pedir la
+ * disponibilidad y avisan los avisos de un refresco.
+ */
+export type ReservationError = 'SEATS_TAKEN' | 'LIMIT' | 'UNAUTHORIZED' | 'FAILED'
+
 /** El estado del "−" / cantidad / "+" y sus acciones. */
 export type QuantityStepper = {
   quantity: number
