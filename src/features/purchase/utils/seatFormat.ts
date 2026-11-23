@@ -1,10 +1,12 @@
-import type { SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
+import type { EventSector, SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import { SEAT_STATUS_LABEL, SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
 import type { AlertMessage, SeatStatus } from '../types/purchase.types'
 
 type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
 type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
+type UnnumberedPlacesInput = Pick<EventSector, 'capacity'> &
+  Pick<SectorAvailability, 'availablePlaces'>
 
 const seatListFormatter = new Intl.ListFormat('es', { type: 'conjunction' })
 
@@ -34,4 +36,11 @@ export function formatSeatCode({ row, number }: SeatLabelInput) {
 /** `Fila A, asiento 3, disponible`: el estado también va en el nombre, no solo en el color. */
 export function formatSeatAccessibleName({ row, number }: SeatLabelInput, status: SeatStatus) {
   return `Fila ${row}, asiento ${number}, ${SEAT_STATUS_LABEL[status].toLowerCase()}`
+}
+
+const placesFormatter = new Intl.NumberFormat('es-AR')
+
+export function formatUnnumberedPlaces({ availablePlaces, capacity }: UnnumberedPlacesInput) {
+  const available = placesFormatter.format(availablePlaces)
+  return `Sin numerar · ${available} lugares libres de ${placesFormatter.format(capacity)}`
 }
