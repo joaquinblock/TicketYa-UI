@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
 import { getCurrentUrl, LocationProbe } from '@/test/LocationProbe'
@@ -135,5 +135,41 @@ describe('Sectores y precios: CA5', () => {
     expect(within(section).getByText('Cargando sectores')).toBeInTheDocument()
     expect(await within(section).findAllByRole('listitem')).not.toHaveLength(0)
     expect(within(section).queryByText('Cargando sectores')).not.toBeInTheDocument()
+  })
+})
+
+const AVAILABILITY_PATH = '/api/availability'
+
+/** Corta solo la disponibilidad, como si se cayera el ticket-service: el detalle sigue cargando. */
+function failAvailabilityRequests() {
+  const realFetch = globalThis.fetch
+  return vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+    const url = input instanceof Request ? input.url : String(input)
+    if (url.includes(AVAILABILITY_PATH)) return Promise.reject(new TypeError('Failed to fetch'))
+    return realFetch(input, init)
+  })
+}
+
+describe('Sectores y precios: CA5 error', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('sin la disponibilidad avisa el error con "Reintentar", y al volver muestra los sectores', async () => {
+    const event = await getEvent(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+    const availabilityDown = failAvailabilityRequests()
+    const user = userEvent.setup()
+    renderEventPage(event.id)
+
+    const section = await screen.findByRole('region', { name: 'Sectores y precios' })
+    const error = await within(section).findByRole('alert')
+    expect(error).toHaveTextContent('No pudimos cargar los sectores')
+    expect(screen.getByRole('heading', { level: 1, name: event.name })).toBeInTheDocument()
+
+    availabilityDown.mockRestore()
+    await user.click(within(error).getByRole('button', { name: 'Reintentar' }))
+
+    expect(await within(section).findAllByRole('listitem')).toHaveLength(event.sectors.length)
+    expect(within(section).queryByRole('alert')).not.toBeInTheDocument()
   })
 })
