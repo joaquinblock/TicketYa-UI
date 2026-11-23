@@ -37,7 +37,7 @@ async function createRealPendingOrder(): Promise<Order> {
         eventId: candidate.id,
         idempotencyKey: crypto.randomUUID(),
         eventSectorId: generalSector.eventSectorId,
-        quantity: 1,
+        quantity: 2,
       })
     } catch {
       // Si el cliente del seeder ya alcanzó el tope en este evento, probamos el siguiente.
