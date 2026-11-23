@@ -4,6 +4,7 @@ import {
   formatSectorTabLabel,
   formatTakenSeatsMessage,
   formatUnnumberedPlaces,
+  formatQuantityLoweredMessage,
 } from './seatFormat'
 
 describe('formatSectorTabLabel', () => {
@@ -55,5 +56,21 @@ describe('formatUnnumberedPlaces', () => {
     expect(formatUnnumberedPlaces({ availablePlaces: 1240, capacity: 5000 })).toBe(
       'Sin numerar · 1.240 lugares libres de 5.000',
     )
+  })
+})
+
+describe('formatQuantityLoweredMessage', () => {
+  it('con 2 lugares, avisa en plural a cuánto bajó la cantidad', () => {
+    expect(formatQuantityLoweredMessage({ sectorName: 'Campo', quantity: 2 })).toEqual({
+      lead: 'Quedan 2 lugares en Campo:',
+      hint: 'bajamos tu cantidad a 2',
+    })
+  })
+
+  it('con 1 lugar, avisa en singular', () => {
+    expect(formatQuantityLoweredMessage({ sectorName: 'Campo', quantity: 1 })).toEqual({
+      lead: 'Queda 1 lugar en Campo:',
+      hint: 'bajamos tu cantidad a 1',
+    })
   })
 })
