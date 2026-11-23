@@ -62,6 +62,19 @@ describe('Detalle del evento: CA1', () => {
       `${event.venue.name} · ${event.venue.address}, ${event.venue.city}`,
     )
   })
+
+  it('"Ver en el mapa" abre Google Maps en las coordenadas del evento, en otra pestaña', async () => {
+    const event = await getEvent(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+    renderEventPage(event.id)
+
+    const mapLink = within(await findEventFacts()).getByRole('link', { name: /Ver en el mapa/ })
+    expect(mapLink).toHaveAttribute(
+      'href',
+      `https://www.google.com/maps/search/?api=1&query=${event.venue.latitude},${event.venue.longitude}`,
+    )
+    expect(mapLink).toHaveAttribute('target', '_blank')
+    expect(mapLink).toHaveAttribute('rel', 'noopener noreferrer')
+  })
 })
 
 function findEventFacts() {
