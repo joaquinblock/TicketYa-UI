@@ -102,6 +102,19 @@ describe('Lugares: CA2, pestañas', () => {
   })
 })
 
+describe('Lugares: CA2, sector agotado', () => {
+  it('en el evento 11 la pestaña Platea dice "Agotado" y está deshabilitada, y queda abierta la Pullman', async () => {
+    renderSeatsPage(SEEDER_EVENT.PLATEA_SOLD_OUT)
+
+    const tabs = await findSectorTabs()
+    expect(within(tabs).getByRole('button', { name: 'Platea Agotado' })).toBeDisabled()
+    expect(within(tabs).getByRole('button', { name: /^Pullman / })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    )
+  })
+})
+
 function findSectorTabs() {
   return screen.findByRole('group', { name: 'Sectores' })
 }
