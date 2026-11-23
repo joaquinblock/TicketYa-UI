@@ -25,10 +25,17 @@ export function useSeatSelection(seats: SeatAvailability[]) {
     }
   }
 
+  // Cualquier elección nueva (otro asiento u otro sector) deja atrás el aviso.
   return {
     selection,
     takenSeats,
-    toggle: (seatId: SeatId) => setSelection((current) => toggleSeat(current, seatId)),
-    clear: () => setSelection([]),
+    toggle: (seatId: SeatId) => {
+      setSelection((current) => toggleSeat(current, seatId))
+      setTakenSeats([])
+    },
+    clear: () => {
+      setSelection([])
+      setTakenSeats([])
+    },
   }
 }
