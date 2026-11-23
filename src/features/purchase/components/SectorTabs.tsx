@@ -15,6 +15,7 @@ export function SectorTabs({ sectors, openSectorId, onOpen }: SectorTabsProps) {
           key={sector.eventSectorId}
           type="button"
           aria-pressed={sector.eventSectorId === openSectorId}
+          disabled={sector.availablePlaces === 0}
           onClick={() => onOpen(sector.eventSectorId)}
         >
           <span>{sector.sectorName}</span> <span>{formatSectorTabLabel(sector)}</span>
