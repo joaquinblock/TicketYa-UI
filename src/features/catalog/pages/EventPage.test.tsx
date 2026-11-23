@@ -75,7 +75,20 @@ describe('Detalle del evento: CA1', () => {
     expect(mapLink).toHaveAttribute('target', '_blank')
     expect(mapLink).toHaveAttribute('rel', 'noopener noreferrer')
   })
+
+  it('un evento de alta demanda lo dice en el hero', async () => {
+    const event = await getEvent(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+    renderEventPage(event.id)
+
+    expect(
+      within(await findEventHero(event.name)).getByText('Alta demanda · fila virtual'),
+    ).toBeInTheDocument()
+  })
 })
+
+function findEventHero(eventName: string) {
+  return screen.findByRole('region', { name: eventName })
+}
 
 function findEventFacts() {
   return screen.findByRole('complementary', { name: 'El evento' })
