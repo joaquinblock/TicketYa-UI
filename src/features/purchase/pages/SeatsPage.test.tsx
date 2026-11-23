@@ -573,6 +573,18 @@ describe('Lugares no numerados: CA3, tope', () => {
   })
 })
 
+describe('Lugares no numerados: CA3, límite por persona', () => {
+  it('en el evento 43 muestra "Hasta N por persona" con el máximo del evento', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    expect(
+      within(panel).getByText(`Hasta ${field.maxTicketsPerCustomer} por persona`),
+    ).toBeInTheDocument()
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
