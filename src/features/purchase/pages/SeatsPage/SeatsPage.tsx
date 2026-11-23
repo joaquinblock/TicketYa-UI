@@ -5,17 +5,28 @@ import { PURCHASE_STEP } from '@/shared/components/templates/PurchaseLayout/purc
 import { SeatMap } from '../../components/SeatMap'
 import { SeatMapSkeleton } from '../../components/SeatMapSkeleton'
 import { SeatsHeader } from '../../components/SeatsHeader'
+import { SeatsLoadError } from '../../components/SeatsLoadError'
 import { SectorTabs } from '../../components/SectorTabs'
 import { TakenSeatsAlert } from '../../components/TakenSeatsAlert'
 import { useSeatsPageController } from './useSeatsPageController'
 
 export function SeatsPage() {
   const { eventId = '' } = useParams()
-  const { event, sectors, openSector, openSectorById, selection, takenSeats, toggleSeat } =
-    useSeatsPageController(eventId)
+  const {
+    event,
+    sectors,
+    hasLoadError,
+    retryLoad,
+    openSector,
+    openSectorById,
+    selection,
+    takenSeats,
+    toggleSeat,
+  } = useSeatsPageController(eventId)
 
   let content: ReactNode
-  if (sectors) {
+  if (hasLoadError) content = <SeatsLoadError onRetry={retryLoad} />
+  else if (sectors) {
     content = (
       <>
         <SectorTabs

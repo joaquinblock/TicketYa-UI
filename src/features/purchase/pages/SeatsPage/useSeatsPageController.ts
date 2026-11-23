@@ -10,9 +10,9 @@ const NO_SEATS: SeatAvailability[] = []
 
 export function useSeatsPageController(eventIdParam: string) {
   const eventId = parseEventId(eventIdParam)
-  const { event } = useEvent(eventId)
-  const { availability } = useEventAvailability(eventId)
-  const sectors = availability?.sectors
+  const eventQuery = useEvent(eventId)
+  const availabilityQuery = useEventAvailability(eventId)
+  const sectors = availabilityQuery.availability?.sectors
   const { openSector, openSectorById } = useOpenSector(sectors ?? [])
   const { selection, takenSeats, toggle, clear } = useSeatSelection(openSector?.seats ?? NO_SEATS)
 
@@ -22,9 +22,19 @@ export function useSeatsPageController(eventIdParam: string) {
     clear()
   }
 
+  // Si falla un refresco con los datos en pantalla, quedan los últimos: el error es solo sin datos.
+  const hasLoadError =
+    (eventQuery.isError && !eventQuery.event) || (availabilityQuery.isError && !sectors)
+  const retryLoad = () => {
+    void eventQuery.refetch()
+    void availabilityQuery.refetch()
+  }
+
   return {
-    event,
+    event: eventQuery.event,
     sectors,
+    hasLoadError,
+    retryLoad,
     openSector,
     openSectorById: openSectorAndClearSelection,
     selection,
