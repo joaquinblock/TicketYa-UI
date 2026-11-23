@@ -542,6 +542,17 @@ describe('Lugares no numerados: CA2, accesibilidad', () => {
   })
 })
 
+describe('Lugares no numerados: CA3, piso', () => {
+  it('con la cantidad en 1, "Una menos" está deshabilitado', async () => {
+    const field = await unnumberedSectorOf(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    renderSeatsPage(UNNUMBERED_EVENT.FIELD_WITH_PLACES)
+    const panel = await findQuantityPanel(field.sectorName)
+
+    expect(quantityIn(panel)).toHaveTextContent(/^1$/)
+    expect(within(panel).getByRole('button', { name: 'Una menos' })).toBeDisabled()
+  })
+})
+
 /** El sector no numerado, con la capacidad del detalle y el límite por persona del evento. */
 async function unnumberedSectorOf(eventId: number) {
   const [{ sectors }, event] = await Promise.all([getAvailability(eventId), getEvent(eventId)])
