@@ -2,6 +2,7 @@ import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/atoms/Button'
 import type { EventDetail, PurchaseAction } from '../../types/catalog.types'
+import { formatPurchaseTerms } from '../../utils/sectorFormat'
 import { SectorRow } from './SectorRow'
 import { useEventSectors } from './useEventSectors'
 
@@ -22,18 +23,26 @@ export function EventSectors({ event }: EventSectorsProps) {
           ))}
         </ul>
       )}
-      {purchaseAction && <PurchaseButton action={purchaseAction} />}
+      {purchaseAction && (
+        <PurchaseButton action={purchaseAction} maxTickets={event.maxTicketsPerCustomer} />
+      )}
     </section>
   )
 }
 
-function PurchaseButton({ action }: { action: PurchaseAction }) {
+type PurchaseButtonProps = { action: PurchaseAction; maxTickets: number | null }
+
+/** El texto de límite y devoluciones va solo junto al botón: sin compra, no hay nada que avisar. */
+function PurchaseButton({ action, maxTickets }: PurchaseButtonProps) {
   return (
-    <Button asChild>
-      <Link to={action.to}>
-        {action.label}
-        <ArrowUpRight aria-hidden className="size-4.5" />
-      </Link>
-    </Button>
+    <>
+      <Button asChild>
+        <Link to={action.to}>
+          {action.label}
+          <ArrowUpRight aria-hidden className="size-4.5" />
+        </Link>
+      </Button>
+      <p>{formatPurchaseTerms(maxTickets)}</p>
+    </>
   )
 }
