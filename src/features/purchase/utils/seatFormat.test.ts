@@ -6,6 +6,7 @@ import {
   formatUnnumberedPlaces,
   formatQuantityLoweredMessage,
   formatSectorSoldOutMessage,
+  formatSelectionCount,
 } from './seatFormat'
 
 describe('formatSectorTabLabel', () => {
@@ -73,6 +74,16 @@ describe('formatQuantityLoweredMessage', () => {
       lead: 'Queda 1 lugar en Campo:',
       hint: 'bajamos tu cantidad a 1',
     })
+  })
+})
+
+describe('formatSelectionCount', () => {
+  it('con 2 elegidos y límite 4, muestra "2/4"', () => {
+    expect(formatSelectionCount({ count: 2, maxTicketsPerCustomer: 4 })).toBe('2/4')
+  })
+
+  it('sin límite por persona, muestra solo los elegidos', () => {
+    expect(formatSelectionCount({ count: 2, maxTicketsPerCustomer: null })).toBe('2')
   })
 })
 

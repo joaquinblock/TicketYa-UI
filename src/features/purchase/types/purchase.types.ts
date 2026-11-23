@@ -23,6 +23,36 @@ export type UnnumberedSector = Pick<
   Pick<EventSector, 'capacity'> &
   Pick<EventDetail, 'maxTicketsPerCustomer'>
 
+/** Una línea de "Tu selección": un asiento, o la cantidad de un sector no numerado. */
+export type SelectionLine = { key: number; label: string; price: number }
+
+/** `count` son los lugares elegidos, para el contador "N/M". */
+export type SelectionSummary = { lines: SelectionLine[]; total: number; count: number }
+
+/** Lo que se reserva, sin la clave: con asientos, o una cantidad de un sector no numerado. */
+export type ReservationDraft =
+  | { eventId: number; seatIds: SeatId[] }
+  | (Pick<SectorAvailability, 'eventSectorId'> & { eventId: number; quantity: number })
+
+/** El body de `POST /api/orders`: la misma clave con los mismos datos devuelve la misma orden. */
+export type ReservationRequest = ReservationDraft & { idempotencyKey: string }
+
+/** El estado de "Reservar y pagar" y su acción. */
+export type Reservation = {
+  isReserving: boolean
+  reserve: () => void
+  error: ShownReservationError | undefined
+}
+
+/**
+ * Por qué no se creó la reserva. `SEATS_TAKEN` no tiene texto propio: se vuelve a pedir la
+ * disponibilidad y avisan los avisos de un refresco.
+ */
+export type ReservationError = 'SEATS_TAKEN' | 'LIMIT' | 'UNAUTHORIZED' | 'FAILED'
+
+/** Los que se avisan en "Tu selección", arriba del botón. */
+export type ShownReservationError = Exclude<ReservationError, 'SEATS_TAKEN'>
+
 /** El estado del "−" / cantidad / "+" y sus acciones. */
 export type QuantityStepper = {
   quantity: number
