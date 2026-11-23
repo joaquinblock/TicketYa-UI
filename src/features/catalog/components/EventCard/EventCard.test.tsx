@@ -29,4 +29,18 @@ describe('EventCard: CA6', () => {
     expect(screen.getByText('Próximamente')).toBeInTheDocument()
     expect(screen.getByText('Alta demanda')).toBeInTheDocument()
   })
+
+  it('con la venta abierta y alta demanda muestra "Alta demanda" y no "Próximamente"', async () => {
+    renderWithProviders(<EventCard event={await fetchSummary(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)} />)
+
+    expect(screen.getByText('Alta demanda')).toBeInTheDocument()
+    expect(screen.queryByText('Próximamente')).not.toBeInTheDocument()
+  })
+
+  it('el evento agotado muestra "Agotado" y no "Próximamente"', async () => {
+    renderWithProviders(<EventCard event={await fetchSummary(SEEDER_EVENT.SOLD_OUT)} />)
+
+    expect(screen.getByText('Agotado')).toBeInTheDocument()
+    expect(screen.queryByText('Próximamente')).not.toBeInTheDocument()
+  })
 })
