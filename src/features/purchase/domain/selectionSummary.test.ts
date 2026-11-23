@@ -29,3 +29,16 @@ describe('summarizeSelection', () => {
     })
   })
 })
+
+describe('summarizeSelection, orden de las líneas', () => {
+  it('con filas distintas elegidas en otro orden, las líneas van por fila y número', () => {
+    const shuffled = {
+      ...plateaBaja,
+      seats: [seat(21, 'G', 3), seat(11, 'F', 8), seat(10, 'F', 7)],
+    }
+
+    const { lines } = summarizeSelection({ sector: shuffled, selection: [21, 11, 10], quantity: 0 })
+
+    expect(lines.map((line) => line.key)).toEqual([10, 11, 21])
+  })
+})
