@@ -6,6 +6,7 @@ import { SeatMap } from '../../components/SeatMap'
 import { SeatMapSkeleton } from '../../components/SeatMapSkeleton'
 import { SeatsHeader } from '../../components/SeatsHeader'
 import { SeatsLoadError } from '../../components/SeatsLoadError'
+import { QuantityPanel } from '../../components/QuantityPanel'
 import { SeatsNotForSale } from '../../components/SeatsNotForSale'
 import { SectorTabs } from '../../components/SectorTabs'
 import { SelectionChangedAlert } from '../../components/SelectionChangedAlert'
@@ -25,6 +26,8 @@ export function SeatsPage() {
     selection,
     takenSeats,
     toggleSeat,
+    unnumberedSector,
+    quantity,
   } = useSeatsPageController(eventId)
 
   let content: ReactNode
@@ -41,6 +44,7 @@ export function SeatsPage() {
         {openSector?.numbered && (
           <SeatMap sector={openSector} selection={selection} onToggle={toggleSeat} />
         )}
+        {unnumberedSector && <QuantityPanel sector={unnumberedSector} quantity={quantity} />}
         {takenSeats.length > 0 && (
           <SelectionChangedAlert message={formatTakenSeatsMessage(takenSeats)} />
         )}
