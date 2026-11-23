@@ -126,7 +126,29 @@ describe('Detalle del evento: CA2', () => {
     expect(within(await findEventHero(event.name)).getByText(badge)).toBeInTheDocument()
     expect(await findEventNotice()).toHaveTextContent(title)
   })
+
+  it('a la venta, sin alta demanda y con la venta abierta no muestra ningún aviso', async () => {
+    const event = await getEvent(SEEDER_EVENT.ON_SALE_WITHOUT_SALE_START)
+    expect(event).toMatchObject({ status: 'PUBLISHED', highDemand: false, saleStart: null })
+    renderEventPage(event.id)
+
+    await screen.findByRole('heading', { level: 1, name: event.name })
+    expect(screen.queryByRole('region', { name: 'Aviso' })).not.toBeInTheDocument()
+  })
+
+  it.each(Object.values(SEEDER_EVENT).filter((id) => id !== SEEDER_EVENT.DRAFT))(
+    'el evento %i no muestra ningún código de estado del backend',
+    async (eventId) => {
+      const event = await getEvent(eventId)
+      renderEventPage(event.id)
+
+      await screen.findByRole('heading', { level: 1, name: event.name })
+      for (const code of BACKEND_STATUS_CODES) expect(document.body).not.toHaveTextContent(code)
+    },
+  )
 })
+
+const BACKEND_STATUS_CODES = ['PUBLISHED', 'SOLD_OUT', 'SUSPENDED', 'CANCELLED', 'FINISHED']
 
 function findEventNotice() {
   return screen.findByRole('region', { name: 'Aviso' })
