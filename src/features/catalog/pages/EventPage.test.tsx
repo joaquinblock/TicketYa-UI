@@ -10,8 +10,8 @@ import { setupApiClient } from '@/app/setupApiClient'
 import { configureApiClient } from '@/shared/lib/http/apiClient'
 import { renderWithProviders } from '@/test/render'
 import { EVENT_TYPE_LABEL } from '../constants/catalog.constants'
-import { formatEventDateTime } from '../lib/eventFormat'
-import { getEvent } from '../services/events.service'
+import { formatEventDateTime } from '@/shared/utils/eventFormat'
+import { getEvent } from '@/shared/services/events.service'
 
 /**
  * Anclas de "Datos de prueba" (`event-service.md`): el id fija el caso, y los datos (nombre, lugar,

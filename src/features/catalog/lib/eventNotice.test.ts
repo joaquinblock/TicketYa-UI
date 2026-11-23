@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { EventDetail } from '../types/catalog.types'
+import type { EventDetail } from '@/shared/types/event.types'
 import { getEventNotice } from './eventNotice'
 
 type NoticeInput = Pick<EventDetail, 'status' | 'highDemand' | 'saleStart'>

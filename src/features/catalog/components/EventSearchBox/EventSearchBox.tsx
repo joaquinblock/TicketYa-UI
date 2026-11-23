@@ -3,7 +3,7 @@ import type { FocusEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/atoms/Button'
 import { ROUTES } from '@/shared/lib/routes'
-import { getEventDateParts } from '../../lib/eventFormat'
+import { getEventDateParts } from '@/shared/utils/eventFormat'
 import type { EventSummary } from '../../types/catalog.types'
 import { useEventSearchBox } from './useEventSearchBox'
 

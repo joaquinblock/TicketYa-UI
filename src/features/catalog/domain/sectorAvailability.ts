@@ -1,13 +1,8 @@
 import { ROUTES } from '@/shared/lib/routes'
 import { QUEUE_ACTION_LABEL, SEATS_ACTION_LABEL } from '../constants/sectorAvailability.constants'
 import { hasSaleNotStarted } from '../lib/eventNotice'
-import type {
-  EventDetail,
-  EventSector,
-  PurchaseAction,
-  SectorAvailability,
-  SectorWithAvailability,
-} from '../types/catalog.types'
+import type { EventDetail, EventSector, SectorAvailability } from '@/shared/types/event.types'
+import type { PurchaseAction, SectorWithAvailability } from '../types/catalog.types'
 
 /**
  * Los dos endpoints no comparten id de sector: se unen por nombre, que es único dentro del lugar.

@@ -1,6 +1,7 @@
 import { EVENT_NOTICE_TEXT, SALE_NOT_STARTED_TITLE } from '../constants/eventNotice.constants'
-import type { EventDetail, EventNotice, FixedNoticeKind } from '../types/catalog.types'
-import { formatEventDateTime } from './eventFormat'
+import type { EventDetail } from '@/shared/types/event.types'
+import type { EventNotice, FixedNoticeKind } from '../types/catalog.types'
+import { formatEventDateTime } from '@/shared/utils/eventFormat'
 
 type NoticeInput = Pick<EventDetail, 'status' | 'highDemand' | 'saleStart'>
 

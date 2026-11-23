@@ -2,7 +2,7 @@ import { focusManager, QueryClient, QueryClientProvider } from '@tanstack/react-
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { createElement, type ReactNode } from 'react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { catalogKeys } from '../lib/catalog.queryKeys'
+import { eventKeys as catalogKeys } from '../lib/event.queryKeys'
 import { useEventAvailability } from './useEventAvailability'
 
 /** Ancla de "Datos de prueba": el evento 1 está a la venta. */

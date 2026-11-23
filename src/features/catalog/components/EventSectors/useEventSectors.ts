@@ -4,8 +4,8 @@ import {
   isPurchaseOpen,
   joinSectorsWithAvailability,
 } from '../../domain/sectorAvailability'
-import { useEventAvailability } from '../../hooks/useEventAvailability'
-import type { EventDetail } from '../../types/catalog.types'
+import { useEventAvailability } from '@/shared/hooks/useEventAvailability'
+import type { EventDetail } from '@/shared/types/event.types'
 
 /**
  * Los sectores del detalle con su disponibilidad, que solo se pide si se puede mostrar, y la acción

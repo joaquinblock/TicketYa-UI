@@ -1,4 +1,4 @@
-import type { EventDetail as EventDetailData } from '../../types/catalog.types'
+import type { EventDetail as EventDetailData } from '@/shared/types/event.types'
 import { EventSectors } from '../EventSectors/EventSectors'
 import { EventFacts } from './EventFacts'
 import { EventHero } from './EventHero'

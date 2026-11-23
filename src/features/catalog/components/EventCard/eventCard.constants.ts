@@ -1,4 +1,5 @@
-import type { EventFlagKind, EventType } from '../../types/catalog.types'
+import type { EventType } from '@/shared/types/event.types'
+import type { EventFlagKind } from '../../types/catalog.types'
 
 export const EVENT_FLAG_LABEL = {
   SOLD_OUT: 'Agotado',

@@ -1,7 +1,5 @@
-import type { EventSort, EventType, EventTypeLabel } from '../types/catalog.types'
-
-/** En el orden en que se muestran los chips. */
-export const EVENT_TYPES = ['CONCERT', 'FESTIVAL', 'THEATER', 'SPORTS', 'CONFERENCE'] as const
+import type { EventType } from '@/shared/types/event.types'
+import type { EventSort, EventTypeLabel } from '../types/catalog.types'
 
 /** Plural para el filtro ("Recitales") y singular para la card ("Recital"). */
 export const EVENT_TYPE_LABEL = {
@@ -32,26 +30,8 @@ export const SEARCH_DEBOUNCE_MS = 300
 /** Máximo que acepta el backend para `q`. */
 export const MAX_QUERY_LENGTH = 100
 
-export const MONTH_ABBREVIATIONS = [
-  'ENE',
-  'FEB',
-  'MAR',
-  'ABR',
-  'MAY',
-  'JUN',
-  'JUL',
-  'AGO',
-  'SEP',
-  'OCT',
-  'NOV',
-  'DIC',
-] as const
-
 /** Búsqueda de Google Maps por coordenadas: abre el pin sin API key. */
 export const GOOGLE_MAPS_SEARCH_URL = 'https://www.google.com/maps/search/?api=1'
 
 /** El badge del hero y el título del aviso dicen lo mismo. */
 export const HIGH_DEMAND_LABEL = 'Alta demanda · fila virtual'
-
-/** Código del `ErrorDto` cuando el evento no existe o es un borrador. */
-export const EVENT_NOT_FOUND_ERROR = 'event_not_found'

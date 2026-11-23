@@ -1,0 +1,38 @@
+import type { SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
+import { formatPrice } from '@/shared/utils/eventFormat'
+import { SEAT_STATUS_LABEL, SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
+import type { SeatStatus } from '../types/purchase.types'
+
+type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
+type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
+
+const seatListFormatter = new Intl.ListFormat('es', { type: 'conjunction' })
+
+export function formatSectorTabLabel({ price, availablePlaces }: SectorTabInput) {
+  return availablePlaces === 0 ? SOLD_OUT_TAB_LABEL : formatPrice(price)
+}
+
+/** El aviso va en dos partes: la primera oración se destaca. */
+export function formatTakenSeatsMessage(seats: SeatLabelInput[]) {
+  const codes = seatListFormatter.format(seats.map(formatSeatCode))
+  if (seats.length === 1) {
+    return {
+      lead: `El asiento ${codes} lo acaba de reservar otra persona.`,
+      hint: 'Lo sacamos de tu elección: elegí otro.',
+    }
+  }
+  return {
+    lead: `Los asientos ${codes} los acaba de reservar otra persona.`,
+    hint: 'Los sacamos de tu elección: elegí otros.',
+  }
+}
+
+/** `F7`: la fila y el número, como en la entrada. */
+export function formatSeatCode({ row, number }: SeatLabelInput) {
+  return `${row}${number}`
+}
+
+/** `Fila A, asiento 3, disponible`: el estado también va en el nombre, no solo en el color. */
+export function formatSeatAccessibleName({ row, number }: SeatLabelInput, status: SeatStatus) {
+  return `Fila ${row}, asiento ${number}, ${SEAT_STATUS_LABEL[status].toLowerCase()}`
+}

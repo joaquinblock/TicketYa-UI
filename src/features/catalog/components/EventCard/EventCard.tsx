@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { cn } from '@/shared/lib/cn'
 import { ROUTES } from '@/shared/lib/routes'
 import { EVENT_TYPE_LABEL } from '../../constants/catalog.constants'
-import { formatPrice, getEventDateParts } from '../../lib/eventFormat'
+import { formatPrice, getEventDateParts } from '@/shared/utils/eventFormat'
 import type { EventSummary } from '../../types/catalog.types'
 import {
   EVENT_FLAG_LABEL,

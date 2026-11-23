@@ -24,6 +24,12 @@
   --color-info: #eaf0ff;
   --color-info-ink: #1e3a8a;
   --color-seat-free: #eef3e9;
+  --color-seat-free-line: #cfdcc6;
+  --color-seat-free-ink: #2f4a26;
+  --color-seat-taken: #e6e4df;
+  --color-seat-taken-ink: #b3afa6;
+  --color-tab-open: #fff9e8;
+  --color-sold-out: #a8a49b;
   --color-footer: #f8f7f3;
   --color-footer-line: #e1ded7;
 
@@ -41,6 +47,8 @@
 
   --radius-control: 10px;
   --radius-card: 14px;
+
+  --tracking-stage: 0.22em;
 }
 
 @layer base {

@@ -1,9 +1,6 @@
 /** Con menos lugares que esto, la fila avisa "Últimos N lugares". */
 export const LAST_PLACES_THRESHOLD = 10
 
-/** La disponibilidad se vuelve a pedir cada 30 s: alcanza sin WebSocket ni SSE. */
-export const AVAILABILITY_REFETCH_INTERVAL_MS = 30_000
-
 /** Regla del ticket-service (`ReturnRequestService.MINIMUM_NOTICE_BEFORE_THE_EVENT`). */
 export const RETURN_NOTICE_HOURS = 72
 

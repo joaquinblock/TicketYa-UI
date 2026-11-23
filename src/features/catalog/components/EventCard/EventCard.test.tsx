@@ -2,7 +2,8 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { renderWithProviders } from '@/test/render'
 import { EVENTS_PAGE_SIZE } from '../../constants/catalog.constants'
-import { getEvent, searchEvents } from '../../services/events.service'
+import { getEvent } from '@/shared/services/events.service'
+import { searchEvents } from '../../services/events.service'
 import { EventCard } from './EventCard'
 
 /** Anclas de "Datos de prueba" (`event-service.md`): el resumen se trae de la búsqueda real. */

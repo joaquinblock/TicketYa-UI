@@ -5,7 +5,8 @@ import {
   SOLD_OUT_PLACES_LABEL,
   UNNUMBERED_SECTOR_LABEL,
 } from '../constants/sectorAvailability.constants'
-import type { SeatAvailability, SectorAvailability } from '../types/catalog.types'
+import type { SectorAvailability } from '@/shared/types/event.types'
+import { sortedRowsOf } from '@/shared/utils/seatRows'
 
 const PERCENT = 100
 
@@ -24,11 +25,6 @@ export function formatSectorKind(sector: SectorKindInput) {
   if (rows.length === 0) return NUMBERED_SECTOR_LABEL
   if (rows.length === 1) return `${NUMBERED_SECTOR_LABEL} · fila ${rows[0]}`
   return `${NUMBERED_SECTOR_LABEL} · filas ${rows[0]} a ${rows.at(-1)}`
-}
-
-function sortedRowsOf(seats: SeatAvailability[]) {
-  const rows = [...new Set(seats.map((seat) => seat.row))]
-  return rows.sort((first, second) => first.localeCompare(second, 'es', { numeric: true }))
 }
 
 /** La barra muestra lo ocupado, no lo libre: se llena a medida que se vende. */

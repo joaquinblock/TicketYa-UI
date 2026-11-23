@@ -1,5 +1,6 @@
-import { formatPrice } from '../../lib/eventFormat'
-import type { SectorAvailability, SectorWithAvailability } from '../../types/catalog.types'
+import { formatPrice } from '@/shared/utils/eventFormat'
+import type { SectorAvailability } from '@/shared/types/event.types'
+import type { SectorWithAvailability } from '../../types/catalog.types'
 import { formatPlacesLeft, formatSectorKind, getOccupancyPercent } from '../../utils/sectorFormat'
 
 type SectorRowProps = { sector: SectorWithAvailability }
