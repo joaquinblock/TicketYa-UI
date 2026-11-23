@@ -22,6 +22,16 @@ export type Ticket = {
   price: number
   status: TicketStatus
   qrCode: string | null
+  hasPendingReturnRequest?: boolean
+}
+
+export type ReturnRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED'
+
+export type ReturnRequestResponse = {
+  id: number
+  ticketId: number
+  status: ReturnRequestStatus
+  requestedAt: string
 }
 
 export type Order = {

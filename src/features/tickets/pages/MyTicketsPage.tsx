@@ -1,14 +1,46 @@
-import { CircleAlert, Ticket } from 'lucide-react'
+import { CircleAlert, Ticket as TicketIcon } from 'lucide-react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/atoms/Button'
 import { PageTitle } from '@/shared/components/atoms/PageTitle'
 import { Spinner } from '@/shared/components/atoms/Spinner'
 import { ROUTES } from '@/shared/lib/routes'
 import { OrderCard } from '../components/OrderCard'
+import { ReturnRequestDialog } from '../components/ReturnRequestDialog'
 import { useMyOrders } from '../hooks/useMyOrders'
+import { useRequestReturn } from '../hooks/useRequestReturn'
+import {
+  formatOrderPrice,
+  formatTicketLocation,
+  getReturnRequestErrorMessage,
+} from '../lib/ticketFormat'
+import type { Order, Ticket } from '../types/tickets.types'
 
 export function MyTicketsPage() {
   const { orders, isPending, isError, refetch } = useMyOrders()
+  const requestReturn = useRequestReturn()
+  const [selectedForReturn, setSelectedForReturn] = useState<{
+    order: Order
+    ticket: Ticket
+  } | null>(null)
+
+  const handleOpenReturnDialog = (order: Order, ticket: Ticket) => {
+    requestReturn.reset()
+    setSelectedForReturn({ order, ticket })
+  }
+
+  const handleCloseReturnDialog = () => {
+    if (requestReturn.isPending) return
+    requestReturn.reset()
+    setSelectedForReturn(null)
+  }
+
+  const handleConfirmReturn = () => {
+    if (!selectedForReturn) return
+    requestReturn.mutate(selectedForReturn.ticket.id, {
+      onSuccess: () => setSelectedForReturn(null),
+    })
+  }
 
   return (
     <section className="mx-auto flex w-full max-w-245 flex-col gap-5.5 px-4 pt-10 pb-18 md:px-7">
@@ -26,7 +58,23 @@ export function MyTicketsPage() {
       ) : orders.length === 0 ? (
         <MyTicketsEmptyState />
       ) : (
-        orders.map((order) => <OrderCard key={order.id} order={order} />)
+        orders.map((order) => (
+          <OrderCard key={order.id} order={order} onRequestReturn={handleOpenReturnDialog} />
+        ))
+      )}
+
+      {selectedForReturn && (
+        <ReturnRequestDialog
+          eventName={selectedForReturn.order.event.name}
+          ticketLocation={formatTicketLocation(selectedForReturn.ticket)}
+          priceLabel={formatOrderPrice(selectedForReturn.ticket.price)}
+          isPending={requestReturn.isPending}
+          errorMessage={
+            requestReturn.isError ? getReturnRequestErrorMessage(requestReturn.error) : null
+          }
+          onCancel={handleCloseReturnDialog}
+          onConfirm={handleConfirmReturn}
+        />
       )}
     </section>
   )
@@ -72,7 +120,7 @@ function MyTicketsErrorState({ onRetry }: { onRetry: () => void }) {
 function MyTicketsEmptyState() {
   return (
     <div className="flex flex-col items-center gap-3 rounded-2xl border border-line bg-surface px-5 py-14 text-center text-muted">
-      <Ticket aria-hidden="true" className="size-11 text-line-strong" />
+      <TicketIcon aria-hidden="true" className="size-11 text-line-strong" />
       <h2 className="text-2xl font-bold text-ink">Todavía no tenés compras</h2>
       <p className="max-w-md text-sm">
         Cuando compres tus entradas, van a aparecer acá con su código QR listo para el ingreso.

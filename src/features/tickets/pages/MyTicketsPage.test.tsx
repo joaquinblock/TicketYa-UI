@@ -177,3 +177,90 @@ function pointApiClientToClosedPort() {
     onUnauthorized: () => {},
   })
 }
+
+describe('Mis entradas: solicitud de devolución', () => {
+  it('muestra aviso y botón deshabilitado en orden < 72 h, Devolución pendiente del seeder, y permite abrir y cancelar el diálogo en una entrada elegible', async () => {
+    const token = await devLogin(SEEDER_USER.CLIENT)
+    localStorage.setItem('ticketya.accessToken', token)
+    const allOrders = await getOrders()
+    localStorage.clear()
+
+    const paidOrders = allOrders.filter((order) => order.status === 'PAID')
+    const pastOrder = paidOrders.find((order) => order.eventId === 9)
+    const pendingOrder = paidOrders.find((order) =>
+      order.tickets.some((ticket) => ticket.hasPendingReturnRequest),
+    )
+    const eligibleOrder = paidOrders.find(
+      (order) =>
+        order.eventId !== 9 &&
+        order.tickets.some(
+          (ticket) => ticket.status === 'ISSUED' && !ticket.hasPendingReturnRequest,
+        ),
+    )
+
+    expect(pastOrder).toBeDefined()
+    expect(pendingOrder).toBeDefined()
+    expect(eligibleOrder).toBeDefined()
+
+    const user = userEvent.setup()
+    renderMyTicketsPage()
+
+    const pastCard = await screen.findByRole('article', {
+      name: `Orden ${pastOrder!.id}, ${pastOrder!.event.name}`,
+    })
+    expect(
+      within(pastCard).getByText(
+        'Faltan menos de 72 horas para este evento: ya no se pueden pedir devoluciones.',
+      ),
+    ).toBeInTheDocument()
+
+    await user.click(
+      within(pastCard).getByRole('button', {
+        name: new RegExp(formatTicketCode(pastOrder!.tickets[0].id)),
+      }),
+    )
+    expect(
+      await within(pastCard).findByRole('button', { name: 'Pedir la devolución' }),
+    ).toBeDisabled()
+
+    const pendingTicket = pendingOrder!.tickets.find((ticket) => ticket.hasPendingReturnRequest)!
+    const pendingCard = screen.getByRole('article', {
+      name: `Orden ${pendingOrder!.id}, ${pendingOrder!.event.name}`,
+    })
+    expect(
+      within(pendingCard).getByRole('button', {
+        name: new RegExp(formatTicketCode(pendingTicket.id)),
+      }),
+    ).toHaveTextContent('Devolución pendiente')
+
+    const eligibleTicket = eligibleOrder!.tickets.find(
+      (ticket) => ticket.status === 'ISSUED' && !ticket.hasPendingReturnRequest,
+    )!
+    const eligibleCard = screen.getByRole('article', {
+      name: `Orden ${eligibleOrder!.id}, ${eligibleOrder!.event.name}`,
+    })
+    await user.click(
+      within(eligibleCard).getByRole('button', {
+        name: new RegExp(formatTicketCode(eligibleTicket.id)),
+      }),
+    )
+    await user.click(
+      await within(eligibleCard).findByRole('button', { name: /pedir la devolución/i }),
+    )
+
+    const dialog = await screen.findByRole('dialog', { name: '¿Pedir la devolución?' })
+    expect(
+      within(dialog).getByText(
+        `${eligibleOrder!.event.name} · ${formatTicketLocation(eligibleTicket)}`,
+      ),
+    ).toBeInTheDocument()
+    expect(
+      within(dialog).getByText(
+        new RegExp(`te reintegramos ${formatOrderPrice(eligibleTicket.price).replace('$', '\\$')}`),
+      ),
+    ).toBeInTheDocument()
+
+    await user.click(within(dialog).getByRole('button', { name: 'No, volver' }))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+})

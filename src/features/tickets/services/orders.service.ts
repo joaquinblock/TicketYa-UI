@@ -1,13 +1,17 @@
 import { apiClient } from '@/shared/lib/http/apiClient'
 import { getAccessToken, saveAccessToken } from '@/shared/lib/session'
 import { SEEDER_CLIENT_USER_ID } from '../constants/tickets.constants'
-import type { Order } from '../types/tickets.types'
+import type { Order, ReturnRequestResponse } from '../types/tickets.types'
 
 const ORDERS_ENDPOINT = '/api/orders'
 const DEV_LOGIN_ENDPOINT = '/api/auth/dev-login'
 
 export function getOrders(): Promise<Order[]> {
   return apiClient.get<Order[]>(ORDERS_ENDPOINT)
+}
+
+export function requestTicketReturn(ticketId: number): Promise<ReturnRequestResponse> {
+  return apiClient.post<ReturnRequestResponse>(`/api/tickets/${ticketId}/return-requests`)
 }
 
 /**
