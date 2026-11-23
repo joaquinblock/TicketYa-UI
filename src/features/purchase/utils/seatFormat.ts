@@ -1,5 +1,10 @@
-import type { SeatAvailability, SectorAvailability } from '@/shared/types/event.types'
-import { formatPrice } from '@/shared/utils/eventFormat'
+import type {
+  EventDetail,
+  SeatAvailability,
+  SectorAvailability,
+  Venue,
+} from '@/shared/types/event.types'
+import { formatEventDateTime, formatPrice } from '@/shared/utils/eventFormat'
 import { SEAT_STATUS_LABEL, SOLD_OUT_TAB_LABEL } from '../constants/seats.constants'
 import type { SeatStatus } from '../types/purchase.types'
 
@@ -7,6 +12,13 @@ type SectorTabInput = Pick<SectorAvailability, 'price' | 'availablePlaces'>
 type SeatLabelInput = Pick<SeatAvailability, 'row' | 'number'>
 
 const seatListFormatter = new Intl.ListFormat('es', { type: 'conjunction' })
+
+type EventHeaderInput = Pick<EventDetail, 'name' | 'dateTime'> & { venue: Pick<Venue, 'name'> }
+
+/** `La casa de las sierras · 19 dic 2026 · 20:30 hs · Teatro de la Sierra` */
+export function formatEventHeader({ name, dateTime, venue }: EventHeaderInput) {
+  return `${name} · ${formatEventDateTime(dateTime)} · ${venue.name}`
+}
 
 export function formatSectorTabLabel({ price, availablePlaces }: SectorTabInput) {
   return availablePlaces === 0 ? SOLD_OUT_TAB_LABEL : formatPrice(price)
