@@ -2,6 +2,8 @@ import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
+import { setupApiClient } from '@/app/setupApiClient'
+import { configureApiClient } from '@/shared/lib/http/apiClient'
 import { ROUTES } from '@/shared/lib/routes'
 import { saveAccessToken } from '@/shared/lib/session'
 import { devLogin, SEEDER_USER } from '@/test/gateway'
@@ -136,4 +138,34 @@ describe('Mis entradas: CA4', () => {
     expect(screen.queryByRole('heading', { level: 2, name: 'Todavía no tenés compras' })).not.toBeInTheDocument()
     expect(screen.queryAllByRole('article')).toHaveLength(0)
   })
+
+  it('cuando falla la carga muestra el error y "Reintentar" vuelve a pedir las órdenes', async () => {
+    pointApiClientToClosedPort()
+    const user = userEvent.setup()
+    renderMyTicketsPage()
+
+    expect(
+      await screen.findByRole(
+        'heading',
+        { level: 2, name: 'No pudimos cargar tus entradas' },
+        NETWORK_FAILURE_TIMEOUT,
+      ),
+    ).toBeInTheDocument()
+
+    setupApiClient()
+    await user.click(screen.getByRole('button', { name: 'Reintentar' }))
+
+    const articles = await screen.findAllByRole('article')
+    expect(articles.length).toBeGreaterThanOrEqual(2)
+  })
 })
+
+const NETWORK_FAILURE_TIMEOUT = { timeout: 10_000 }
+
+function pointApiClientToClosedPort() {
+  configureApiClient({
+    baseUrl: 'http://localhost:1',
+    getAccessToken: () => undefined,
+    onUnauthorized: () => {},
+  })
+}
