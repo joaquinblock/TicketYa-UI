@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest'
 import { AppRouter } from '@/app/AppRouter'
 import { ROUTES } from '@/shared/lib/routes'
 import { LocationProbe } from '@/test/LocationProbe'
+import { getCurrentUrl } from '@/test/LocationProbe'
+import userEvent from '@testing-library/user-event'
 import { renderWithProviders } from '@/test/render'
 import { EVENT_TYPE_LABEL } from '../constants/catalog.constants'
 import { formatEventDateTime } from '../lib/eventFormat'
@@ -149,6 +151,25 @@ describe('Detalle del evento: CA2', () => {
 })
 
 const BACKEND_STATUS_CODES = ['PUBLISHED', 'SOLD_OUT', 'SUSPENDED', 'CANCELLED', 'FINISHED']
+
+const MISSING_EVENT_ID = 999999
+
+describe('Detalle del evento: CA3', () => {
+  it('un id inexistente muestra "No encontramos este evento", y "Volver a explorar" lleva a Inicio', async () => {
+    const user = userEvent.setup()
+    renderEventPage(MISSING_EVENT_ID)
+
+    expect(
+      await screen.findByRole('heading', { name: 'No encontramos este evento' }),
+    ).toBeInTheDocument()
+    const backLinks = screen.getAllByRole('link', { name: /Volver a explorar/ })
+    expect(backLinks).toHaveLength(1)
+
+    await user.click(backLinks[0])
+
+    expect(getCurrentUrl().pathname).toBe(ROUTES.home)
+  })
+})
 
 function findEventNotice() {
   return screen.findByRole('region', { name: 'Aviso' })
