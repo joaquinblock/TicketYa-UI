@@ -243,6 +243,37 @@ describe('Lugares: CA3, alguien me ganó un asiento', () => {
   })
 })
 
+/** Ancla de "Datos de prueba" (`ticket-service.md`): en el 45 queda 1 lugar en Campo. */
+const LAST_PLACE_EVENT = 45
+
+describe('Lugares: CA3, alguien me ganó el último lugar', () => {
+  afterEach(async () => {
+    await cancelOtherPersonOrders()
+    await cancelPendingOrders(LAST_PLACE_EVENT)
+  })
+
+  it('si otra persona reservó el último lugar del sector, sigo en Lugares con el aviso de agotado y el botón deshabilitado', async () => {
+    const field = await unnumberedSectorOf(LAST_PLACE_EVENT)
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(LAST_PLACE_EVENT)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+    await reserveAsAnotherPerson({
+      eventId: LAST_PLACE_EVENT,
+      eventSectorId: field.eventSectorId,
+      quantity: field.availablePlaces,
+    })
+
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+
+    expect(
+      await screen.findByRole('alert', { name: `Se agotó ${field.sectorName}.` }),
+    ).toBeInTheDocument()
+    expect(getCurrentUrl().pathname).toBe(ROUTES.seats(LAST_PLACE_EVENT))
+    expect(within(summary).getByRole('button', { name: 'Reservar y pagar' })).toBeDisabled()
+  })
+})
+
 /**
  * Ancla de "Datos de prueba" (`ticket-service.md`): el 43 tiene Campo, Platea baja, Platea alta
  * agotada y Palco VIP. Se usa para cambiar de pestaña, sin reservar.
