@@ -55,7 +55,11 @@ export function SelectionSummary({
         <strong className="font-mono text-2xl font-medium">{formatPrice(summary.total)}</strong>
       </div>
       {reservation.error && (
-        <ReservationAlert error={reservation.error} maxTicketsPerCustomer={maxTicketsPerCustomer} />
+        <ReservationAlert
+          error={reservation.error}
+          maxTicketsPerCustomer={maxTicketsPerCustomer}
+          onRetry={reservation.reserve}
+        />
       )}
       <Button
         variant="accent"
@@ -82,10 +86,12 @@ export function SelectionSummary({
 
 type ReservationAlertProps = Pick<EventDetail, 'maxTicketsPerCustomer'> & {
   error: ShownReservationError
+  /** Manda la misma clave: si el primer pedido llegó, el backend devuelve esa orden. */
+  onRetry: () => void
 }
 
 /** Al lado del botón, para que se vea donde pasó (Nielsen 9), también en mobile. */
-function ReservationAlert({ error, maxTicketsPerCustomer }: ReservationAlertProps) {
+function ReservationAlert({ error, maxTicketsPerCustomer, onRetry }: ReservationAlertProps) {
   return (
     <div
       role="alert"
@@ -96,6 +102,11 @@ function ReservationAlert({ error, maxTicketsPerCustomer }: ReservationAlertProp
         <Link to={ROUTES.login} className="font-semibold text-error-ink underline">
           Iniciar sesión (falta login)
         </Link>
+      )}
+      {error === 'FAILED' && (
+        <Button variant="ghost" onClick={onRetry} className="self-start">
+          Reintentar
+        </Button>
       )}
     </div>
   )
