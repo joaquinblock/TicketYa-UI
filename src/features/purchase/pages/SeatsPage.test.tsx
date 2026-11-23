@@ -219,6 +219,41 @@ describe('Lugares: CA5, dos asientos a la vez', () => {
   })
 })
 
+describe('Lugares: CA5, el aviso se va', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    focusManager.setFocused(undefined)
+  })
+
+  async function showTakenSeatAlert() {
+    const [taken, other] = await freeSeats(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS, 2)
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    await user.click(await screen.findByRole('button', { name: seatName(taken, 'disponible') }))
+    takeSeatsOnNextRefreshes([taken.seatId])
+    refetchByRefocusing()
+    await screen.findByRole('alert', { name: /lo acaba de reservar otra persona/ })
+    return { user, other }
+  }
+
+  it('desaparece al elegir otro asiento', async () => {
+    const { user, other } = await showTakenSeatAlert()
+
+    await user.click(screen.getByRole('button', { name: seatName(other, 'disponible') }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+
+  it('desaparece al cambiar de sector', async () => {
+    const { user } = await showTakenSeatAlert()
+
+    const tabs = screen.getByRole('group', { name: 'Sectores' })
+    await user.click(within(tabs).getByRole('button', { name: /^Pullman / }))
+
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+})
+
 async function freeSeats(eventId: number, count: number) {
   const sector = await firstSectorWithPlaces(eventId)
   const seats = (sector.seats ?? []).filter((candidate) => candidate.available).slice(0, count)
