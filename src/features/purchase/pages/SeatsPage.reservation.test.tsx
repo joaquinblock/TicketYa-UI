@@ -25,6 +25,7 @@ const NUMBERED_EVENT = {
   RESERVING: 25,
   RESERVED: 26,
   DOUBLE_CLICK: 27,
+  SEAT_TAKEN: 29,
 } as const
 
 const UNNUMBERED_EVENT = {
@@ -209,6 +210,39 @@ describe('Lugares: CA2 borde, dos clics seguidos', () => {
   })
 })
 
+describe('Lugares: CA3, alguien me ganó un asiento', () => {
+  afterEach(async () => {
+    await cancelOtherPersonOrders()
+    await cancelPendingOrders(NUMBERED_EVENT.SEAT_TAKEN)
+  })
+
+  it('si otra persona reservó antes el asiento, sigo en Lugares, veo el aviso y el asiento sale de "Tu selección"', async () => {
+    const eventId = NUMBERED_EVENT.SEAT_TAKEN
+    const { seats } = await freeSeats(eventId, 2)
+    const [taken, kept] = seats
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    for (const seat of seats) await user.click(await findFreeSeatButton(seat))
+    await reserveAsAnotherPerson({ eventId, seatIds: [taken.seatId] })
+
+    await user.click(screen.getByRole('button', { name: 'Reservar y pagar' }))
+
+    expect(
+      await screen.findByRole('alert', {
+        name: `El asiento ${taken.row}${taken.number} lo acaba de reservar otra persona.`,
+      }),
+    ).toBeInTheDocument()
+    expect(getCurrentUrl().pathname).toBe(ROUTES.seats(eventId))
+    const summary = screen.getByRole('complementary', { name: 'Tu selección' })
+    expect(
+      within(summary)
+        .getAllByRole('listitem')
+        .map((line) => line.textContent),
+    ).toEqual([expect.stringContaining(`fila ${kept.row}, asiento ${kept.number}`)])
+  })
+})
+
 /**
  * Ancla de "Datos de prueba" (`ticket-service.md`): el 43 tiene Campo, Platea baja, Platea alta
  * agotada y Palco VIP. Se usa para cambiar de pestaña, sin reservar.
@@ -349,6 +383,39 @@ const GATEWAY_URL = import.meta.env.TICKETYA_GATEWAY_URL
 
 type ClientOrder = Pick<Order, 'id' | 'eventId' | 'status'> & {
   tickets: Pick<OrderTicket, 'seatId' | 'eventSectorId'>[]
+}
+
+type OtherPersonOrder = { id: number; token: string }
+
+const otherPersonOrders: OtherPersonOrder[] = []
+
+/**
+ * Otra persona (el organizador del seeder: `POST /api/orders` no valida el rol) reserva esos
+ * lugares por la API. La orden queda anotada para cancelarla al terminar.
+ */
+async function reserveAsAnotherPerson(
+  request: { eventId: number } & (
+    { seatIds: number[] } | { eventSectorId: number; quantity: number }
+  ),
+) {
+  const token = await devLogin(SEEDER_USER.ORGANIZER)
+  const response = await fetch(`${GATEWAY_URL}${ORDERS_PATH}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ ...request, idempotencyKey: crypto.randomUUID() }),
+  })
+  if (!response.ok) throw new Error(`La otra persona no pudo reservar: ${response.status}`)
+  const { id } = (await response.json()) as { id: number }
+  otherPersonOrders.push({ id, token })
+}
+
+async function cancelOtherPersonOrders() {
+  for (const { id, token } of otherPersonOrders.splice(0)) {
+    await fetch(`${GATEWAY_URL}${ORDERS_PATH}/${id}/cancel`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  }
 }
 
 /** Las órdenes del cliente del seeder, pedidas por fuera de la página. */
