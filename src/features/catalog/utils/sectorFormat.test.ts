@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatPlacesLeft, getOccupancyPercent } from './sectorAvailability'
+import { formatPlacesLeft, getOccupancyPercent } from './sectorFormat'
 
 describe('formatPlacesLeft y getOccupancyPercent', () => {
   it('con 1240 de 5000 libres dice "1.240 disponibles" y ocupa el 75 %', () => {
