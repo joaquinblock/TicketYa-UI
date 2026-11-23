@@ -1,7 +1,7 @@
 # 15: Detalle del evento y participantes
 
 **Tipo:** Story
-**Estado:** borrador
+**Estado:** aprobado
 **Funcionalidad:** Evento (épica #10 Cliente, página #14)
 
 ## Historia
@@ -59,7 +59,7 @@ Desde la cartelera (story 12) cada card lleva al detalle, pero hoy esa página e
 ## Notas técnicas
 
 - Feature `catalog`; la página `src/features/catalog/pages/EventPage` ya existe dentro de `PurchaseLayout`.
-- Mockup: `Evento` y `EventoMobile` (artifact de `MOCKUP.md`). **Antes del tracker se corrige el mockup:** agregar el estado "Este evento ya pasó" (`FINISHED`), cambiar el mapa decorativo por el link "Ver en el mapa" y sacar el organizador.
+- Mockup: `Evento` y `EventoMobile` (artifact de `MOCKUP.md`). **El mockup no se corrige:** sus diferencias con esta story van al tracker, en la checklist visual, y ahí manda la story. Son el estado "Este evento ya pasó" (`FINISHED`), que el mockup no tiene; el link "Ver en el mapa" en lugar del mapa decorativo; y el organizador, que no se muestra.
 
 ## Definition of Done
 

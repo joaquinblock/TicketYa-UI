@@ -1,7 +1,7 @@
 # 16: Sectores y precios con disponibilidad
 
 **Tipo:** Story
-**Estado:** borrador
+**Estado:** aprobado
 **Funcionalidad:** Evento (épica #10 Cliente, página #14)
 
 ## Historia
@@ -58,7 +58,7 @@ El detalle del evento (story 15) dice qué es y en qué estado está, pero no cu
 
 - Feature `catalog`. Las rutas de la fila y de Lugares ya están en `src/shared/lib/routes.ts`.
 - El texto de las devoluciones (72 h) es una regla del backend (ticket-service); va como constante con nombre.
-- Mockup: `Evento` y `EventoMobile` (artifact de `MOCKUP.md`). **Antes del tracker se corrige el mockup:** agregar el botón "Elegir lugares" para un evento sin alta demanda y los sectores sin disponibilidad para suspendido, cancelado y finalizado.
+- Mockup: `Evento` y `EventoMobile` (artifact de `MOCKUP.md`). **El mockup no se corrige:** sus diferencias con esta story van al tracker, en la checklist visual, y ahí manda la story. Son el botón "Elegir lugares" para un evento sin alta demanda y los sectores sin disponibilidad para suspendido, cancelado y finalizado, que el mockup no tiene.
 
 ## Definition of Done
 
