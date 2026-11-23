@@ -332,6 +332,30 @@ describe('Lugares: CA6, error', () => {
   })
 })
 
+describe('Lugares: CA6, reintentando', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    setupApiClient()
+  })
+
+  it('mientras vuelve a pedir, el error deja lugar al mapa en carga', async () => {
+    pointApiClientToClosedPort()
+    const user = userEvent.setup()
+    renderSeatsPage(SEEDER_EVENT.PLATEA_WITH_SOLD_SEATS)
+    const error = await screen.findByRole(
+      'alert',
+      { name: 'No pudimos cargar los lugares' },
+      NETWORK_FAILURE_TIMEOUT,
+    )
+
+    vi.spyOn(globalThis, 'fetch').mockImplementation(() => new Promise<Response>(() => {}))
+    await user.click(within(error).getByRole('button', { name: 'Reintentar' }))
+
+    expect(await screen.findByRole('status', { name: 'Cargando lugares' })).toBeInTheDocument()
+    expect(error).not.toBeInTheDocument()
+  })
+})
+
 describe('Lugares: CA6, sin venta', () => {
   it('con el evento 999999 avisa que no tiene lugares a la venta, sin "Reintentar", y el link lleva al evento', async () => {
     const user = userEvent.setup()
