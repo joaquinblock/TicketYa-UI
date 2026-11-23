@@ -19,6 +19,10 @@ const NUMBERED_EVENT = {
   SUMMARY: 17,
 } as const
 
+const UNNUMBERED_EVENT = {
+  SUMMARY: 13,
+} as const
+
 function renderSeatsPage(eventId: number) {
   return renderWithProviders(
     <>
@@ -52,6 +56,24 @@ describe('Lugares: CA1, ver mi selección', () => {
   })
 })
 
+describe('Lugares: CA1, ver mi selección en un sector no numerado', () => {
+  it('con la cantidad en 2, "Tu selección" muestra una sola línea "2 × <sector>" con el precio por 2', async () => {
+    const eventId = UNNUMBERED_EVENT.SUMMARY
+    const sector = await unnumberedSectorOf(eventId)
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+
+    await user.click(await screen.findByRole('button', { name: 'Una más' }))
+
+    const summary = screen.getByRole('complementary', { name: 'Tu selección' })
+    const lines = within(summary).getAllByRole('listitem')
+    expect(lines.map((line) => line.textContent)).toEqual([
+      `2 × ${sector.sectorName}${formatPrice(2 * sector.price)}`,
+    ])
+    expect(within(summary).getAllByText(formatPrice(2 * sector.price))).toHaveLength(2)
+  })
+})
+
 /** Los primeros libres en el orden del mapa: fila y número. */
 async function freeSeats(eventId: number, count: number) {
   const { sectors } = await getAvailability(eventId)
@@ -63,6 +85,13 @@ async function freeSeats(eventId: number, count: number) {
     .slice(0, count)
   if (seats.length < count) throw new Error(`El evento ${eventId} no tiene ${count} libres`)
   return { sector, seats }
+}
+
+async function unnumberedSectorOf(eventId: number) {
+  const { sectors } = await getAvailability(eventId)
+  const sector = sectors.find((candidate) => !candidate.numbered && candidate.availablePlaces > 0)
+  if (!sector) throw new Error(`El evento ${eventId} no tiene un sector no numerado con lugares`)
+  return sector
 }
 
 function findFreeSeatButton(seat: SeatAvailability) {
