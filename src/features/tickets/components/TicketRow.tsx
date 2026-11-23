@@ -8,12 +8,19 @@ import { TicketQrCode } from './TicketQrCode'
 
 type TicketRowProps = {
   ticket: Ticket
+  canRequestReturn?: boolean
+  onRequestReturn?: (ticket: Ticket) => void
 }
 
-export function TicketRow({ ticket }: TicketRowProps) {
+export function TicketRow({
+  ticket,
+  canRequestReturn = true,
+  onRequestReturn,
+}: TicketRowProps) {
   const [isExpanded, setIsExpanded] = useState(false)
   const code = formatTicketCode(ticket.id)
   const isPendingReturn = ticket.status === 'ISSUED' && Boolean(ticket.hasPendingReturnRequest)
+  const canShowReturnAction = ticket.status === 'ISSUED' && !isPendingReturn
   const statusMeta = isPendingReturn
     ? PENDING_RETURN_TICKET_META
     : TICKET_STATUS_META[ticket.status]
@@ -60,6 +67,16 @@ export function TicketRow({ ticket }: TicketRowProps) {
             <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
             <h3 className="text-xl font-bold text-ink">{statusMeta.title}</h3>
             <p className="text-sm leading-relaxed text-muted">{statusMeta.description}</p>
+            {canShowReturnAction && (
+              <button
+                type="button"
+                disabled={!canRequestReturn}
+                onClick={() => onRequestReturn?.(ticket)}
+                className="inline-flex min-h-9 cursor-pointer items-center gap-1.5 text-sm font-semibold text-ink underline decoration-accent decoration-2 underline-offset-4 disabled:cursor-not-allowed disabled:text-subtle disabled:decoration-line-strong"
+              >
+                {canRequestReturn ? 'Pedir la devolución ↗' : 'Pedir la devolución'}
+              </button>
+            )}
           </div>
         </div>
       )}
