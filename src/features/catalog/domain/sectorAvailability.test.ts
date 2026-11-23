@@ -44,4 +44,13 @@ describe('joinSectorsWithAvailability: unión por nombre', () => {
       ['Pullman', 7],
     ])
   })
+
+  it('un sector del detalle sin par en la disponibilidad queda con nombre y precio, sin lugares', () => {
+    const joined = joinSectorsWithAvailability(
+      [detailSector(1, 'Campo'), detailSector(2, 'Palco')],
+      [availabilityOf(10, 'Campo', 50)],
+    )
+
+    expect(joined[1]).toEqual({ ...detailSector(2, 'Palco'), availability: undefined })
+  })
 })
