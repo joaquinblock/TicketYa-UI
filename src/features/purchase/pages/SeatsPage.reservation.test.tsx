@@ -29,6 +29,7 @@ const NUMBERED_EVENT = {
 const UNNUMBERED_EVENT = {
   SUMMARY: 13,
   SOLD_OUT_ON_REFRESH: 14,
+  RESERVED: 15,
 } as const
 
 function renderSeatsPage(eventId: number) {
@@ -156,6 +157,31 @@ describe('Lugares: CA2, reservar y seguir al pago', () => {
     expect(order?.tickets.map((ticket) => ticket.seatId).sort()).toEqual(
       seats.map((seat) => seat.seatId).sort(),
     )
+  })
+})
+
+describe('Lugares: CA2, reservar en un sector no numerado', () => {
+  afterEach(async () => {
+    await cancelPendingOrders(UNNUMBERED_EVENT.RESERVED)
+  })
+
+  it('con la cantidad en 2, va a Pago y la orden tiene 2 entradas del sector', async () => {
+    const eventId = UNNUMBERED_EVENT.RESERVED
+    const sector = await unnumberedSectorOf(eventId)
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    await user.click(await screen.findByRole('button', { name: 'Una más' }))
+
+    await user.click(screen.getByRole('button', { name: 'Reservar y pagar' }))
+
+    await waitFor(() => expect(getCurrentUrl().pathname).toBe(ROUTES.payment(eventId)))
+    const orderId = Number(getCurrentUrl().searchParams.get('orderId'))
+    const order = (await clientOrders()).find((candidate) => candidate.id === orderId)
+    expect(order?.tickets.map((ticket) => ticket.eventSectorId)).toEqual([
+      sector.eventSectorId,
+      sector.eventSectorId,
+    ])
   })
 })
 
