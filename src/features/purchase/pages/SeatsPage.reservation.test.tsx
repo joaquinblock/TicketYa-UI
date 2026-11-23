@@ -30,7 +30,7 @@ const NUMBERED_EVENT = {
 const UNNUMBERED_EVENT = {
   SUMMARY: 13,
   SOLD_OUT_ON_REFRESH: 14,
-  RESERVED: 15,
+  RESERVED: 31,
 } as const
 
 function renderSeatsPage(eventId: number) {
