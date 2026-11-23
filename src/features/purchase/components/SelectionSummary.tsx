@@ -3,13 +3,20 @@ import { useId } from 'react'
 import { Button } from '@/shared/components/atoms/Button'
 import type { EventDetail } from '@/shared/types/event.types'
 import { formatPrice } from '@/shared/utils/eventFormat'
-import type { SelectionSummary as Summary } from '../types/purchase.types'
+import type { Reservation, SelectionSummary as Summary } from '../types/purchase.types'
 import { formatSelectionCount } from '../utils/seatFormat'
 
-type SelectionSummaryProps = Pick<EventDetail, 'maxTicketsPerCustomer'> & { summary: Summary }
+type SelectionSummaryProps = Pick<EventDetail, 'maxTicketsPerCustomer'> & {
+  summary: Summary
+  reservation: Reservation
+}
 
 /** "Tu selección": lo elegido con su precio, el total y el contador contra el límite por persona. */
-export function SelectionSummary({ summary, maxTicketsPerCustomer }: SelectionSummaryProps) {
+export function SelectionSummary({
+  summary,
+  maxTicketsPerCustomer,
+  reservation,
+}: SelectionSummaryProps) {
   const titleId = useId()
 
   return (
@@ -40,9 +47,20 @@ export function SelectionSummary({ summary, maxTicketsPerCustomer }: SelectionSu
         <span>Total</span>
         <strong className="font-mono text-2xl font-medium">{formatPrice(summary.total)}</strong>
       </div>
-      <Button variant="accent" size="lg" disabled={summary.count === 0}>
-        Reservar y pagar
-        <ArrowUpRight aria-hidden className="size-4.5" />
+      <Button
+        variant="accent"
+        size="lg"
+        disabled={summary.count === 0 || reservation.isReserving}
+        onClick={reservation.reserve}
+      >
+        {reservation.isReserving ? (
+          'Reservando…'
+        ) : (
+          <>
+            Reservar y pagar
+            <ArrowUpRight aria-hidden className="size-4.5" />
+          </>
+        )}
       </Button>
       <p className="flex gap-2 text-label text-subtle">
         <ShieldCheck aria-hidden className="mt-0.5 size-4 flex-none text-seat-free-ink" />

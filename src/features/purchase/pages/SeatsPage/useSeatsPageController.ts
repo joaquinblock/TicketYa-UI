@@ -2,8 +2,10 @@ import type { SeatAvailability } from '@/shared/types/event.types'
 import { parseEventId } from '@/shared/utils/eventId'
 import { useOpenSector } from '../../hooks/useOpenSector'
 import { useSeatSelection } from '../../hooks/useSeatSelection'
+import { useReservation } from '../../hooks/useReservation'
 import { useSeatsData } from '../../hooks/useSeatsData'
 import { useSectorQuantity } from '../../hooks/useSectorQuantity'
+import { toReservationDraft } from '../../domain/reservationDraft'
 import { summarizeSelection } from '../../domain/selectionSummary'
 import { toUnnumberedSector } from '../../domain/unnumberedSector'
 
@@ -12,7 +14,8 @@ const NO_SEATS: SeatAvailability[] = []
 
 /** Une los datos, el sector abierto y la selección, que #20 y #21 también van a usar. */
 export function useSeatsPageController(eventIdParam: string) {
-  const data = useSeatsData(parseEventId(eventIdParam))
+  const eventId = parseEventId(eventIdParam)
+  const data = useSeatsData(eventId)
   const { openSector, openSectorById } = useOpenSector(data.sectors ?? [])
   const { selection, takenSeats, toggle, clear } = useSeatSelection(openSector?.seats ?? NO_SEATS)
   const unnumberedSector = toUnnumberedSector(data.event, openSector)
@@ -26,16 +29,19 @@ export function useSeatsPageController(eventIdParam: string) {
     sectorQuantity.reset()
   }
 
-  const selectionSummary = summarizeSelection({
+  const chosen = {
     sector: openSector,
     selection,
     quantity: unnumberedSector ? sectorQuantity.stepper.quantity : 0,
-  })
+  }
+  const selectionSummary = summarizeSelection(chosen)
+  const reservation = useReservation(toReservationDraft({ eventId, ...chosen }))
 
   return {
     ...data,
     maxTicketsPerCustomer: data.event?.maxTicketsPerCustomer ?? null,
     selectionSummary,
+    reservation,
     openSector,
     openSectorById: openSectorAndClearSelection,
     selection,

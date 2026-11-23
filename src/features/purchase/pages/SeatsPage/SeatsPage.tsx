@@ -32,6 +32,7 @@ export function SeatsPage() {
     quantityChange,
     selectionSummary,
     maxTicketsPerCustomer,
+    reservation,
   } = useSeatsPageController(eventId)
 
   let content: ReactNode
@@ -72,6 +73,7 @@ export function SeatsPage() {
         <SelectionSummary
           summary={selectionSummary}
           maxTicketsPerCustomer={maxTicketsPerCustomer}
+          reservation={reservation}
         />
       </div>
     )
