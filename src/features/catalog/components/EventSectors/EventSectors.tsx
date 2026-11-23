@@ -1,8 +1,10 @@
 import { ArrowUpRight } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/atoms/Button'
 import type { EventDetail, PurchaseAction } from '../../types/catalog.types'
 import { formatPurchaseTerms } from '../../utils/sectorFormat'
+import { EventSectorsSkeleton } from './EventSectorsSkeleton'
 import { SectorRow } from './SectorRow'
 import { useEventSectors } from './useEventSectors'
 
@@ -12,17 +14,22 @@ type EventSectorsProps = { event: EventDetail }
 export function EventSectors({ event }: EventSectorsProps) {
   const { sectors, isLoading, purchaseAction } = useEventSectors(event)
 
+  let content: ReactNode
+  if (isLoading) content = <EventSectorsSkeleton rowCount={sectors.length} />
+  else
+    content = (
+      <ul>
+        {sectors.map((sector) => (
+          <SectorRow key={sector.sectorId} sector={sector} />
+        ))}
+      </ul>
+    )
+
   return (
     <section aria-labelledby="sectores">
       <p>Encontrá tu lugar</p>
       <h2 id="sectores">Sectores y precios</h2>
-      {!isLoading && (
-        <ul>
-          {sectors.map((sector) => (
-            <SectorRow key={sector.sectorId} sector={sector} />
-          ))}
-        </ul>
-      )}
+      {content}
       {purchaseAction && (
         <PurchaseButton action={purchaseAction} maxTickets={event.maxTicketsPerCustomer} />
       )}
