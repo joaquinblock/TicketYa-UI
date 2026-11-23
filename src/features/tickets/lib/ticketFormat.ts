@@ -3,6 +3,8 @@ import type { Ticket } from '../types/tickets.types'
 
 const TICKET_CODE_PREFIX = 'TY-'
 const TICKET_CODE_DIGITS = 5
+const RETURN_DEADLINE_HOURS = 72
+const MS_PER_HOUR = 60 * 60 * 1000
 
 const priceFormatter = new Intl.NumberFormat('es-AR', {
   style: 'currency',
@@ -46,4 +48,13 @@ export function formatTicketLocation({
 /** Formatea el id de la entrada como código legible (`TY-00001`). */
 export function formatTicketCode(ticketId: number): string {
   return `${TICKET_CODE_PREFIX}${String(ticketId).padStart(TICKET_CODE_DIGITS, '0')}`
+}
+
+/** Indica si faltan al menos 72 horas para el inicio del evento. */
+export function isWithinReturnDeadline(dateTime: string, now: Date = new Date()): boolean {
+  const [date, time = '00:00:00'] = dateTime.split('T')
+  const [year, month, day] = date.split('-').map(Number)
+  const [hour = 0, minute = 0, second = 0] = time.split(':').map(Number)
+  const eventStart = new Date(year, month - 1, day, hour, minute, second)
+  return eventStart.getTime() - now.getTime() >= RETURN_DEADLINE_HOURS * MS_PER_HOUR
 }
