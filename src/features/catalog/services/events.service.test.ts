@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { EVENTS_PAGE_SIZE } from '../constants/catalog.constants'
 import type { EventSummary } from '../types/catalog.types'
 import { searchEvents } from './events.service'
+import { getEvent } from './events.service'
+import { ApiError } from '@/shared/lib/http/ApiError'
 
 /** Las reglas valen con cualquier dato del seeder; solo el agotado es un ancla de "Datos de prueba". */
 const SOLD_OUT_ANCHOR = 'Jazz en el puerto'
@@ -60,5 +62,30 @@ describe('searchEvents con filtros', () => {
 
     expect(result.content.length).toBeGreaterThan(0)
     expect(result.content.every((event) => event.venue.city === 'Tandil')).toBe(true)
+  })
+})
+
+/** Ancla de "Datos de prueba": el evento 1 es de alta demanda, a la venta y con participantes. */
+const HIGH_DEMAND_EVENT_ID = 1
+const MISSING_EVENT_ID = 999999
+
+describe('getEvent', () => {
+  it('trae el evento con su lugar, sus participantes y su estado', async () => {
+    const event = await getEvent(HIGH_DEMAND_EVENT_ID)
+
+    expect(event).toMatchObject({ id: HIGH_DEMAND_EVENT_ID, status: 'PUBLISHED', highDemand: true })
+    expect(event.venue.address).not.toBe('')
+    expect(event.venue.city).not.toBe('')
+    expect(typeof event.venue.latitude).toBe('number')
+    expect(typeof event.venue.longitude).toBe('number')
+    expect(event.participants.length).toBeGreaterThan(0)
+    for (const participant of event.participants) expect(participant.name).not.toBe('')
+  })
+
+  it('con un id que no existe falla con event_not_found y 404', async () => {
+    const error = await getEvent(MISSING_EVENT_ID).catch((caught: unknown) => caught)
+
+    expect(error).toBeInstanceOf(ApiError)
+    expect(error).toMatchObject({ code: 'event_not_found', status: 404 })
   })
 })
