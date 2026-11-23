@@ -74,4 +74,15 @@ describe('Sectores y precios: CA2', () => {
 
     expect(getCurrentUrl().pathname).toBe(ROUTES.seats(SEEDER_EVENT.ON_SALE_WITHOUT_HIGH_DEMAND))
   })
+
+  it('debajo del botón avisa el límite por persona del evento y las devoluciones', async () => {
+    const event = await getEvent(SEEDER_EVENT.HIGH_DEMAND_ON_SALE)
+    renderEventPage(event.id)
+
+    const button = await screen.findByRole('link', { name: /Entrar a la fila/ })
+    const terms = screen.getByText(
+      `Hasta ${event.maxTicketsPerCustomer} entradas por persona · Devoluciones hasta 72 horas antes del evento`,
+    )
+    expect(button.compareDocumentPosition(terms)).toBe(Node.DOCUMENT_POSITION_FOLLOWING)
+  })
 })
