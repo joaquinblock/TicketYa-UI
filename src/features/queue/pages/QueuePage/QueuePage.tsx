@@ -11,7 +11,11 @@ import { QueueExpiredBody } from '../../components/QueueExpiredBody'
 import { QueueRulesList } from '../../components/QueueRulesList'
 import { QueueSkeleton } from '../../components/QueueSkeleton'
 import { QueueWaitingBody } from '../../components/QueueWaitingBody'
-import { QUEUE_BATCH_SECONDS, QUEUE_BATCH_SIZE } from '../../constants/queue.constants'
+import {
+  IS_QUEUE_RESET_ENABLED,
+  QUEUE_BATCH_SECONDS,
+  QUEUE_BATCH_SIZE,
+} from '../../constants/queue.constants'
 import { formatEstimatedWait, getQueueProgressPercent } from '../../utils/queueFormat'
 import { useQueuePageController } from './useQueuePageController'
 
@@ -27,6 +31,8 @@ export function QueuePage() {
     retry,
     rejoin,
     isRejoining,
+    resetQueue,
+    isResetting,
   } = useQueuePageController(eventIdParam)
 
   const isWaiting = entry?.status === 'WAITING'
@@ -117,6 +123,17 @@ export function QueuePage() {
             >
               Esperando tu turno…
               <ArrowUpRight aria-hidden className="size-4.5" />
+            </button>
+          )}
+
+          {IS_QUEUE_RESET_ENABLED && (
+            <button
+              type="button"
+              disabled={isResetting}
+              onClick={resetQueue}
+              className="mt-4 min-h-11 cursor-pointer text-sm font-semibold text-muted underline underline-offset-4 disabled:cursor-progress disabled:opacity-60"
+            >
+              {isResetting ? 'Reiniciando la fila…' : 'Reiniciar la fila (solo en desarrollo)'}
             </button>
           )}
         </section>
