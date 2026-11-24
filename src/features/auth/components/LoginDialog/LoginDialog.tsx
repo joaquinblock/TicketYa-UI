@@ -1,9 +1,8 @@
 import { Ticket, X } from 'lucide-react'
 import { type MouseEvent, useId } from 'react'
-import { GOOGLE_CLIENT_ID, IS_DEV_LOGIN_ENABLED } from '../../constants/auth.constants'
-import { GoogleButtonFace } from '../GoogleSignInButton/GoogleButtonFace'
+import { GOOGLE_CLIENT_ID } from '../../constants/auth.constants'
 import { GoogleSignInButton } from '../GoogleSignInButton/GoogleSignInButton'
-import { DevLoginForm } from './DevLoginForm'
+import { TestAccountChooser } from './TestAccountChooser'
 import { useLoginDialogController } from './useLoginDialogController'
 
 /** "Ingresá a TicketYa": se abre sobre la pantalla actual, que queda como estaba detrás. */
@@ -70,14 +69,11 @@ export function LoginDialog() {
             onCredential={loginWithGoogleCredential}
           />
         ) : (
-          <GoogleButtonFace disabled title="Falta configurar TICKETYA_GOOGLE_CLIENT_ID" />
+          <TestAccountChooser isLoggingIn={isLoggingIn} onChoose={loginAsDevUser} />
         )}
         <small className="text-label text-subtle">
           Organizadores y personal de acceso entran con el mismo botón.
         </small>
-        {IS_DEV_LOGIN_ENABLED && (
-          <DevLoginForm isLoggingIn={isLoggingIn} onLogin={loginAsDevUser} />
-        )}
       </div>
     </div>
   )

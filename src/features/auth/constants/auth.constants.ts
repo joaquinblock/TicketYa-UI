@@ -1,20 +1,16 @@
-/** Usuarios del `AuthSeeder` del backend, para entrar con dev-login en desarrollo. */
-export const DEV_LOGIN_USERS = [
-  { userId: 1, label: 'Cliente' },
-  { userId: 2, label: 'Organizador' },
-  { userId: 3, label: 'Administrador' },
-  { userId: 4, label: 'Personal de acceso' },
+/**
+ * Cuentas del `AuthSeeder` del backend, una por rol. Sin client id de Google, el botón de Google
+ * las ofrece para elegir y entra con dev-login (perfil `dev` del auth-service).
+ */
+export const TEST_ACCOUNTS = [
+  { userId: 1, email: 'client@ticketya.com', role: 'Cliente' },
+  { userId: 2, email: 'organizer@ticketya.com', role: 'Organizador' },
+  { userId: 3, email: 'admin@ticketya.com', role: 'Administrador' },
+  { userId: 4, email: 'staff@ticketya.com', role: 'Personal de acceso' },
 ] as const
 
-export type DevLoginUserId = (typeof DEV_LOGIN_USERS)[number]['userId']
-
-export const DEFAULT_DEV_LOGIN_USER_ID = 1 satisfies DevLoginUserId
-
-/** El mismo `GOOGLE_CLIENT_ID` del backend (no es secreto). Sin él, no hay botón de Google. */
+/** El mismo `GOOGLE_CLIENT_ID` del backend (no es secreto). Sin él, se usan las cuentas de prueba. */
 export const GOOGLE_CLIENT_ID = import.meta.env.TICKETYA_GOOGLE_CLIENT_ID
-
-/** El login sin Google solo existe con el perfil `dev` del auth-service. */
-export const IS_DEV_LOGIN_ENABLED = import.meta.env.DEV
 
 export const GOOGLE_IDENTITY_SCRIPT_URL = 'https://accounts.google.com/gsi/client'
 

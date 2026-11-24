@@ -38,7 +38,8 @@ describe('Login: CA1, entrar desde el header', () => {
 
     await user.click(screen.getByRole('button', { name: 'Ingresar' }))
     expect(screen.getByRole('dialog', LOGIN_DIALOG)).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Entrar como usuario de prueba' }))
+    await user.click(screen.getByRole('button', { name: 'Continuar con Google' }))
+    await user.click(screen.getByRole('button', { name: /client@ticketya.com/ }))
 
     await waitFor(() => expect(screen.queryByRole('dialog', LOGIN_DIALOG)).not.toBeInTheDocument())
     const token = getAccessToken()
@@ -53,16 +54,18 @@ describe('Login: CA1, entrar desde el header', () => {
 describe('Login: CA2, mientras se canjea el token', () => {
   afterEach(() => vi.restoreAllMocks())
 
-  it('el botón dice "Ingresando…" y no se puede tocar', async () => {
+  it('se ve "Ingresando…" y las cuentas no se pueden tocar', async () => {
     // El canje no termina: así se ve el estado intermedio, que contra el gateway dura milisegundos.
     vi.spyOn(authService, 'devLogin').mockReturnValue(new Promise(() => {}))
     const user = userEvent.setup()
     renderApp()
 
     await user.click(screen.getByRole('button', { name: 'Ingresar' }))
-    await user.click(screen.getByRole('button', { name: 'Entrar como usuario de prueba' }))
+    await user.click(screen.getByRole('button', { name: 'Continuar con Google' }))
+    await user.click(screen.getByRole('button', { name: /client@ticketya.com/ }))
 
-    expect(screen.getByRole('button', { name: 'Ingresando…' })).toBeDisabled()
+    expect(screen.getByText('Ingresando…')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /client@ticketya.com/ })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Cerrar' })).toBeDisabled()
   })
 })
@@ -95,5 +98,38 @@ describe('Login: CA6, cerrar sesión', () => {
     expect(getCurrentUrl().pathname).toBe(ROUTES.home)
     expect(screen.getByRole('button', { name: 'Ingresar' })).toBeInTheDocument()
     expect(getAccessToken()).toBeUndefined()
+  })
+})
+
+describe('Login: cuentas de prueba en el botón de Google', () => {
+  it('ofrece un email del seeder por rol: cliente, organizador, administrador y personal de acceso', async () => {
+    const user = userEvent.setup()
+    renderApp()
+
+    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+    await user.click(screen.getByRole('button', { name: 'Continuar con Google' }))
+
+    for (const email of [
+      'client@ticketya.com',
+      'organizer@ticketya.com',
+      'admin@ticketya.com',
+      'staff@ticketya.com',
+    ]) {
+      expect(screen.getByRole('button', { name: (name) => name.includes(email) })).toBeEnabled()
+    }
+  })
+
+  it('al elegir el organizador, el header muestra el nombre del usuario 2 del seeder', async () => {
+    const { firstName, lastName } = await currentUserOf(await devLogin(SEEDER_USER.ORGANIZER))
+    const user = userEvent.setup()
+    renderApp()
+
+    await user.click(screen.getByRole('button', { name: 'Ingresar' }))
+    await user.click(screen.getByRole('button', { name: 'Continuar con Google' }))
+    await user.click(screen.getByRole('button', { name: /organizer@ticketya\.com/ }))
+
+    expect(
+      await screen.findByRole('button', { name: `${firstName} ${lastName}, salir` }),
+    ).toBeInTheDocument()
   })
 })
