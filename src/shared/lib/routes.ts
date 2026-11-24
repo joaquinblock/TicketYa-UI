@@ -11,6 +11,13 @@ export const ROUTES = {
     `/eventos/${eventId}/pago?orderId=${orderId}`,
   myTickets: '/mis-entradas',
   preferences: '/preferencias',
+  /** Panel del personal de acceso: eventos asignados y validar entradas. */
+  access: {
+    home: '/acceso',
+    scan: '/acceso/escanear',
+    /** Escanear con el evento ya elegido. */
+    scanEvent: (eventId: EventId) => `/acceso/escanear?evento=${eventId}`,
+  },
   backoffice: {
     home: '/backoffice',
     refunds: '/backoffice/devoluciones',

@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { LoginDialog } from '@/features/auth/components/LoginDialog/LoginDialog'
+import { accessRoute } from '@/features/access/routes/access.route'
 import { backofficeRoute } from '@/features/backoffice/routes/backoffice.route'
 import { SessionMenu } from '@/features/auth/components/SessionMenu/SessionMenu'
 import { catalogRoute } from '@/features/catalog/routes/catalog.route'
@@ -19,6 +20,7 @@ export function AppRouter() {
       <LoginDialog />
       <Routes>
         {backofficeRoute(<SessionMenu />)}
+        {accessRoute(<SessionMenu />)}
         <Route element={<StoreLayout headerActions={<SessionMenu />} />}>
           <Route path={ROUTES.home} element={<HomePage />} />
           {catalogRoute}

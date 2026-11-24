@@ -24,3 +24,6 @@ export const BACKOFFICE_LOGIN_ROLES = [
   'ADMIN',
   'ORGANIZER',
 ] as const satisfies readonly SessionRole[]
+
+/** Al ingresar, el personal de acceso va directo a su panel de la puerta. */
+export const ACCESS_PANEL_ROLE = 'ACCESS_STAFF' satisfies SessionRole

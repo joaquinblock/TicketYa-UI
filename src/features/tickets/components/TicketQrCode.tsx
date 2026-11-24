@@ -57,6 +57,12 @@ export function TicketQrCode({ qrValue, code, isActive }: TicketQrCodeProps) {
         />
       )}
       <span className="font-mono text-xs font-medium tracking-widest text-ink">{code}</span>
+      {qrValue && isActive && (
+        <span className="flex max-w-40 flex-col items-center gap-0.5 text-center">
+          <span className="text-[10px] text-subtle">Código para la puerta</span>
+          <span className="font-mono text-[10px] break-all text-ink select-all">{qrValue}</span>
+        </span>
+      )}
     </div>
   )
 }

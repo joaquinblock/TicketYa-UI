@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '@/shared/lib/routes'
 import { getSessionClaims } from '@/shared/lib/session'
-import { BACKOFFICE_LOGIN_ROLES } from '../../constants/auth.constants'
+import { ACCESS_PANEL_ROLE, BACKOFFICE_LOGIN_ROLES } from '../../constants/auth.constants'
 import { useDialogFocus } from './useDialogFocus'
 import { useLogin } from './useLogin'
 import { useLoginRequest } from './useLoginRequest'
@@ -18,6 +18,8 @@ export function useLoginDialogController() {
     const role = getSessionClaims()?.role
     if (BACKOFFICE_LOGIN_ROLES.some((backofficeRole) => backofficeRole === role)) {
       navigate(ROUTES.backoffice.home)
+    } else if (role === ACCESS_PANEL_ROLE) {
+      navigate(ROUTES.access.home)
     }
   }
 
