@@ -6,4 +6,5 @@ export const backofficeKeys = {
   returnRequests: () => [...backofficeKeys.all, 'return-requests'] as const,
   returnRequestPage: (filter: string, page: number) =>
     [...backofficeKeys.returnRequests(), filter, page] as const,
+  adminEvents: () => [...backofficeKeys.all, 'admin-events'] as const,
 }

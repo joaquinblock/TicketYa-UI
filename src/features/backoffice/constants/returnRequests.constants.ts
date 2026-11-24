@@ -11,7 +11,7 @@ export const RETURN_REQUEST_TABS = [
 
 export const DEFAULT_RETURN_REQUEST_FILTER = 'PENDING' satisfies ReturnRequestFilter
 
-type StatusTone = 'amber' | 'green' | 'red' | 'gray'
+export type StatusTone = 'amber' | 'green' | 'red' | 'gray' | 'orange'
 
 export const RETURN_REQUEST_STATUS_META = {
   PENDING: { label: 'Pendiente', tone: 'amber' },
@@ -26,6 +26,7 @@ export const STATUS_TONE_CLASS = {
   green: 'bg-[#e8f5eb] text-[#27834c]',
   red: 'bg-[#ffedeb] text-[#b93e32]',
   gray: 'bg-[#f0efec] text-[#73716b]',
+  orange: 'bg-[#fff0e7] text-[#be6b31]',
 } as const satisfies Record<StatusTone, string>
 
 export const RESOLUTION_META = {
