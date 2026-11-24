@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState } from 'react'
 import { getCities } from '@/features/catalog/services/venues.service'
+import { isUnauthorizedError } from '@/shared/lib/http/ApiError'
 import { getErrorMessage } from '@/shared/lib/http/errorMessage'
 import type { EventType, Participant } from '@/shared/types/event.types'
 import { FAVORITE_SUGGESTIONS_LIMIT } from '../constants/preferences.constants'
 import { preferencesKeys } from '../lib/preferences.queryKeys'
 import {
-  ensureDevClientSession,
   getMyPreferences,
   getParticipants,
   updateMyPreferences,
@@ -24,10 +24,7 @@ export function usePreferencesPageController() {
   const preferencesQuery = useQuery({
     queryKey: preferencesKeys.me(),
     retry: false,
-    queryFn: async () => {
-      await ensureDevClientSession()
-      return getMyPreferences()
-    },
+    queryFn: () => getMyPreferences(),
   })
 
   const participantsQuery = useQuery({
@@ -49,10 +46,7 @@ export function usePreferencesPageController() {
   const [saveError, setSaveError] = useState<string | null>(null)
 
   const saveMutation = useMutation({
-    mutationFn: async (next: Preferences) => {
-      await ensureDevClientSession()
-      return updateMyPreferences(next)
-    },
+    mutationFn: (next: Preferences) => updateMyPreferences(next),
     meta: { handlesErrorInline: true },
     onSuccess: (saved) => {
       queryClient.setQueryData(preferencesKeys.me(), saved)
@@ -113,7 +107,7 @@ export function usePreferencesPageController() {
     [participants],
   )
 
-  const favoriteParticipants = useMemo(
+  const favoriteParticipants = useMemo<Participant[]>(
     () =>
       currentPreferences.participantIds.map(
         (id) => participantsById.get(id) ?? { id, name: `Participante #${id}`, type: 'ARTIST' },
@@ -133,9 +127,12 @@ export function usePreferencesPageController() {
   }, [participants, currentPreferences.participantIds, favoriteQuery])
 
   const isLoading = preferencesQuery.isPending
+  const isLoginRequired =
+    isUnauthorizedError(preferencesQuery.error) || isUnauthorizedError(saveMutation.error)
   const isForbidden =
-    (preferencesQuery.isError && isPreferencesForbiddenError(preferencesQuery.error)) ||
-    (saveMutation.isError && isPreferencesForbiddenError(saveMutation.error))
+    !isLoginRequired &&
+    ((preferencesQuery.isError && isPreferencesForbiddenError(preferencesQuery.error)) ||
+      (saveMutation.isError && isPreferencesForbiddenError(saveMutation.error)))
   const loadError =
     preferencesQuery.isError && !isPreferencesForbiddenError(preferencesQuery.error)
       ? getErrorMessage(preferencesQuery.error, 'No pudimos cargar tus preferencias.')
@@ -143,6 +140,7 @@ export function usePreferencesPageController() {
 
   return {
     isLoading,
+    isLoginRequired,
     isForbidden,
     loadError,
     retryLoad: () => void preferencesQuery.refetch(),

@@ -1,6 +1,7 @@
 import { ArrowUpRight, Clock, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
+import { LoginRequired } from '@/shared/components/molecules/LoginRequired/LoginRequired'
 import { PurchaseLayout } from '@/shared/components/templates/PurchaseLayout/PurchaseLayout'
 import { PURCHASE_STEP } from '@/shared/components/templates/PurchaseLayout/purchaseSteps.constants'
 import { ROUTES } from '@/shared/lib/routes'
@@ -16,8 +17,17 @@ import { useQueuePageController } from './useQueuePageController'
 
 export function QueuePage() {
   const { eventId: eventIdParam = '' } = useParams()
-  const { eventName, entry, initialPosition, isLoading, errorInfo, retry, rejoin, isRejoining } =
-    useQueuePageController(eventIdParam)
+  const {
+    eventName,
+    entry,
+    initialPosition,
+    isLoading,
+    isLoginRequired,
+    errorInfo,
+    retry,
+    rejoin,
+    isRejoining,
+  } = useQueuePageController(eventIdParam)
 
   const isWaiting = entry?.status === 'WAITING'
   const isEnabled = entry?.status === 'ENABLED'
@@ -29,6 +39,10 @@ export function QueuePage() {
   return (
     <PurchaseLayout step={PURCHASE_STEP.QUEUE} eventId={eventIdParam}>
       {isLoading && <QueueSkeleton />}
+
+      {!isLoading && isLoginRequired && (
+        <LoginRequired message="Iniciá sesión para hacer la fila." />
+      )}
 
       {!isLoading && errorInfo && (
         <QueueErrorView

@@ -1,8 +1,6 @@
 import type { BadgeProps } from '@/shared/components/atoms/Badge'
 import type { PaymentMethod, TicketStatus } from '../types/tickets.types'
 
-export const SEEDER_CLIENT_USER_ID = 1
-
 export const MONTH_ABBREVIATIONS = [
   'ENE',
   'FEB',

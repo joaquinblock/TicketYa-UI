@@ -26,3 +26,10 @@ export class ApiError extends Error {
     this.detail = detail
   }
 }
+
+const HTTP_UNAUTHORIZED = 401
+
+/** El gateway no reconoce la sesión: falta el token o venció. */
+export function isUnauthorizedError(error: unknown): boolean {
+  return error instanceof ApiError && error.status === HTTP_UNAUTHORIZED
+}

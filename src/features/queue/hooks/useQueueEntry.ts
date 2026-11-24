@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { clearQueueTurn, saveQueueTurn } from '@/shared/lib/queueToken'
 import { QUEUE_POLL_INTERVAL_MS } from '../constants/queue.constants'
 import { queueKeys } from '../lib/queue.queryKeys'
-import { ensureDevClientSession, getQueueStatus, joinQueue } from '../services/queue.service'
+import { getQueueStatus, joinQueue } from '../services/queue.service'
 import type { QueueEntry } from '../types/queue.types'
 import { isTurnExpired } from '../utils/queueFormat'
 
@@ -33,7 +33,6 @@ export function useQueueEntry(eventId: number | undefined) {
       q.state.data?.entry.status === 'WAITING' ? QUEUE_POLL_INTERVAL_MS : false,
     queryFn: async () => {
       const id = eventId!
-      await ensureDevClientSession()
       const entry = joinedEventRef.current === id ? await getQueueStatus(id) : await joinQueue(id)
       joinedEventRef.current = id
       if (entry.position != null && entry.position > initialPositionRef.current) {
@@ -44,10 +43,7 @@ export function useQueueEntry(eventId: number | undefined) {
   })
 
   const rejoinMutation = useMutation<QueueEntry, unknown, number>({
-    mutationFn: async (id) => {
-      await ensureDevClientSession()
-      return joinQueue(id)
-    },
+    mutationFn: (id) => joinQueue(id),
     onSuccess: (entry, id) => {
       joinedEventRef.current = id
       initialPositionRef.current = entry.position ?? 0

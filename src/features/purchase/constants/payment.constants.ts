@@ -1,7 +1,6 @@
 import type { PaymentEndReason, PaymentMethod } from '../types/payment.types'
 
 export const MAX_PAYMENT_ATTEMPTS = 3
-export const SEEDER_CLIENT_USER_ID = 1
 
 export const PAYMENT_METHOD_META = {
   CREDIT_CARD: {

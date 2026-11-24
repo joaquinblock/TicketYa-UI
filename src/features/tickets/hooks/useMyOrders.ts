@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { isUnauthorizedError } from '@/shared/lib/http/ApiError'
 import { ticketsKeys } from '../lib/tickets.queryKeys'
-import { ensureDevClientSession, getOrders } from '../services/orders.service'
+import { getOrders } from '../services/orders.service'
 import type { Order } from '../types/tickets.types'
 
 function selectPaidOrdersNewestFirst(orders: Order[]): Order[] {
@@ -11,10 +12,7 @@ function selectPaidOrdersNewestFirst(orders: Order[]): Order[] {
 export function useMyOrders() {
   const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: ticketsKeys.orders(),
-    queryFn: async () => {
-      await ensureDevClientSession()
-      return getOrders()
-    },
+    queryFn: () => getOrders(),
     select: selectPaidOrdersNewestFirst,
   })
 
@@ -22,6 +20,7 @@ export function useMyOrders() {
     orders: data ?? [],
     isPending,
     isError,
+    isLoginRequired: isUnauthorizedError(error),
     error,
     refetch,
   }

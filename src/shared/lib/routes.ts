@@ -9,8 +9,6 @@ export const ROUTES = {
   /** Pago de una reserva recién creada: Pago la pide por `orderId`. */
   orderPayment: (eventId: EventId, orderId: number) =>
     `/eventos/${eventId}/pago?orderId=${orderId}`,
-  /** Sin página hasta #8. */
-  login: '/ingresar',
   myTickets: '/mis-entradas',
   preferences: '/preferencias',
 } as const
