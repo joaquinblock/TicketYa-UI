@@ -1,37 +1,45 @@
 import { CircleAlert, X } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
-import { ADMIN_EVENT_ACTION_META } from '../../constants/adminEvents.constants'
-import type { AdminEvent, AdminEventAction } from '../../types/adminEvent.types'
 
-type AdminEventActionDialogProps = {
-  event: AdminEvent
-  action: AdminEventAction
-  cancelConfirmation: string
-  onCancelConfirmationChange: (value: string) => void
+type EventActionDialogProps = {
+  eventName: string
+  title: string
+  message: string
+  confirmLabel: string
+  isDestructive: boolean
+  /** Para lo definitivo (cancelar, borrar): se confirma escribiendo el nombre del evento. */
+  requiresNameConfirmation: boolean
+  nameConfirmation: string
+  onNameConfirmationChange: (value: string) => void
   canConfirm: boolean
   isRunning: boolean
   error: string | undefined
+  /** Lo que el backend dice que falta, por ejemplo al publicar un borrador incompleto. */
+  errorDetails?: readonly string[]
   onConfirm: () => void
   onClose: () => void
 }
 
 /**
- * `.bo-modal` del diseño. Cancelar es definitivo y reintegra todas las entradas: se confirma
- * escribiendo el nombre del evento (Nielsen 5).
+ * `.bo-modal` del diseño, para cambiar el estado de un evento. Lo que no se puede deshacer se
+ * confirma escribiendo el nombre del evento (Nielsen 5).
  */
-export function AdminEventActionDialog({
-  event,
-  action,
-  cancelConfirmation,
-  onCancelConfirmationChange,
+export function EventActionDialog({
+  eventName,
+  title,
+  message,
+  confirmLabel,
+  isDestructive,
+  requiresNameConfirmation,
+  nameConfirmation,
+  onNameConfirmationChange,
   canConfirm,
   isRunning,
   error,
+  errorDetails = [],
   onConfirm,
   onClose,
-}: AdminEventActionDialogProps) {
-  const meta = ADMIN_EVENT_ACTION_META[action]
-
+}: EventActionDialogProps) {
   return (
     <div
       role="presentation"
@@ -41,7 +49,7 @@ export function AdminEventActionDialog({
       <section
         role="dialog"
         aria-modal="true"
-        aria-labelledby="admin-event-action-title"
+        aria-labelledby="event-action-title"
         onClick={(clickEvent) => clickEvent.stopPropagation()}
         className="relative w-full max-w-105 rounded-xl bg-surface p-6 text-[13px] shadow-[0_20px_60px_#0003]"
       >
@@ -56,27 +64,34 @@ export function AdminEventActionDialog({
         <div className="mb-3 grid size-10 place-items-center rounded-full bg-[#ffedeb] text-[#b93e32]">
           <CircleAlert aria-hidden className="size-5" />
         </div>
-        <h2 id="admin-event-action-title" className="m-0 mb-2 font-display text-lg font-bold">
-          {meta.title}
+        <h2 id="event-action-title" className="m-0 mb-2 font-display text-lg font-bold">
+          {title}
         </h2>
-        <p className="m-0 mb-4 text-xs leading-[1.6] text-[#5f5c55]">{meta.message(event)}</p>
+        <p className="m-0 mb-4 text-xs leading-[1.6] text-[#5f5c55]">{message}</p>
 
-        {action === 'cancel' && (
+        {requiresNameConfirmation && (
           <label className="mb-4 flex flex-col gap-1.5 text-[11px] font-semibold">
             Escribí el nombre del evento para confirmar
             <input
-              value={cancelConfirmation}
-              onChange={(changeEvent) => onCancelConfirmationChange(changeEvent.target.value)}
-              placeholder={event.name}
+              value={nameConfirmation}
+              onChange={(changeEvent) => onNameConfirmationChange(changeEvent.target.value)}
+              placeholder={eventName}
               className="min-h-10 rounded-[7px] border border-[#dedbd3] px-2.5 text-xs font-normal"
             />
           </label>
         )}
 
         {error && (
-          <p role="alert" className="m-0 mb-3 text-[11px] font-medium text-error-ink">
-            {error}
-          </p>
+          <div role="alert" className="mb-3 text-[11px] font-medium text-error-ink">
+            <p className="m-0">{error}</p>
+            {errorDetails.length > 0 && (
+              <ul className="m-0 mt-1.5 list-disc pl-4.5 font-normal">
+                {errorDetails.map((detail) => (
+                  <li key={detail}>{detail}</li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
 
         <div className="flex justify-end gap-2">
@@ -93,12 +108,12 @@ export function AdminEventActionDialog({
             disabled={!canConfirm}
             className={cn(
               'inline-flex min-h-10 cursor-pointer items-center rounded-[7px] border px-3.25 text-[11px] font-semibold disabled:cursor-not-allowed disabled:opacity-45',
-              meta.isDestructive
+              isDestructive
                 ? 'border-[#b83224] bg-[#b83224] text-white'
                 : 'border-accent bg-accent text-[#171717] hover:bg-[#f0b714]',
             )}
           >
-            {isRunning ? 'Aplicando…' : meta.label}
+            {isRunning ? 'Aplicando…' : confirmLabel}
           </button>
         </div>
       </section>

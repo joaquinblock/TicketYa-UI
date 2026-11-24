@@ -14,7 +14,7 @@ import type {
   AdminEventStatusFilter,
 } from '../../types/adminEvent.types'
 import { BackofficeStatusBadge } from '../BackofficeStatusBadge'
-import { AdminEventActionDialog } from './AdminEventActionDialog'
+import { EventActionDialog } from '../EventActionDialog'
 import { useAdminEventsSection } from './useAdminEventsSection'
 
 const TABLE_HEADERS = ['EVENTO', 'FECHA Y LUGAR', 'ORGANIZACIÓN', 'ESTADO', '']
@@ -124,11 +124,17 @@ export function AdminEventsSection() {
       </section>
 
       {section.pendingAction && (
-        <AdminEventActionDialog
-          event={section.pendingAction.event}
-          action={section.pendingAction.action}
-          cancelConfirmation={section.cancelConfirmation}
-          onCancelConfirmationChange={section.setCancelConfirmation}
+        <EventActionDialog
+          eventName={section.pendingAction.event.name}
+          title={ADMIN_EVENT_ACTION_META[section.pendingAction.action].title}
+          message={ADMIN_EVENT_ACTION_META[section.pendingAction.action].message(
+            section.pendingAction.event,
+          )}
+          confirmLabel={ADMIN_EVENT_ACTION_META[section.pendingAction.action].label}
+          isDestructive={ADMIN_EVENT_ACTION_META[section.pendingAction.action].isDestructive}
+          requiresNameConfirmation={section.pendingAction.action === 'cancel'}
+          nameConfirmation={section.cancelConfirmation}
+          onNameConfirmationChange={section.setCancelConfirmation}
           canConfirm={section.canConfirmAction}
           isRunning={section.isRunningAction}
           error={section.actionError}
