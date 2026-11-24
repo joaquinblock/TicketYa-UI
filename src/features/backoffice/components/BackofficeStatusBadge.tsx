@@ -1,14 +1,13 @@
 import { cn } from '@/shared/lib/cn'
-import {
-  RETURN_REQUEST_STATUS_META,
-  STATUS_TONE_CLASS,
-} from '../constants/returnRequests.constants'
-import type { ReturnRequestStatus } from '../types/returnRequest.types'
+import { STATUS_TONE_CLASS, type StatusTone } from '../constants/returnRequests.constants'
+
+type BackofficeStatusBadgeProps = {
+  label: string
+  tone: StatusTone
+}
 
 /** `.bo-status` del diseño: el punto y el texto, nunca solo el color. */
-export function BackofficeStatusBadge({ status }: { status: ReturnRequestStatus }) {
-  const { label, tone } = RETURN_REQUEST_STATUS_META[status]
-
+export function BackofficeStatusBadge({ label, tone }: BackofficeStatusBadgeProps) {
   return (
     <span
       className={cn(

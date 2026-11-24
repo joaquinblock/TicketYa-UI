@@ -2,7 +2,11 @@ import { CheckCircle2, CircleAlert } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
 import type { EventDetail } from '@/shared/types/event.types'
 import { formatEventDateTime } from '@/shared/utils/eventFormat'
-import { RESOLUTION_META, RETURN_REQUEST_TABS } from '../../constants/returnRequests.constants'
+import {
+  RESOLUTION_META,
+  RETURN_REQUEST_STATUS_META,
+  RETURN_REQUEST_TABS,
+} from '../../constants/returnRequests.constants'
 import type { ReturnRequest, ReturnRequestResolution } from '../../types/returnRequest.types'
 import { formatRequestedAt } from '../../utils/backofficeFormat'
 import { BackofficeStatusBadge } from '../BackofficeStatusBadge'
@@ -166,7 +170,7 @@ function RefundRow({ request, event, onResolve }: RefundRowProps) {
       <td className={cellClassName}>Cliente #{request.requestedBy}</td>
       <td className={cellClassName}>{formatRequestedAt(request.requestedAt)}</td>
       <td className={cellClassName}>
-        <BackofficeStatusBadge status={request.status} />
+        <BackofficeStatusBadge {...RETURN_REQUEST_STATUS_META[request.status]} />
       </td>
       <td className={cellClassName}>
         {request.status === 'PENDING' && (
