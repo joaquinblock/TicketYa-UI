@@ -169,3 +169,35 @@ describe('Fila virtual: #8 CA5, sin sesión', () => {
     expect(screen.getByRole('dialog', { name: 'Ingresá a TicketYa' })).toBeInTheDocument()
   })
 })
+
+describe('Fila virtual: reiniciar en desarrollo', () => {
+  it('"Reiniciar la fila" vacía la fila, olvida el turno guardado y vuelve a entrar', async () => {
+    saveQueueTurn(HIGH_DEMAND_EVENT_ID, {
+      queueToken: 'jwt-turno-viejo',
+      enabledUntil: new Date(Date.now() + 60_000).toISOString(),
+    })
+    vi.spyOn(queueService, 'joinQueue')
+      .mockResolvedValueOnce({
+        status: 'ENABLED',
+        position: null,
+        queueToken: 'jwt-turno-viejo',
+        enabledUntil: new Date(Date.now() + 60_000).toISOString(),
+      })
+      .mockResolvedValue({ status: 'WAITING', position: 3, queueToken: null, enabledUntil: null })
+    const reset = vi.spyOn(queueService, 'resetQueue').mockResolvedValue(undefined)
+    const user = userEvent.setup()
+    renderQueuePage(HIGH_DEMAND_EVENT_ID)
+
+    await user.click(
+      await screen.findByRole('button', { name: 'Reiniciar la fila (solo en desarrollo)' }),
+    )
+
+    expect(reset).toHaveBeenCalledWith(HIGH_DEMAND_EVENT_ID)
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'personas delante tuyo' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1 }).previousElementSibling).toHaveTextContent('3')
+    expect(getQueueTurn(HIGH_DEMAND_EVENT_ID)).toBeNull()
+    vi.restoreAllMocks()
+  })
+})

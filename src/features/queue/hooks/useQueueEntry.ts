@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { clearQueueTurn, saveQueueTurn } from '@/shared/lib/queueToken'
 import { QUEUE_POLL_INTERVAL_MS } from '../constants/queue.constants'
 import { queueKeys } from '../lib/queue.queryKeys'
-import { getQueueStatus, joinQueue } from '../services/queue.service'
+import { getQueueStatus, joinQueue, resetQueue } from '../services/queue.service'
 import type { QueueEntry } from '../types/queue.types'
 import { isTurnExpired } from '../utils/queueFormat'
 
@@ -42,16 +42,27 @@ export function useQueueEntry(eventId: number | undefined) {
     },
   })
 
+  const storeJoinedEntry = (entry: QueueEntry, id: number) => {
+    joinedEventRef.current = id
+    initialPositionRef.current = entry.position ?? 0
+    queryClient.setQueryData<QueueQueryData>(queueKeys.entry(id), {
+      entry,
+      initialPosition: initialPositionRef.current,
+    })
+  }
+
   const rejoinMutation = useMutation<QueueEntry, unknown, number>({
     mutationFn: (id) => joinQueue(id),
-    onSuccess: (entry, id) => {
-      joinedEventRef.current = id
-      initialPositionRef.current = entry.position ?? 0
-      queryClient.setQueryData<QueueQueryData>(queueKeys.entry(id), {
-        entry,
-        initialPosition: initialPositionRef.current,
-      })
+    onSuccess: storeJoinedEntry,
+  })
+
+  const resetMutation = useMutation<QueueEntry, unknown, number>({
+    mutationFn: async (id) => {
+      await resetQueue(id)
+      clearQueueTurn(id)
+      return joinQueue(id)
     },
+    onSuccess: storeJoinedEntry,
   })
 
   const rawEntry = query.data?.entry
@@ -93,5 +104,10 @@ export function useQueueEntry(eventId: number | undefined) {
       rejoinMutation.mutate(eventId)
     },
     isRejoining: rejoinMutation.isPending,
+    resetQueue: () => {
+      if (eventId == null || resetMutation.isPending) return
+      resetMutation.mutate(eventId)
+    },
+    isResetting: resetMutation.isPending,
   }
 }

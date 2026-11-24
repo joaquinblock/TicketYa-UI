@@ -7,3 +7,6 @@ export const QUEUE_RULES = [
   { number: '02', text: 'Cuando te habiliten, tenés 10 minutos para reservar.', icon: 'clock' },
   { number: '03', text: 'Si se te pasa la ventana, volvés al final.', icon: 'none' },
 ] as const
+
+/** "Reiniciar la fila" solo en desarrollo: usa el `dev-reset` del perfil `dev` del queue-service. */
+export const IS_QUEUE_RESET_ENABLED = import.meta.env.DEV
