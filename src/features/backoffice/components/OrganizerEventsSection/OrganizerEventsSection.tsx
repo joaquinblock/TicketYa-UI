@@ -116,7 +116,7 @@ export function OrganizerEventsSection() {
                   <OrganizerEventRow
                     key={event.id}
                     event={event}
-                    creatorName={section.creatorName(event)}
+                    creatorLabel={section.creatorLabel(event)}
                     isOwn={section.isOwnEvent(event)}
                     onAction={section.askAction}
                   />
@@ -192,12 +192,12 @@ function EmptyState({ hasEvents, onClearFilters }: EmptyStateProps) {
 
 type OrganizerEventRowProps = {
   event: OrganizerEvent
-  creatorName: string | undefined
+  creatorLabel: string | undefined
   isOwn: boolean
   onAction: (event: OrganizerEvent, action: OrganizerEventAction) => void
 }
 
-function OrganizerEventRow({ event, creatorName, isOwn, onAction }: OrganizerEventRowProps) {
+function OrganizerEventRow({ event, creatorLabel, isOwn, onAction }: OrganizerEventRowProps) {
   const cellClassName =
     'border-b border-[#f0eee8] px-2 py-2.5 align-middle text-[10px] text-[#5f5c55]'
   const availableActions = ORGANIZER_EVENT_ACTIONS.filter((action) =>
@@ -228,7 +228,7 @@ function OrganizerEventRow({ event, creatorName, isOwn, onAction }: OrganizerEve
             </b>
             <small className="text-[9px] text-[#858178]">
               {ADMIN_EVENT_TYPE_LABEL[event.type]}
-              {creatorName && ` · Creó ${creatorName}`}
+              {creatorLabel && ` · ${creatorLabel}`}
             </small>
           </div>
         </div>

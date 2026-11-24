@@ -89,8 +89,11 @@ export function useOrganizerEventsSection() {
     events,
     totalEvents: allEvents.length,
     isOwnEvent: (event: OrganizerEvent) => event.createdBy === currentUserId,
-    creatorName: (event: OrganizerEvent) =>
-      event.createdBy === currentUserId ? 'vos' : creatorNames.get(event.createdBy),
+    creatorLabel: (event: OrganizerEvent) => {
+      if (event.createdBy === currentUserId) return 'Lo creaste vos'
+      const name = creatorNames.get(event.createdBy)
+      return name ? `Creó ${name}` : undefined
+    },
     isLoading: eventsQuery.isPending,
     loadError: eventsQuery.error
       ? getErrorMessage(eventsQuery.error, LOAD_ERROR_MESSAGE)
