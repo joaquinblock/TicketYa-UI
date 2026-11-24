@@ -22,7 +22,6 @@ function renderPreferencesPage() {
 
 describe('Preferencias y favoritos: CA1 a CA5', () => {
   beforeEach(() => {
-    vi.spyOn(preferencesService, 'ensureDevClientSession').mockResolvedValue()
     vi.spyOn(preferencesService, 'getParticipants').mockResolvedValue(PARTICIPANTS_FIXTURE)
     vi.spyOn(venuesService, 'getCities').mockResolvedValue(['Buenos Aires', 'Córdoba', 'Tandil'])
   })
@@ -149,7 +148,9 @@ describe('Preferencias y favoritos: CA1 a CA5', () => {
     await user.click(await screen.findByRole('button', { name: 'Recitales' }))
     await user.click(screen.getByRole('button', { name: 'Guardar preferencias' }))
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('No disponible')
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'El servicio no está disponible en este momento.',
+    )
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Guardar preferencias' })).toBeEnabled(),
     )
@@ -169,5 +170,26 @@ describe('Preferencias y favoritos: CA1 a CA5', () => {
     expect(
       await screen.findByRole('heading', { level: 2, name: 'Solo para clientes autenticados' }),
     ).toBeInTheDocument()
+  })
+})
+
+describe('Preferencias: #8 CA5, sin sesión', () => {
+  it('ante 401 se abre el login y detrás dice que inicie sesión', async () => {
+    vi.spyOn(preferencesService, 'getParticipants').mockResolvedValue(PARTICIPANTS_FIXTURE)
+    vi.spyOn(venuesService, 'getCities').mockResolvedValue(['Tandil'])
+    vi.spyOn(preferencesService, 'getMyPreferences').mockRejectedValueOnce(
+      new ApiError({ error: 'unauthorized', message: 'Sin token', status: 401 }),
+    )
+
+    renderPreferencesPage()
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 2,
+        name: 'Iniciá sesión para ver tus preferencias.',
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Ingresá a TicketYa' })).toBeInTheDocument()
+    vi.restoreAllMocks()
   })
 })

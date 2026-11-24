@@ -44,7 +44,6 @@ describe('Fila virtual: CA1 a CA5', () => {
   })
 
   it('CA1 espera y CA2 habilitado: guarda el queueToken en sessionStorage y habilita el avance a lugares', async () => {
-    vi.spyOn(queueService, 'ensureDevClientSession').mockResolvedValue()
     vi.spyOn(queueService, 'joinQueue').mockResolvedValue({
       status: 'WAITING',
       position: 42,
@@ -62,7 +61,6 @@ describe('Fila virtual: CA1 a CA5', () => {
 
     vi.restoreAllMocks()
     const enabledUntil = new Date(Date.now() + 10 * 60_000).toISOString()
-    vi.spyOn(queueService, 'ensureDevClientSession').mockResolvedValue()
     vi.spyOn(queueService, 'joinQueue').mockResolvedValue({
       status: 'ENABLED',
       position: 0,
@@ -94,7 +92,6 @@ describe('Fila virtual: CA1 a CA5', () => {
       enabledUntil: new Date(Date.now() + 60_000).toISOString(),
     })
 
-    vi.spyOn(queueService, 'ensureDevClientSession').mockResolvedValue()
     const joinSpy = vi
       .spyOn(queueService, 'joinQueue')
       .mockResolvedValueOnce({
@@ -124,7 +121,6 @@ describe('Fila virtual: CA1 a CA5', () => {
 
   it('CA4 y CA5: muestra error de negocio sin Reintentar y error de red/503 con Reintentar', async () => {
     const user = userEvent.setup()
-    vi.spyOn(queueService, 'ensureDevClientSession').mockResolvedValue()
     vi.spyOn(queueService, 'joinQueue').mockRejectedValueOnce(
       new ApiError({ error: 'event_not_high_demand', message: 'No es alta demanda', status: 409 }),
     )
@@ -155,5 +151,21 @@ describe('Fila virtual: CA1 a CA5', () => {
     const retryBtn = await screen.findByRole('button', { name: 'Reintentar' })
     await user.click(retryBtn)
     expect(await screen.findByText('15')).toBeInTheDocument()
+  })
+})
+
+describe('Fila virtual: #8 CA5, sin sesión', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  it('ante 401 se abre el login y detrás dice que inicie sesión para hacer la fila', async () => {
+    vi.spyOn(queueService, 'joinQueue').mockRejectedValue(
+      new ApiError({ error: 'unauthorized', message: 'Sin token', status: 401 }),
+    )
+    renderQueuePage(HIGH_DEMAND_EVENT_ID)
+
+    expect(
+      await screen.findByRole('heading', { level: 2, name: 'Iniciá sesión para hacer la fila.' }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Ingresá a TicketYa' })).toBeInTheDocument()
   })
 })

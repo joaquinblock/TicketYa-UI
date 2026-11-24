@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { apiClient } from '@/shared/lib/http/apiClient'
 import { getMyPreferences, getParticipants, updateMyPreferences } from './preferences.service'
+import type { Preferences } from '../types/preferences.types'
 
 describe('preferences.service', () => {
   afterEach(() => {
@@ -18,7 +19,11 @@ describe('preferences.service', () => {
   })
 
   it('updateMyPreferences envía PUT /api/preferences/me con el cuerpo completo', async () => {
-    const payload = { eventTypes: ['CONCERT', 'THEATER'], participantIds: [1, 2], city: null }
+    const payload: Preferences = {
+      eventTypes: ['CONCERT', 'THEATER'],
+      participantIds: [1, 2],
+      city: null,
+    }
     const spy = vi.spyOn(apiClient, 'put').mockResolvedValueOnce(payload)
 
     const result = await updateMyPreferences(payload)

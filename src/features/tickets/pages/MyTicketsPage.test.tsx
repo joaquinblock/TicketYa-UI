@@ -32,7 +32,6 @@ describe('Mis entradas: CA1', () => {
     const token = await devLogin(SEEDER_USER.CLIENT)
     localStorage.setItem('ticketya.accessToken', token)
     const allOrders = await getOrders()
-    localStorage.clear()
 
     const paidOrders = allOrders
       .filter((order) => order.status === 'PAID')
@@ -93,7 +92,6 @@ describe('Mis entradas: CA2', () => {
     const token = await devLogin(SEEDER_USER.CLIENT)
     localStorage.setItem('ticketya.accessToken', token)
     const allOrders = await getOrders()
-    localStorage.clear()
 
     const firstPaidOrder = allOrders
       .filter((order) => order.status === 'PAID')
@@ -156,6 +154,7 @@ describe('Mis entradas: CA4', () => {
   })
 
   it('cuando falla la carga muestra el error y "Reintentar" vuelve a pedir las órdenes', async () => {
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
     pointApiClientToClosedPort()
     const user = userEvent.setup()
     renderMyTicketsPage()
@@ -191,7 +190,6 @@ describe('Mis entradas: solicitud de devolución', () => {
     const token = await devLogin(SEEDER_USER.CLIENT)
     localStorage.setItem('ticketya.accessToken', token)
     const allOrders = await getOrders()
-    localStorage.clear()
 
     const paidOrders = allOrders.filter((order) => order.status === 'PAID')
     const pastOrder = paidOrders.find((order) => order.eventId === 9)
@@ -270,5 +268,24 @@ describe('Mis entradas: solicitud de devolución', () => {
 
     await user.click(within(dialog).getByRole('button', { name: 'No, volver' }))
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+  })
+})
+
+describe('Mis entradas: #8 CA5, sin sesión', () => {
+  it('se abre el login, detrás dice que inicie sesión y al entrar se cargan mis entradas', async () => {
+    const user = userEvent.setup()
+    renderMyTicketsPage()
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 2,
+        name: 'Iniciá sesión para ver tus entradas.',
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Ingresá a TicketYa' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Entrar como usuario de prueba' }))
+
+    expect((await screen.findAllByRole('article')).length).toBeGreaterThanOrEqual(1)
   })
 })
