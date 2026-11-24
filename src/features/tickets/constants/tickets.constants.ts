@@ -80,3 +80,13 @@ export const PENDING_RETURN_TICKET_META: TicketStatusMeta = {
   description:
     'Un administrador está revisando tu pedido. Mientras tanto, este QR no sirve para entrar.',
 }
+
+/**
+ * La entrada sigue emitida: el badge conserva su estado real y el rechazo se avisa aparte, con
+ * texto y no solo color.
+ */
+export const REJECTED_RETURN_NOTICE = {
+  label: 'Devolución rechazada',
+  description:
+    'Un administrador rechazó tu pedido de devolución. La entrada sigue vigente y este QR sirve para entrar.',
+} as const
