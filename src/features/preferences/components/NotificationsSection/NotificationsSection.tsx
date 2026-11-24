@@ -1,5 +1,9 @@
-import { Bell } from 'lucide-react'
+import { ArrowUpRight, Bell } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
+import {
+  DEV_MAIL_INBOX_URL,
+  IS_DEV_MAIL_INBOX_VISIBLE,
+} from '../../constants/notifications.constants'
 import type { Notification } from '../../types/notification.types'
 import { formatNotificationTime } from '../../utils/notificationFormat'
 import { useNotificationsSection } from './useNotificationsSection'
@@ -41,6 +45,22 @@ export function NotificationsSection() {
           </button>
         )}
       </div>
+
+      {IS_DEV_MAIL_INBOX_VISIBLE && (
+        <p className="rounded-control bg-background px-4 py-3 text-sm text-muted">
+          Cuando comprás una entrada también te llega un mail con los QR. En desarrollo los mails
+          llegan a Mailpit:{' '}
+          <a
+            href={DEV_MAIL_INBOX_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center gap-1 font-semibold text-ink underline decoration-accent decoration-2 underline-offset-4"
+          >
+            Revisar la bandeja de mail
+            <ArrowUpRight aria-hidden className="size-4" />
+          </a>
+        </p>
+      )}
 
       {isLoading && <p className="text-sm text-muted">Cargando notificaciones…</p>}
 
