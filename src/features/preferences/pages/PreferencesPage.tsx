@@ -5,6 +5,7 @@ import { LoginRequired } from '@/shared/components/molecules/LoginRequired/Login
 import { CitySelectSection } from '../components/CitySelectSection'
 import { EventTypeChips } from '../components/EventTypeChips'
 import { FavoriteParticipantsSection } from '../components/FavoriteParticipantsSection'
+import { NotificationsSection } from '../components/NotificationsSection/NotificationsSection'
 import { PreferencesForbiddenView } from '../components/PreferencesForbiddenView'
 import { PreferencesLoadError } from '../components/PreferencesLoadError'
 import { PreferencesSkeleton } from '../components/PreferencesSkeleton'
@@ -110,6 +111,8 @@ export function PreferencesPage() {
           </section>
         </form>
       )}
+
+      {!isLoading && !isLoginRequired && <NotificationsSection />}
     </div>
   )
 }
