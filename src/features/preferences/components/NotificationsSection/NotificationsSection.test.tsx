@@ -94,3 +94,15 @@ describe('Notificaciones en Preferencias', () => {
     expect(await within(section).findByText(/Todavía no tenés notificaciones/)).toBeInTheDocument()
   })
 })
+
+describe('Notificaciones: bandeja de mail en desarrollo', () => {
+  it('ofrece revisar los mails de la compra en Mailpit (localhost:8025)', async () => {
+    saveAccessToken(await devLogin(SEEDER_USER.CLIENT))
+    renderPreferences()
+
+    const section = await findNotificationsSection()
+    expect(
+      within(section).getByRole('link', { name: 'Revisar la bandeja de mail' }),
+    ).toHaveAttribute('href', 'http://localhost:8025')
+  })
+})
