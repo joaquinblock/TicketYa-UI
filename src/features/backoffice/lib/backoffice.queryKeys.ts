@@ -3,4 +3,7 @@ export const backofficeKeys = {
   user: () => [...backofficeKeys.all, 'user'] as const,
   organization: (organizationId: number | null) =>
     [...backofficeKeys.all, 'organization', organizationId] as const,
+  returnRequests: () => [...backofficeKeys.all, 'return-requests'] as const,
+  returnRequestPage: (filter: string, page: number) =>
+    [...backofficeKeys.returnRequests(), filter, page] as const,
 }

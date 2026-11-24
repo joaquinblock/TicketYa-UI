@@ -1,30 +1,13 @@
 import { Clock3 } from 'lucide-react'
+import { BackofficePageHeading } from '../components/BackofficePageHeading'
 import { BackofficeStateView } from '../components/BackofficeStateView'
-import { useBackofficeOutlet } from '../components/BackofficeLayout/useBackofficeLayout'
-import { BACKOFFICE_ROLE_META, BACKOFFICE_SECTION_META } from '../constants/backoffice.constants'
 import type { BackofficeSection } from '../types/backoffice.types'
 
-/** Una sección del backoffice con el encabezado del diseño (`.bo-heading-row`) y todavía sin contenido. */
+/** Una sección del backoffice con su encabezado y todavía sin contenido. */
 export function BackofficeSectionPage({ section }: { section: BackofficeSection }) {
-  const { role } = useBackofficeOutlet()
-  const { label, description } = BACKOFFICE_SECTION_META[section]
-
   return (
     <>
-      <div className="mb-4.5 flex items-start justify-between gap-5 sm:mb-6.25 sm:items-end">
-        <div>
-          <div className="text-[9px] font-bold tracking-[1.05px] text-backoffice-faint">
-            {BACKOFFICE_ROLE_META[role].kicker}
-          </div>
-          <h1 className="mt-2 mb-1.5 font-display text-[25px] leading-[1.2] font-bold tracking-[-1px] sm:text-[30px]">
-            {label}
-            <span className="text-backoffice-title-dot">.</span>
-          </h1>
-          <p className="m-0 max-w-57.5 text-[10px] leading-normal text-[#716e66] sm:max-w-none sm:text-xs">
-            {description}
-          </p>
-        </div>
-      </div>
+      <BackofficePageHeading section={section} />
       <BackofficeStateView
         icon={Clock3}
         title="Próximamente"
