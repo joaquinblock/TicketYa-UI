@@ -11,6 +11,18 @@ export const ROUTES = {
     `/eventos/${eventId}/pago?orderId=${orderId}`,
   myTickets: '/mis-entradas',
   preferences: '/preferencias',
+  backoffice: {
+    home: '/backoffice',
+    refunds: '/backoffice/devoluciones',
+    events: '/backoffice/eventos',
+    createEvent: '/backoffice/eventos/nuevo',
+    report: '/backoffice/reporte',
+    accessStaff: '/backoffice/personal-de-acceso',
+    venues: '/backoffice/lugares',
+    participants: '/backoffice/participantes',
+    usersAndOrganizations: '/backoffice/usuarios-y-organizaciones',
+    settings: '/backoffice/configuracion',
+  },
 } as const
 
 /** Patrones para el router, derivados de las mismas rutas. */

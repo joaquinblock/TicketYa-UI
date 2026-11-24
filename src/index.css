@@ -33,6 +33,21 @@
   --color-footer: #f8f7f3;
   --color-footer-line: #e1ded7;
 
+  /* Backoffice (diseño de administrador y organizador, app/backoffice.css) */
+  --color-backoffice: #f5f4f0;
+  --color-backoffice-line: #e7e4dc;
+  --color-backoffice-muted: #706d66;
+  --color-backoffice-faint: #8a877e;
+  --color-backoffice-nav: #64615b;
+  --color-backoffice-active: #fff6da;
+  --color-backoffice-active-icon: #a67b04;
+  --color-backoffice-title-dot: #d79d0d;
+  --color-backoffice-org: #f7f0dd;
+  --color-backoffice-org-ink: #8b6b19;
+  --color-backoffice-avatar: #eae6d9;
+  --color-backoffice-avatar-ink: #534a34;
+  --color-backoffice-chip: #f2f1ed;
+
   --font-sans: 'Inter', system-ui, sans-serif;
   --font-display: 'Archivo', sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
