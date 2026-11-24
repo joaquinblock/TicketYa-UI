@@ -46,7 +46,7 @@ describe('Login: CA1, entrar desde el header', () => {
     expect(token).toBeDefined()
     const { firstName, lastName } = await currentUserOf(token!)
     expect(
-      await screen.findByRole('button', { name: `${firstName} ${lastName}, salir` }),
+      await screen.findByRole('button', { name: `Cuenta de ${firstName} ${lastName}` }),
     ).toBeInTheDocument()
   })
 })
@@ -86,14 +86,17 @@ describe('Login: cerrar el modal', () => {
 })
 
 describe('Login: CA6, cerrar sesión', () => {
-  it('al tocar mi nombre vuelvo a Inicio, el header dice "Ingresar" y no queda token', async () => {
+  it('desde el menú de mi cuenta, Cerrar sesión me lleva a Inicio, el header dice "Ingresar" y no queda token', async () => {
     const token = await devLogin(SEEDER_USER.CLIENT)
     saveAccessToken(token)
     const { firstName, lastName } = await currentUserOf(token)
     const user = userEvent.setup()
     renderApp(ROUTES.preferences)
 
-    await user.click(await screen.findByRole('button', { name: `${firstName} ${lastName}, salir` }))
+    await user.click(
+      await screen.findByRole('button', { name: `Cuenta de ${firstName} ${lastName}` }),
+    )
+    await user.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }))
 
     expect(getCurrentUrl().pathname).toBe(ROUTES.home)
     expect(screen.getByRole('button', { name: 'Ingresar' })).toBeInTheDocument()
@@ -129,7 +132,30 @@ describe('Login: cuentas de prueba en el botón de Google', () => {
     await user.click(screen.getByRole('button', { name: /organizer@ticketya\.com/ }))
 
     expect(
-      await screen.findByRole('button', { name: `${firstName} ${lastName}, salir` }),
+      await screen.findByRole('button', { name: `Cuenta de ${firstName} ${lastName}` }),
     ).toBeInTheDocument()
+  })
+})
+
+describe('Login: menú de la cuenta', () => {
+  it('tocar mi avatar abre el menú con mis pantallas y no cierra la sesión', async () => {
+    const token = await devLogin(SEEDER_USER.CLIENT)
+    saveAccessToken(token)
+    const { firstName, lastName, email } = await currentUserOf(token)
+    const user = userEvent.setup()
+    renderApp()
+
+    await user.click(
+      await screen.findByRole('button', { name: `Cuenta de ${firstName} ${lastName}` }),
+    )
+
+    const menu = screen.getByRole('menu', { name: 'Tu cuenta' })
+    expect(menu).toHaveTextContent(email)
+    expect(screen.getByRole('menuitem', { name: 'Mis entradas' })).toHaveAttribute(
+      'href',
+      ROUTES.myTickets,
+    )
+    expect(getAccessToken()).toBe(token)
+    expect(screen.queryByRole('button', { name: 'Ingresar' })).not.toBeInTheDocument()
   })
 })
