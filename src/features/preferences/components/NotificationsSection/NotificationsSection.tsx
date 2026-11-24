@@ -3,7 +3,7 @@ import { cn } from '@/shared/lib/cn'
 import {
   DEV_MAIL_INBOX_URL,
   IS_DEV_MAIL_INBOX_VISIBLE,
-} from '../../constants/notifications.constants'
+} from '@/shared/constants/devMailInbox.constants'
 import type { Notification } from '../../types/notification.types'
 import { formatNotificationTime } from '../../utils/notificationFormat'
 import { useNotificationsSection } from './useNotificationsSection'
