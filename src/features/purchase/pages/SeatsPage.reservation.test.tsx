@@ -739,7 +739,8 @@ describe('Lugares: #8 CA4, reservar sin sesión', () => {
     const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
 
     await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
-    await user.click(await screen.findByRole('button', { name: 'Entrar como usuario de prueba' }))
+    await user.click(await screen.findByRole('button', { name: 'Continuar con Google' }))
+    await user.click(screen.getByRole('button', { name: /client@ticketya.com/ }))
 
     await waitFor(() => expect(getCurrentUrl().pathname).toBe(ROUTES.payment(eventId)))
     expect(getCurrentUrl().searchParams.get('orderId')).toMatch(/^\d+$/)

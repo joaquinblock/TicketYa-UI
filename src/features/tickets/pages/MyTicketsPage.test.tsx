@@ -284,7 +284,8 @@ describe('Mis entradas: #8 CA5, sin sesión', () => {
     ).toBeInTheDocument()
     expect(screen.getByRole('dialog', { name: 'Ingresá a TicketYa' })).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Entrar como usuario de prueba' }))
+    await user.click(screen.getByRole('button', { name: 'Continuar con Google' }))
+    await user.click(screen.getByRole('button', { name: /client@ticketya.com/ }))
 
     expect((await screen.findAllByRole('article')).length).toBeGreaterThanOrEqual(1)
   })
