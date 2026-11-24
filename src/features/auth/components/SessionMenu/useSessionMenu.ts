@@ -9,7 +9,7 @@ import {
   getSessionClaims,
   onSessionChange,
 } from '@/shared/lib/session'
-import { BACKOFFICE_LOGIN_ROLES } from '../../constants/auth.constants'
+import { ACCESS_PANEL_ROLE, BACKOFFICE_LOGIN_ROLES } from '../../constants/auth.constants'
 import { authKeys } from '../../lib/auth.queryKeys'
 import { getCurrentUser } from '../../services/auth.service'
 
@@ -39,6 +39,7 @@ export function useSessionMenu() {
     user: isLoggedIn ? user : undefined,
     isLoggedIn,
     hasBackoffice,
+    hasAccessPanel: role === ACCESS_PANEL_ROLE,
     logout,
     login: () => requestLogin(),
   }

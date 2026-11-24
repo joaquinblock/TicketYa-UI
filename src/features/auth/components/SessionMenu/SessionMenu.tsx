@@ -12,7 +12,7 @@ import { useSessionMenu } from './useSessionMenu'
  * pantallas y "Cerrar sesión". Salir es una acción explícita, nunca un toque al nombre (Nielsen 3).
  */
 export function SessionMenu() {
-  const { user, isLoggedIn, hasBackoffice, logout, login } = useSessionMenu()
+  const { user, isLoggedIn, hasBackoffice, hasAccessPanel, logout, login } = useSessionMenu()
   const [isOpen, setIsOpen] = useState(false)
 
   if (!isLoggedIn) return <Button onClick={login}>Ingresar</Button>
@@ -47,6 +47,7 @@ export function SessionMenu() {
           <UserMenu
             user={user}
             hasBackoffice={hasBackoffice}
+            hasAccessPanel={hasAccessPanel}
             onNavigate={close}
             onLogout={logout}
           />
@@ -59,11 +60,12 @@ export function SessionMenu() {
 type UserMenuProps = {
   user: CurrentUser
   hasBackoffice: boolean
+  hasAccessPanel: boolean
   onNavigate: () => void
   onLogout: () => void
 }
 
-function UserMenu({ user, hasBackoffice, onNavigate, onLogout }: UserMenuProps) {
+function UserMenu({ user, hasBackoffice, hasAccessPanel, onNavigate, onLogout }: UserMenuProps) {
   const itemClassName =
     'flex min-h-11 w-full cursor-pointer items-center gap-2 px-4 text-left text-sm font-semibold text-ink no-underline hover:bg-surface-hover hover:text-ink'
 
@@ -85,6 +87,16 @@ function UserMenu({ user, hasBackoffice, onNavigate, onLogout }: UserMenuProps) 
           className={itemClassName}
         >
           Backoffice
+        </Link>
+      )}
+      {hasAccessPanel && (
+        <Link
+          role="menuitem"
+          to={ROUTES.access.home}
+          onClick={onNavigate}
+          className={itemClassName}
+        >
+          Puerta
         </Link>
       )}
       <Link role="menuitem" to={ROUTES.myTickets} onClick={onNavigate} className={itemClassName}>
