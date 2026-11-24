@@ -1,18 +1,16 @@
 import { AdminEventsSection } from '../components/AdminEventsSection/AdminEventsSection'
 import { BackofficePageHeading } from '../components/BackofficePageHeading'
-import { BackofficeSectionPage } from './BackofficeSectionPage'
+import { OrganizerEventsSection } from '../components/OrganizerEventsSection/OrganizerEventsSection'
 import { useBackofficeOutlet } from '../components/BackofficeLayout/useBackofficeLayout'
 
-/** Eventos: la del administrador ya está; la del organizador la hace otra persona del grupo. */
+/** Eventos: la misma sección del diseño, con la lista y las acciones de cada rol. */
 export function EventsPage() {
   const { role } = useBackofficeOutlet()
-
-  if (role !== 'ADMIN') return <BackofficeSectionPage section="events" />
 
   return (
     <>
       <BackofficePageHeading section="events" />
-      <AdminEventsSection />
+      {role === 'ADMIN' ? <AdminEventsSection /> : <OrganizerEventsSection />}
     </>
   )
 }
