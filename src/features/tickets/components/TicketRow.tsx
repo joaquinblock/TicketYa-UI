@@ -1,7 +1,11 @@
 import { ChevronRight, Ticket as TicketIcon } from 'lucide-react'
 import { useState } from 'react'
 import { Badge } from '@/shared/components/atoms/Badge'
-import { PENDING_RETURN_TICKET_META, TICKET_STATUS_META } from '../constants/tickets.constants'
+import {
+  PENDING_RETURN_TICKET_META,
+  REJECTED_RETURN_NOTICE,
+  TICKET_STATUS_META,
+} from '../constants/tickets.constants'
 import { formatOrderPrice, formatTicketCode, formatTicketLocation } from '../lib/ticketFormat'
 import type { Ticket } from '../types/tickets.types'
 import { TicketQrCode } from './TicketQrCode'
@@ -17,6 +21,8 @@ export function TicketRow({ ticket, canRequestReturn = true, onRequestReturn }: 
   const code = formatTicketCode(ticket.id)
   const isPendingReturn = ticket.status === 'ISSUED' && Boolean(ticket.hasPendingReturnRequest)
   const canShowReturnAction = ticket.status === 'ISSUED' && !isPendingReturn
+  const isRejectedReturn =
+    ticket.status === 'ISSUED' && !isPendingReturn && Boolean(ticket.hasRejectedReturnRequest)
   const statusMeta = isPendingReturn
     ? PENDING_RETURN_TICKET_META
     : TICKET_STATUS_META[ticket.status]
@@ -45,6 +51,11 @@ export function TicketRow({ ticket, canRequestReturn = true, onRequestReturn }: 
             Entrada <span className="font-mono">#{code}</span> ·{' '}
             <span>{formatOrderPrice(ticket.price)}</span>
           </span>
+          {isRejectedReturn && (
+            <span className="text-label font-semibold text-error-ink">
+              {REJECTED_RETURN_NOTICE.label}
+            </span>
+          )}
         </span>
 
         <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
@@ -63,6 +74,11 @@ export function TicketRow({ ticket, canRequestReturn = true, onRequestReturn }: 
             <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>
             <h3 className="text-xl font-bold text-ink">{statusMeta.title}</h3>
             <p className="text-sm leading-relaxed text-muted">{statusMeta.description}</p>
+            {isRejectedReturn && (
+              <p className="rounded-control bg-error/40 px-3 py-2 text-sm leading-relaxed text-error-ink">
+                {REJECTED_RETURN_NOTICE.description}
+              </p>
+            )}
             {canShowReturnAction && (
               <button
                 type="button"

@@ -23,6 +23,7 @@ export type Ticket = {
   status: TicketStatus
   qrCode: string | null
   hasPendingReturnRequest?: boolean
+  hasRejectedReturnRequest?: boolean
 }
 
 export type ReturnRequestStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED'
