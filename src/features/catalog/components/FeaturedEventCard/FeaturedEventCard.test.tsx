@@ -15,13 +15,12 @@ const BASE_EVENT: EventSummary = {
   highDemand: true,
   saleStart: null,
   venue: {
-    id: 1,
     name: 'Estadio del Sur',
-    address: 'Av. del Estadio 1000',
     city: 'Buenos Aires',
   },
   priceFrom: 45000,
   photoUrl: null,
+  participants: [],
 }
 
 describe('FeaturedEventCard', () => {
