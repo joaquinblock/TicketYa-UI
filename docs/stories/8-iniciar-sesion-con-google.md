@@ -1,7 +1,7 @@
 # 8: Iniciar sesión con Google
 
 **Tipo:** Story
-**Estado:** aprobado
+**Estado:** terminado
 **Funcionalidad:** Login y sesión (épica #1)
 
 ## Historia
