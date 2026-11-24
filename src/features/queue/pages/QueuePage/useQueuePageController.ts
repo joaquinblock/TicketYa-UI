@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { isUnauthorizedError } from '@/shared/lib/http/ApiError'
 import { getEvent } from '@/shared/services/events.service'
 import { parseEventId } from '@/shared/utils/eventId'
 import { useQueueEntry } from '../../hooks/useQueueEntry'
@@ -15,10 +16,13 @@ export function useQueuePageController(eventIdParam: string) {
     retry: false,
   })
 
+  const isLoginRequired = queue.isError && isUnauthorizedError(queue.error)
+
   return {
     eventId,
     eventName: eventQuery.data?.name,
     ...queue,
-    errorInfo: queue.isError ? classifyQueueError(queue.error) : null,
+    isLoginRequired,
+    errorInfo: queue.isError && !isLoginRequired ? classifyQueueError(queue.error) : null,
   }
 }

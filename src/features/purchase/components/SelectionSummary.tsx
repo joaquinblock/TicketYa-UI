@@ -112,11 +112,6 @@ function ReservationAlert({
           Ir a la fila virtual
         </Link>
       )}
-      {error === 'UNAUTHORIZED' && (
-        <Link to={ROUTES.login} className="font-semibold text-error-ink underline">
-          Iniciar sesión (falta login)
-        </Link>
-      )}
       {error === 'FAILED' && (
         <Button variant="ghost" onClick={onRetry} className="self-start">
           Reintentar

@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
+import { requestLogin } from '@/shared/lib/loginRequest'
 import { clearQueueTurn } from '@/shared/lib/queueToken'
 import { ROUTES } from '@/shared/lib/routes'
 import { toReservationError } from '../domain/reservationError'
@@ -29,6 +30,8 @@ export function useReservation({ draft, onSeatsTaken }: UseReservationVariables)
       const reservationError = toReservationError(error)
       if (reservationError === 'SEATS_TAKEN') onSeatsTaken()
       else if (reservationError === 'QUEUE_REQUIRED') clearQueueTurn(variables.eventId)
+      // Al entrar se reintenta con la misma clave: la selección sigue y no se duplica la reserva.
+      else if (reservationError === 'UNAUTHORIZED') requestLogin(() => mutation.mutate(variables))
     },
   })
 

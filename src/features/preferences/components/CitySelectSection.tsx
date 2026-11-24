@@ -8,10 +8,7 @@ type CitySelectSectionProps = {
 
 export function CitySelectSection({ cities, city, onChange }: CitySelectSectionProps) {
   return (
-    <section
-      aria-labelledby="pref-city-label"
-      className="flex flex-col gap-3.5 border-t border-line px-4 py-5 md:px-6.5 md:py-6"
-    >
+    <section className="flex flex-col gap-3.5 border-t border-line px-4 py-5 md:px-6.5 md:py-6">
       <label
         id="pref-city-label"
         htmlFor="pref-city"

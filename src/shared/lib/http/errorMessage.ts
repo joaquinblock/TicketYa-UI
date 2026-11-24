@@ -15,8 +15,11 @@ const MESSAGE_BY_CODE: Record<string, string> = {
   forbidden: 'No tenés permiso para hacer esto.',
 }
 
-/** El backend ya responde sus errores de negocio en español: si no hay uno propio, se usa el suyo. */
-export function getErrorMessage(error: unknown): string {
-  if (!(error instanceof ApiError)) return GENERIC_MESSAGE
+/**
+ * El backend ya responde sus errores de negocio en español: si no hay uno propio, se usa el suyo.
+ * `fallback` reemplaza al genérico cuando el error no viene del backend.
+ */
+export function getErrorMessage(error: unknown, fallback = GENERIC_MESSAGE): string {
+  if (!(error instanceof ApiError)) return fallback
   return MESSAGE_BY_CODE[error.code] ?? error.message
 }

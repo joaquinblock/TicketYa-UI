@@ -21,11 +21,7 @@ export function FeaturedEventCard() {
     >
       <div className="relative h-32.5 overflow-hidden bg-line">
         {event.photoUrl && (
-          <img
-            src={event.photoUrl}
-            alt={event.name}
-            className="block size-full object-cover"
-          />
+          <img src={event.photoUrl} alt={event.name} className="block size-full object-cover" />
         )}
         {event.highDemand && (
           <span className="absolute top-2.75 right-2.75 rounded-[5px] bg-accent px-2.25 py-1.5 text-[11px] font-bold text-ink">

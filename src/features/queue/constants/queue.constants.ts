@@ -1,7 +1,6 @@
 export const QUEUE_POLL_INTERVAL_MS = 5_000
 export const QUEUE_BATCH_SIZE = 100
 export const QUEUE_BATCH_SECONDS = 30
-export const QUEUE_SEEDER_CLIENT_USER_ID = 1
 
 export const QUEUE_RULES = [
   { number: '01', text: 'Si volvés a entrar, conservás tu lugar.', icon: 'check' },

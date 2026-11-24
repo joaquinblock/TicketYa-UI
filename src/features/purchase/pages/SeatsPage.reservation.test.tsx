@@ -314,7 +314,7 @@ describe('Lugares: CA4, supero el límite por persona', () => {
 })
 
 describe('Lugares: CA5, sin sesión', () => {
-  it('sin token, sigo en Lugares con mi selección y veo el aviso con el link para iniciar sesión', async () => {
+  it('sin token, sigo en Lugares con mi selección, veo el aviso y se abre el login (#8 CA4)', async () => {
     const eventId = UNNUMBERED_EVENT.WITHOUT_SESSION
     const sector = await unnumberedSectorOf(eventId)
     const user = userEvent.setup()
@@ -326,9 +326,7 @@ describe('Lugares: CA5, sin sesión', () => {
     expect(await within(summary).findByRole('alert')).toHaveTextContent(
       'Iniciá sesión para reservar tus lugares.',
     )
-    expect(
-      within(summary).getByRole('link', { name: 'Iniciar sesión (falta login)' }),
-    ).toHaveAttribute('href', ROUTES.login)
+    expect(screen.getByRole('dialog', { name: 'Ingresá a TicketYa' })).toBeInTheDocument()
     expect(getCurrentUrl().pathname).toBe(ROUTES.seats(eventId))
     expect(
       within(summary)
@@ -728,3 +726,37 @@ function refetchByRefocusing() {
   act(() => focusManager.setFocused(false))
   act(() => focusManager.setFocused(true))
 }
+
+describe('Lugares: #8 CA4, reservar sin sesión', () => {
+  afterEach(async () => {
+    await cancelPendingOrders(UNNUMBERED_EVENT.WITHOUT_SESSION)
+  })
+
+  it('al entrar desde el modal, la reserva se crea sola con mi selección y voy a Pago', async () => {
+    const eventId = UNNUMBERED_EVENT.WITHOUT_SESSION
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+    await user.click(await screen.findByRole('button', { name: 'Entrar como usuario de prueba' }))
+
+    await waitFor(() => expect(getCurrentUrl().pathname).toBe(ROUTES.payment(eventId)))
+    expect(getCurrentUrl().searchParams.get('orderId')).toMatch(/^\d+$/)
+  })
+
+  it('si cierro el modal, sigo en Lugares con mi selección y puedo volver a reservar', async () => {
+    const eventId = UNNUMBERED_EVENT.WITHOUT_SESSION
+    const user = userEvent.setup()
+    renderSeatsPage(eventId)
+    const summary = await screen.findByRole('complementary', { name: 'Tu selección' })
+
+    await user.click(within(summary).getByRole('button', { name: 'Reservar y pagar' }))
+    await user.click(await screen.findByRole('button', { name: 'Cerrar' }))
+
+    expect(screen.queryByRole('dialog', { name: 'Ingresá a TicketYa' })).not.toBeInTheDocument()
+    expect(getCurrentUrl().pathname).toBe(ROUTES.seats(eventId))
+    expect(within(summary).getAllByRole('listitem')).toHaveLength(1)
+    expect(within(summary).getByRole('button', { name: 'Reservar y pagar' })).toBeEnabled()
+  })
+})

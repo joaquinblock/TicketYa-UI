@@ -12,13 +12,12 @@ function makeEvent(overrides: Partial<EventSummary> = {}): EventSummary {
     highDemand: false,
     saleStart: null,
     venue: {
-      id: 1,
       name: 'Estadio del Sur',
-      address: 'Av. del Estadio 1000',
       city: 'Buenos Aires',
     },
     priceFrom: 25000,
     photoUrl: null,
+    participants: [],
     ...overrides,
   }
 }

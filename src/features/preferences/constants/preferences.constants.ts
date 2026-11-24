@@ -10,5 +10,3 @@ export const PREFERENCES_EVENT_TYPE_LABEL = {
 } as const satisfies Record<EventType, string>
 
 export const FAVORITE_SUGGESTIONS_LIMIT = 4
-
-export const PREFERENCES_SEEDER_CLIENT_USER_ID = 1

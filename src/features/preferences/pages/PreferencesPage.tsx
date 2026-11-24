@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
 import { Button } from '@/shared/components/atoms/Button'
 import { PageTitle } from '@/shared/components/atoms/PageTitle'
+import { LoginRequired } from '@/shared/components/molecules/LoginRequired/LoginRequired'
 import { CitySelectSection } from '../components/CitySelectSection'
 import { EventTypeChips } from '../components/EventTypeChips'
 import { FavoriteParticipantsSection } from '../components/FavoriteParticipantsSection'
@@ -12,6 +13,7 @@ import { usePreferencesPageController } from '../hooks/usePreferencesPageControl
 export function PreferencesPage() {
   const {
     isLoading,
+    isLoginRequired,
     isForbidden,
     loadError,
     retryLoad,
@@ -48,13 +50,17 @@ export function PreferencesPage() {
 
       {isLoading && <PreferencesSkeleton />}
 
+      {!isLoading && isLoginRequired && (
+        <LoginRequired message="Iniciá sesión para ver tus preferencias." />
+      )}
+
       {!isLoading && isForbidden && <PreferencesForbiddenView />}
 
-      {!isLoading && !isForbidden && loadError && (
+      {!isLoading && !isLoginRequired && !isForbidden && loadError && (
         <PreferencesLoadError message={loadError} onRetry={retryLoad} />
       )}
 
-      {!isLoading && !isForbidden && !loadError && (
+      {!isLoading && !isLoginRequired && !isForbidden && !loadError && (
         <form
           aria-label="Tus preferencias"
           onSubmit={(event) => {

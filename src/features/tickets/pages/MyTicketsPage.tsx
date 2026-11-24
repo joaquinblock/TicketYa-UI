@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/shared/components/atoms/Button'
 import { PageTitle } from '@/shared/components/atoms/PageTitle'
+import { LoginRequired } from '@/shared/components/molecules/LoginRequired/LoginRequired'
 import { Spinner } from '@/shared/components/atoms/Spinner'
 import { ROUTES } from '@/shared/lib/routes'
 import { OrderCard } from '../components/OrderCard'
@@ -17,7 +18,7 @@ import {
 import type { Order, Ticket } from '../types/tickets.types'
 
 export function MyTicketsPage() {
-  const { orders, isPending, isError, refetch } = useMyOrders()
+  const { orders, isPending, isError, isLoginRequired, refetch } = useMyOrders()
   const requestReturn = useRequestReturn()
   const [selectedForReturn, setSelectedForReturn] = useState<{
     order: Order
@@ -53,6 +54,8 @@ export function MyTicketsPage() {
 
       {isPending ? (
         <MyTicketsLoadingState />
+      ) : isLoginRequired ? (
+        <LoginRequired message="Iniciá sesión para ver tus entradas." />
       ) : isError ? (
         <MyTicketsErrorState onRetry={() => void refetch()} />
       ) : orders.length === 0 ? (

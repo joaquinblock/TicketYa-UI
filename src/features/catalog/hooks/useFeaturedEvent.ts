@@ -12,7 +12,7 @@ export function useFeaturedEvent() {
   const [nowMs, setNowMs] = useState(() => Date.now())
 
   const query = useQuery({
-    queryKey: catalogKeys.list({ sort: 'DATE', page: 1 }),
+    queryKey: catalogKeys.events({ sort: 'DATE', page: 1 }),
     queryFn: () => searchEvents({ sort: 'DATE', page: 1 }, EVENTS_PAGE_SIZE),
     staleTime: 30_000,
   })
