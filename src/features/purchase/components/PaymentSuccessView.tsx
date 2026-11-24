@@ -1,5 +1,9 @@
-import { Check } from 'lucide-react'
+import { ArrowUpRight, Check } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import {
+  DEV_MAIL_INBOX_URL,
+  IS_DEV_MAIL_INBOX_VISIBLE,
+} from '@/shared/constants/devMailInbox.constants'
 import { ROUTES } from '@/shared/lib/routes'
 import { formatPrice } from '@/shared/utils/eventFormat'
 import { PAYMENT_METHOD_META } from '../constants/payment.constants'
@@ -54,6 +58,20 @@ export function PaymentSuccessView({ order }: PaymentSuccessViewProps) {
           Seguir explorando
         </Link>
       </div>
+      {IS_DEV_MAIL_INBOX_VISIBLE && (
+        <p className="m-0 text-sm text-muted">
+          También te mandamos el mail con los QR. En desarrollo llega a Mailpit:{' '}
+          <a
+            href={DEV_MAIL_INBOX_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center gap-1 font-semibold text-ink underline decoration-accent decoration-2 underline-offset-4"
+          >
+            Revisar la bandeja de mail
+            <ArrowUpRight aria-hidden className="size-4" />
+          </a>
+        </p>
+      )}
     </section>
   )
 }
