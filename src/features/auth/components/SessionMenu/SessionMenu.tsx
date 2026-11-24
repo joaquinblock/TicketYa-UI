@@ -12,7 +12,7 @@ import { useSessionMenu } from './useSessionMenu'
  * pantallas y "Cerrar sesión". Salir es una acción explícita, nunca un toque al nombre (Nielsen 3).
  */
 export function SessionMenu() {
-  const { user, isLoggedIn, logout, login } = useSessionMenu()
+  const { user, isLoggedIn, hasBackoffice, logout, login } = useSessionMenu()
   const [isOpen, setIsOpen] = useState(false)
 
   if (!isLoggedIn) return <Button onClick={login}>Ingresar</Button>
@@ -44,7 +44,12 @@ export function SessionMenu() {
       {isOpen && (
         <>
           <div aria-hidden="true" className="fixed inset-0 z-20" onClick={close} />
-          <UserMenu user={user} onNavigate={close} onLogout={logout} />
+          <UserMenu
+            user={user}
+            hasBackoffice={hasBackoffice}
+            onNavigate={close}
+            onLogout={logout}
+          />
         </>
       )}
     </div>
@@ -53,11 +58,12 @@ export function SessionMenu() {
 
 type UserMenuProps = {
   user: CurrentUser
+  hasBackoffice: boolean
   onNavigate: () => void
   onLogout: () => void
 }
 
-function UserMenu({ user, onNavigate, onLogout }: UserMenuProps) {
+function UserMenu({ user, hasBackoffice, onNavigate, onLogout }: UserMenuProps) {
   const itemClassName =
     'flex min-h-11 w-full cursor-pointer items-center gap-2 px-4 text-left text-sm font-semibold text-ink no-underline hover:bg-surface-hover hover:text-ink'
 
@@ -71,6 +77,16 @@ function UserMenu({ user, onNavigate, onLogout }: UserMenuProps) {
         <p className="text-sm font-bold text-ink">{formatFullName(user)}</p>
         <p className="truncate text-label text-subtle">{user.email}</p>
       </div>
+      {hasBackoffice && (
+        <Link
+          role="menuitem"
+          to={ROUTES.backoffice.home}
+          onClick={onNavigate}
+          className={itemClassName}
+        >
+          Backoffice
+        </Link>
+      )}
       <Link role="menuitem" to={ROUTES.myTickets} onClick={onNavigate} className={itemClassName}>
         Mis entradas
       </Link>

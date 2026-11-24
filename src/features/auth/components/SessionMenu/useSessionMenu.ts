@@ -3,7 +3,13 @@ import { useSyncExternalStore } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { requestLogin } from '@/shared/lib/loginRequest'
 import { ROUTES } from '@/shared/lib/routes'
-import { clearAccessToken, getAccessToken, onSessionChange } from '@/shared/lib/session'
+import {
+  clearAccessToken,
+  getAccessToken,
+  getSessionClaims,
+  onSessionChange,
+} from '@/shared/lib/session'
+import { BACKOFFICE_LOGIN_ROLES } from '../../constants/auth.constants'
 import { authKeys } from '../../lib/auth.queryKeys'
 import { getCurrentUser } from '../../services/auth.service'
 
@@ -26,5 +32,14 @@ export function useSessionMenu() {
     navigate(ROUTES.home)
   }
 
-  return { user: isLoggedIn ? user : undefined, isLoggedIn, logout, login: () => requestLogin() }
+  const role = isLoggedIn ? getSessionClaims()?.role : undefined
+  const hasBackoffice = BACKOFFICE_LOGIN_ROLES.some((backofficeRole) => backofficeRole === role)
+
+  return {
+    user: isLoggedIn ? user : undefined,
+    isLoggedIn,
+    hasBackoffice,
+    logout,
+    login: () => requestLogin(),
+  }
 }

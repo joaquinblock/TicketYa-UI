@@ -1,3 +1,5 @@
+import type { SessionRole } from '@/shared/lib/session'
+
 /**
  * Cuentas del `AuthSeeder` del backend, una por rol. Sin client id de Google, el botón de Google
  * las ofrece para elegir y entra con dev-login (perfil `dev` del auth-service).
@@ -16,3 +18,9 @@ export const GOOGLE_IDENTITY_SCRIPT_URL = 'https://accounts.google.com/gsi/clien
 
 /** Ancho del botón de Google: el del modal (420 px) menos su padding. */
 export const GOOGLE_BUTTON_WIDTH_PX = 352
+
+/** Al ingresar, estos roles van directo a su backoffice en vez de quedarse en la tienda. */
+export const BACKOFFICE_LOGIN_ROLES = [
+  'ADMIN',
+  'ORGANIZER',
+] as const satisfies readonly SessionRole[]
