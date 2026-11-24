@@ -1,6 +1,7 @@
 import { Ticket, X } from 'lucide-react'
 import { type MouseEvent, useId } from 'react'
 import { GOOGLE_CLIENT_ID, IS_DEV_LOGIN_ENABLED } from '../../constants/auth.constants'
+import { GoogleButtonFace } from '../GoogleSignInButton/GoogleButtonFace'
 import { GoogleSignInButton } from '../GoogleSignInButton/GoogleSignInButton'
 import { DevLoginForm } from './DevLoginForm'
 import { useLoginDialogController } from './useLoginDialogController'
@@ -62,12 +63,14 @@ export function LoginDialog() {
             {errorMessage}
           </p>
         )}
-        {GOOGLE_CLIENT_ID && (
+        {GOOGLE_CLIENT_ID ? (
           <GoogleSignInButton
             clientId={GOOGLE_CLIENT_ID}
             isLoggingIn={isLoggingIn}
             onCredential={loginWithGoogleCredential}
           />
+        ) : (
+          <GoogleButtonFace disabled title="Falta configurar TICKETYA_GOOGLE_CLIENT_ID" />
         )}
         <small className="text-label text-subtle">
           Organizadores y personal de acceso entran con el mismo botón.

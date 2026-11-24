@@ -1,5 +1,5 @@
-import { Button } from '@/shared/components/atoms/Button'
 import { cn } from '@/shared/lib/cn'
+import { GoogleButtonFace } from './GoogleButtonFace'
 import { useGoogleSignIn } from './useGoogleSignIn'
 
 type GoogleSignInButtonProps = {
@@ -9,8 +9,8 @@ type GoogleSignInButtonProps = {
 }
 
 /**
- * El botón oficial de Google, el que el usuario ya conoce (Jakob). Mientras se canjea el token,
- * queda en su lugar uno deshabilitado que dice que está trabajando (Doherty, Nielsen 1).
+ * Se ve nuestro botón, pero el clic lo recibe el botón oficial de Google, invisible encima: es el
+ * único que entrega el ID token. Mientras se canjea, el de Google se saca y queda "Ingresando…".
  */
 export function GoogleSignInButton({
   clientId,
@@ -20,13 +20,17 @@ export function GoogleSignInButton({
   const { containerRef } = useGoogleSignIn(clientId, onCredential)
 
   return (
-    <div className="flex min-h-12.5 justify-center">
-      <div ref={containerRef} className={cn(isLoggingIn && 'hidden')} />
-      {isLoggingIn && (
-        <Button variant="ghost" disabled className="min-h-12.5 w-full">
-          Ingresando…
-        </Button>
-      )}
+    <div className="relative">
+      <GoogleButtonFace tabIndex={-1} aria-hidden="true" disabled={isLoggingIn}>
+        {isLoggingIn ? 'Ingresando…' : undefined}
+      </GoogleButtonFace>
+      <div
+        ref={containerRef}
+        className={cn(
+          'absolute inset-0 flex items-center justify-center overflow-hidden opacity-0',
+          isLoggingIn && 'hidden',
+        )}
+      />
     </div>
   )
 }
